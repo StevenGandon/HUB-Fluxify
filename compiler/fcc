@@ -14,7 +14,7 @@ import sys
 
 def main() -> int:
     temp = Floff64()
-    temp.tables.append(Floff64Table(1, b"hello world!"))
+    temp.create_table(TABLE_CONSTANT, b"hello world!")
     temp.write()
     temp.flush("./test.flo")
 

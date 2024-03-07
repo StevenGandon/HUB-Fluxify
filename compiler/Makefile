@@ -7,12 +7,12 @@
 
 OBJ	=	./src/__pycache__
 
-NAME	=	./fcc
+NAME	=	fcc
 
-all: setup
+all: setup $(NAME)
 
 $(NAME):
-	chmod +x ./fcc
+	chmod +x $(NAME)
 
 run:
 	python3 $(NAME)
@@ -30,4 +30,4 @@ re: fclean
 build:
 	echo "Not implemented"
 
-.PHONY: clean fclean re setup
+.PHONY: clean fclean re setup $(NAME)

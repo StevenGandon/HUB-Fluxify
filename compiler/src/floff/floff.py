@@ -164,6 +164,12 @@ class Floff64(object):
         value: str = (bytes.fromhex(hex(interger).split('x')[1].zfill(size * 2)))
         return (value if byteorder == "big" else value[::-1])
 
+    def create_table(self, table_type: int, table_content: bytes = None):
+        self.tables.append(Floff64Table(table_type, table_content))
+
+    def add_table(self, table: Floff64Table):
+        self.tables.append(table)
+
     def write(self) -> None:
         temp: bytearray = bytearray()
         extend_array = temp.extend
