@@ -15,7 +15,7 @@ $(NAME):
 	chmod +x ./fcc
 
 run:
-	py $(NAME)
+	python3 $(NAME)
 
 setup:
 	pip install -r ./requirements.txt

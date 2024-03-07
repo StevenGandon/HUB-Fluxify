@@ -8,11 +8,19 @@
 """
 
 from sys import exit
+from src.floff import *
 
 import sys
 
 def main() -> int:
-    sys.stdout("Hello world!\n")
+    temp = Floff64()
+    temp.tables.append(Floff64Table(1, b"hello world!"))
+    temp.write()
+    temp.flush("./test.flo")
+
+    temp2 = Floff64.from_file("./test.flo")
+    print(temp2)
+
     return (0)
 
 
