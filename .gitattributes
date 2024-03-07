@@ -173,6 +173,7 @@ Procfile text
 *.o binary
 *.obj binary
 *.pyc binary
+*.flo binary
 
 # Precompiled header
 *.gch binary

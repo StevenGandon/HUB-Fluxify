@@ -63,3 +63,11 @@ dkms.conf
 
 # Compiled object cache folder
 __pycache__
+
+
+######################
+## ---- Fluxify ----##
+######################
+
+# Object file
+*.flo
