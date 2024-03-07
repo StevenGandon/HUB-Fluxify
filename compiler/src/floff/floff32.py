@@ -18,7 +18,7 @@ class Floff32(Floff64):
 
     @staticmethod
     def from_file(file_path: str, check_magic: bool = True, check_architecture: bool = True) -> object:
-        new_format: Floff64
+        new_format: Floff32
         number_tables: int
 
         if (not access(file_path, F_OK)):

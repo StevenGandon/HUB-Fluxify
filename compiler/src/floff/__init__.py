@@ -13,6 +13,9 @@ from .floff32 import (
     Floff32,
     Floff32Table
 )
+from .floff import (
+    FloffAuto
+)
 from .exceptions import (
     FloFFError,
     FloFFFilePermissionDenied,

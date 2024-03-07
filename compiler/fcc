@@ -29,6 +29,8 @@ def main() -> int:
     temp2 = Floff32.from_file("./test32.flo")
     print(temp2)
 
+    print(FloffAuto.from_file("./test64.flo"))
+
     # test = Floff32.from_file("./test64.flo")
 
     return (0)
