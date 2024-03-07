@@ -1,0 +1,20 @@
+#!/bin/python3
+
+"""
+-- EPITECH PROJECT, 2024
+-- Hub project
+-- File description:
+-- fcc
+"""
+
+from sys import exit
+
+import sys
+
+def main() -> int:
+    sys.stdout("Hello world!\n")
+    return (0)
+
+
+if __name__ == "__main__":
+    exit(main())
