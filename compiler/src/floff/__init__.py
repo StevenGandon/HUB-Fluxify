@@ -5,9 +5,13 @@
 -- module init
 """
 
-from .floff import (
+from .floff64 import (
     Floff64,
     Floff64Table
+)
+from .floff32 import (
+    Floff32,
+    Floff32Table
 )
 from .exceptions import (
     FloFFError,

@@ -23,7 +23,7 @@ class FloFFFileInvalidMagic(FloFFError):
 
 class FloFFFileInvalidArchitecture(FloFFError):
     def __init__(self, file_path: str) -> None:
-        super().__init__(f"{file_path}: invalid magic.")
+        super().__init__(f"{file_path}: invalid architecture.")
 
 class FloFFFileCompilerNameTooBig(FloFFError):
     def __init__(self, code_hash: str) -> None:

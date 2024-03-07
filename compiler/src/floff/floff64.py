@@ -32,41 +32,6 @@ from .locals import (
     BYTE_ORDER
 )
 
-#   _________________
-#  |   Header 64b    |
-#  |_________________|
-#  |  Size  |  Name  |
-#  |________|________|
-#  |   04     Magic  |
-#  |-----------------|
-#  |   02    FVersion|
-#  |-----------------|
-#  |   02      Arch  |
-#  |-----------------|
-#  |   01    SizeText|
-#  |------vvv--------|
-#  |   --    Compiler|
-#  |-----------------|
-#  |   40     CHash  |
-#  |-----------------|
-#  |   08    NbTable |
-#  |-----------------|
-#  |   08  StartLabel|
-#  |_________________|
-#  |      Body       |
-#  |_________________|
-#  |  Size  |  Name  |
-#  |________|________|
-#  |   01   TableType|
-#  |-----------------|
-#  |   08   TableSize|
-#  |------vvv--------|
-#  |   --   TableByte|
-#  |-----------------|
-#  |       ...       |
-#  |_________________|
-
-
 class Floff64Table(object):
     def __init__(self, table_type: int, table_bytes: int) -> None:
         self.type: int = table_type
@@ -129,12 +94,12 @@ class Floff64(object):
             new_format = Floff64()
 
             new_format.magic = read(4)
-            if (new_format.magic != DEFAULT_MAGIC):
+            if (check_magic and new_format.magic != DEFAULT_MAGIC):
                 raise (FloFFFileInvalidMagic(file_path))
 
             new_format.version = tuple(read(2))
-            new_format.arch = from_bytes(read(1))
-            if (new_format.arch != ARCH_X86_64):
+            new_format.arch = from_bytes(read(2))
+            if (check_architecture and new_format.arch != ARCH_X86_64):
                 raise (FloFFFileInvalidArchitecture(file_path))
 
             new_format.compiler = read(read(1)[0]).decode()
@@ -174,10 +139,11 @@ class Floff64(object):
         temp: bytearray = bytearray()
         extend_array = temp.extend
         integer_to_bytes = lambda x: self.integer_to_bytes(x, 8, BYTE_ORDER)
+        integer_to_bytes_short = lambda x: self.integer_to_bytes(x, 2, BYTE_ORDER)
 
         extend_array(self.magic)
         extend_array(self.version)
-        extend_array((self.arch,))
+        extend_array(integer_to_bytes_short(self.arch))
 
         if (len(self.compiler) > 0xff):
             raise (FloFFFileCompilerNameTooBig(self.code_hash))
