@@ -6,6 +6,7 @@
 */
 
 #include "fluxify.h"
+#include "floff.h"
 #include "main.h"
 
 int
@@ -15,6 +16,9 @@ main(argc, argv)
 {
     (void)argc;
     (void)argv;
-    (void)hello_world();
+    floff64_t *object = create_floff64();
+
+    if (read_floff64(object, "../compiler/test64.flo") < -1)
+        return (84);
     return (0);
 }

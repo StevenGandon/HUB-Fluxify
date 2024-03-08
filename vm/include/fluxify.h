@@ -10,4 +10,4 @@
 
 void hello_world(void);
 
-#endif
+#endif /* FLUXIFY_H_ */
