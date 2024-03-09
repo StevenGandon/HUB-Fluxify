@@ -16,10 +16,10 @@ main(argc, argv)
 {
     (void)argc;
     (void)argv;
-    floff64_t *object = auto_floff("../compiler/test64.flo");
+    floff32_t *object = auto_floff("../compiler/test32.flo");
 
     if (!object)
         return (84);
-    (void)destroy_floff64(object);
+    (void)destroy_floff32(object);
     return (0);
 }

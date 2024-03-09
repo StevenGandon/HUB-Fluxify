@@ -57,8 +57,8 @@ little_endian_to_big_endian(value)
     unsigned long long int *value;
 {
     *value = ((*value >> 24) & 0xFF) |
-             ((*value << 8) & 0xFF00) |
-             ((*value >> 8) & 0xFF0000) |
+             ((*value << 8) & 0xFF0000) |
+             ((*value >> 8) & 0xFF00) |
              ((*value << 24) & 0xFF000000);
 }
 
@@ -114,7 +114,6 @@ read_program_datas(fd, object)
         object->body = NULL;
         return (file_sucess(fd));
     }
-
     object->body = (floff32_body_t **)malloc(sizeof(floff32_body_t *) * object->table_number);
     if (!object->body)
         return (file_failed(fd));
