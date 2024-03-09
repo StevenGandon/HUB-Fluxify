@@ -6,7 +6,9 @@
 ##
 
 SRC	=	./floff64.c	\
-		./floff32.c
+		./floff32.c	\
+		./floff.c
+
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfloff
 CFLAGS	=	-O2 -I ./ -Wall -Wextra -Werror	\

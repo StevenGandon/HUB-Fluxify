@@ -72,7 +72,12 @@
 
     int read_floff64(floff64_t *, const char *);
     floff64_t *create_floff64(void);
+    void destroy_floff64(floff64_t *);
 
+    int read_floff32(floff32_t *, const char *);
     floff32_t *create_floff32(void);
+    void destroy_floff32(floff32_t *);
+
+    void *auto_floff(const char *file_path);
 
 #endif /* FLOFF_H_ */
