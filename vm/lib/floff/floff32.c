@@ -54,12 +54,12 @@ file_sucess(fd)
 
 static void
 little_endian_to_big_endian(value)
-    unsigned long long int *value;
+    unsigned int *value;
 {
-    *value = ((*value >> 24) & 0xFF) |
-             ((*value << 8) & 0xFF0000) |
-             ((*value >> 8) & 0xFF00) |
-             ((*value << 24) & 0xFF000000);
+    *value = (*value & 0x000000ff) << 24u |
+        (*value & 0x0000ff00) << 8u |
+        (*value & 0x00ff0000) >> 8u |
+        (*value & 0xff000000) >> 24u;
 }
 
 static int
@@ -128,7 +128,6 @@ read_program_datas(fd, object)
         if (0 > read(fd, &object->body[i]->table_size, 4))
             return (file_failed(fd));
         (void)little_endian_to_big_endian(&object->body[i]->table_size);
-
         object->body[i]->table_bytes = (unsigned char *)malloc(sizeof(unsigned char) * object->body[i]->table_size);
         if (!object->body[i]->table_bytes)
             return (file_failed(fd));
