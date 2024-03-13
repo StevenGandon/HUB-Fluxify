@@ -13,26 +13,9 @@ from src.floff import *
 import sys
 
 def main() -> int:
-    temp = Floff64()
-    temp.create_table(TABLE_CONSTANT, b"hello world!")
-    temp.write()
-    temp.flush("./test64.flo")
-
-    temp2 = Floff64.from_file("./test64.flo")
-    print(temp2)
-
-    temp = Floff32()
-    temp.create_table(TABLE_CONSTANT, b"hello world!")
-    temp.write()
-    temp.flush("./test32.flo")
-
-    temp2 = Floff32.from_file("./test32.flo")
-    print(temp2)
-
-    print(FloffAuto.from_file("./test64.flo"))
-
-    # test = Floff32.from_file("./test64.flo")
-
+    if len(sys.argv) != 2:
+        print("Usage: fcc <filename>")
+        return (84)
     return (0)
 
 

@@ -71,3 +71,4 @@ __pycache__
 
 # Object file
 *.flo
+*.fly
