@@ -1,6 +1,28 @@
 class Token(object):
     pass
 
+class TokenBranch(Token):
+    pass
+
+class TokenBranchGrowth(Token):
+    pass
+
+class FieldStart(Token):
+    def __init__(self) -> None:
+        pass
+    def __repr__(self):
+        return f"<FieldStart>"
+    def __str__(self):
+        return self.__repr__()
+
+class FieldEnd(Token):
+    def __init__(self) -> None:
+        pass
+    def __repr__(self):
+        return f"<FieldEnd>"
+    def __str__(self):
+        return self.__repr__()
+
 class VarToken(Token):
     def __init__(self, name: str, value) -> None:
         self.name = name
@@ -33,8 +55,55 @@ class FunctionToken(Token):
         self.name = name
         self.args = args
         self.body = body
+
     def __repr__(self):
         return f"<FunctionToken name={self.name} args={self.args} body={self.body}>"
+
+    def __str__(self):
+        return self.__repr__()
+
+class IfToken(TokenBranch):
+    def __init__(self, condition: Token, body: list) -> None:
+        self.condition = condition
+        self.next_branch = None
+        self.body = body
+
+    def __repr__(self):
+        return f"<IfToken condition={self.condition} next_branch={self.next_branch} body={self.body}>"
+
+    def __str__(self):
+        return self.__repr__()
+
+class ElseIfToken(TokenBranchGrowth, TokenBranch):
+    def __init__(self, condition: Token, body: list) -> None:
+        self.condition = condition
+        self.next_branch = None
+        self.body = body
+
+    def __repr__(self):
+        return f"<ElseIfToken condition={self.condition} next_branch={self.next_branch} body={self.body}>"
+
+    def __str__(self):
+        return self.__repr__()
+
+class ElseToken(TokenBranchGrowth):
+    def __init__(self, body: list) -> None:
+        self.body = body
+
+    def __repr__(self):
+        return f"<Else body={self.body}>"
+
+    def __str__(self):
+        return self.__repr__()
+
+class WhileToken(Token):
+    def __init__(self, condition: Token, body: list) -> None:
+        self.condition = condition
+        self.body = body
+
+    def __repr__(self):
+        return f"<WhileToken condition={self.condition} body={self.body}>"
+
     def __str__(self):
         return self.__repr__()
 
