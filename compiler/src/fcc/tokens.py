@@ -11,6 +11,7 @@ class FieldStart(Token):
     def __init__(self) -> None:
         pass
     def __repr__(self):
+
         return f"<FieldStart>"
     def __str__(self):
         return self.__repr__()
@@ -19,6 +20,7 @@ class FieldEnd(Token):
     def __init__(self) -> None:
         pass
     def __repr__(self):
+
         return f"<FieldEnd>"
     def __str__(self):
         return self.__repr__()
@@ -27,8 +29,10 @@ class VarToken(Token):
     def __init__(self, name: str, value) -> None:
         self.name = name
         self.value = value
+
     def __repr__(self):
-        return f"<VarToken name={self.name} value={self.value}>"
+        return f"<VarToken ({self.name}, {self.value})>"
+
     def __str__(self):
         return self.__repr__()
 
@@ -36,8 +40,10 @@ class AssignToken(Token):
     def __init__(self, name: str, value) -> None:
         self.name = name
         self.value = value
+
     def __repr__(self):
-        return f"<AssignToken name={self.name} value={self.value}>"
+        return f"<AssignToken ({self.name}, {self.value})>"
+
     def __str__(self):
         return self.__repr__()
 
@@ -45,8 +51,11 @@ class ClassToken(Token):
     def __init__(self, name: str, body: list) -> None:
         self.name = name
         self.body = body
+
     def __repr__(self):
-        return f"<ClassToken name={self.name} body={self.body}>"
+        temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
+        return f"<ClassToken ({self.name}, [\n{temp}\n])>"
+
     def __str__(self):
         return self.__repr__()
 
@@ -57,7 +66,8 @@ class FunctionToken(Token):
         self.body = body
 
     def __repr__(self):
-        return f"<FunctionToken name={self.name} args={self.args} body={self.body}>"
+        temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
+        return f"<FunctionToken ({self.name}, {self.args}, [\n{temp}\n])>"
 
     def __str__(self):
         return self.__repr__()
@@ -69,7 +79,9 @@ class IfToken(TokenBranch):
         self.body = body
 
     def __repr__(self):
-        return f"<IfToken condition={self.condition} next_branch={self.next_branch} body={self.body}>"
+        temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
+        branch_temp = '\n  '.join(str(self.next_branch).split('\n'))
+        return f"<IfToken ({self.condition}, {branch_temp}, [\n{temp}\n])>"
 
     def __str__(self):
         return self.__repr__()
@@ -81,7 +93,9 @@ class ElseIfToken(TokenBranchGrowth, TokenBranch):
         self.body = body
 
     def __repr__(self):
-        return f"<ElseIfToken condition={self.condition} next_branch={self.next_branch} body={self.body}>"
+        temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
+        branch_temp = '\n  '.join(str(self.next_branch).split('\n'))
+        return f"<ElseIfToken ({self.condition}, {branch_temp}, [\n{temp}\n])>"
 
     def __str__(self):
         return self.__repr__()
@@ -91,7 +105,8 @@ class ElseToken(TokenBranchGrowth):
         self.body = body
 
     def __repr__(self):
-        return f"<Else body={self.body}>"
+        temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
+        return f"<Else ([\n{temp}\n])>"
 
     def __str__(self):
         return self.__repr__()
@@ -102,7 +117,8 @@ class WhileToken(Token):
         self.body = body
 
     def __repr__(self):
-        return f"<WhileToken condition={self.condition} body={self.body}>"
+        temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
+        return f"<WhileToken ({self.condition}, [\n{temp}\n])>"
 
     def __str__(self):
         return self.__repr__()
@@ -110,8 +126,10 @@ class WhileToken(Token):
 class IntToken(Token):
     def __init__(self, value: int, base: int = 10) -> None:
         self.value = int(value, base)
+
     def __repr__(self):
-        return f"<IntToken value={self.value}>"
+        return f"<IntToken ({self.value})>"
+
     def __str__(self):
         return self.__repr__()
 
@@ -122,8 +140,10 @@ class MinusToken(Token):
         else:
             self.value = value
         self.value2 = value2
+
     def __repr__(self):
-        return f"<MinusToken value={self.value} value2={self.value2}>"
+        return f"<MinusToken ({self.value}, {self.value2})>"
+
     def __str__(self):
         return self.__repr__()
 
@@ -134,8 +154,10 @@ class PlusToken(Token):
         else:
             self.value = value
         self.value2 = value2
+
     def __repr__(self):
-        return f"<PlusToken value={self.value} value2={self.value2}>"
+        return f"<PlusToken ({self.value}, {self.value2})>"
+
     def __str__(self):
         return self.__repr__()
 
@@ -143,9 +165,11 @@ class PlusToken(Token):
 class RootToken(Token):
     def __init__(self, body: list) -> None:
         self.body = body
-    def __repr__(self):
-        temp = '\n'.join('  ' + str(token) for token in self.body)
 
-        return f"<RootToken body=[\n{temp}\n]>"
+    def __repr__(self):
+        temp = ',\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
+
+        return f"<RootToken ([\n{temp}\n])>"
+
     def __str__(self):
         return self.__repr__()
