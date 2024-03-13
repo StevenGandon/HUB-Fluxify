@@ -7,15 +7,34 @@
 -- fcc
 """
 
-from sys import exit
+from sys import exit, argv
+from genericpath import isfile
 from src.floff import *
+from src.fcc.compiler import Compiler
 
-import sys
+def read_code(file_path: str) -> str:
+    data: str = None
+
+    if (not isfile(file_path)):
+        return (None)
+    with open(file_path, 'r') as fp:
+        data: str = fp.read()
+    return (data)
 
 def main() -> int:
-    if len(sys.argv) != 2:
+    code: str = None
+
+    if len(argv) < 2:
         print("Usage: fcc <filename>")
         return (84)
+    for file in argv[1:]:
+        code: str = read_code(file)
+
+        if (not code):
+            return (84)
+        compiler: Compiler = Compiler(code, [], [], file)
+        compiler.tokenize()
+        compiler.compile()
     return (0)
 
 
