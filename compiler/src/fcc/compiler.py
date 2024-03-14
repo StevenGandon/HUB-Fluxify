@@ -17,12 +17,20 @@ class Compiler(object):
         self.tokens = RootToken([])
         self.debug: list = []
 
+    @staticmethod
+    def lexer(string: str):
+        return (string
+            .replace('\\\n', '')
+            .replace(']', '\n]\n')
+            .replace('[', '\n[\n')
+            .split("\n")
+        )
+
     def tokenize(self):
         tokenized: list = self.tokens.body
         fields: list = []
-        last_branch = None
 
-        for line in self.code.replace(']', '\n]\n').replace('[', '\n[\n').split("\n"):
+        for line in Compiler.lexer(self.code):
             line: str = line.strip()
             if not line:
                 continue
@@ -57,9 +65,11 @@ class Compiler(object):
 
     @staticmethod
     def get_token(line: str):
+        line = line.strip()
+
         if (line.split(' ')[0] == "var"):
             return VarToken((line.split('=')[0].split("var")[1].strip()),
-                            Compiler.get_token(line.split("=")[1].strip()) if '=' in line else None)
+                            Compiler.get_token(line.split("=")[1]) if '=' in line else None)
         if (line.startswith('[')):
             return FieldStart()
         if (line.startswith(']')):
@@ -67,18 +77,18 @@ class Compiler(object):
         if (line.split(' ')[0] == "class"):
             return ClassToken(line.split(' ')[1].strip(), [])
         if (line.split(' ')[0] == "fun"):
-            return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].strip().split('(')[1].split(')')[0].split(',') if item), [])
+            return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].split('(')[1].split(')')[0].split(',') if item), [])
         if (line.split(' ')[0] == "if"):
-            return IfToken(Compiler.get_token(line.split('if ')[1].strip()), [])
+            return IfToken(Compiler.get_token(line.split('if ')[1]), [])
         if (line.split(' ')[0] == "elif"):
-            return ElseIfToken(Compiler.get_token(line.split('elif ')[1].strip()), [])
+            return ElseIfToken(Compiler.get_token(line.split('elif ')[1]), [])
         if (line.split(' ')[0] == "else"):
             return ElseToken([])
         if (line.split(' ')[0] == "while"):
-            return WhileToken(Compiler.get_token(line.split('while ')[1].strip()), [])
+            return WhileToken(Compiler.get_token(line.split('while ')[1]), [])
         if ('-' in line):
-            return MinusToken(Compiler.get_token(line.split('-')[0].strip()), Compiler.get_token("-".join(line.split('-')[1:]).strip()))
+            return MinusToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
         if ('+' in line):
-            return PlusToken(Compiler.get_token(line.split('+')[0].strip()), Compiler.get_token("+".join(line.split('+')[1:]).strip()))
+            return PlusToken(Compiler.get_token(line.split('+')[0]), Compiler.get_token("+".join(line.split('+')[1:])))
         if (line.isnumeric()):
             return IntToken(line)
