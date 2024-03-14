@@ -89,6 +89,8 @@ class Compiler(object):
             return ElseToken([])
         if (line.split(' ')[0] == "while"):
             return WhileToken(Compiler.get_token(line.split('while ')[1]), [])
+        if ('=' in line):
+            return (AssignToken(line.split('=')[0].strip(), Compiler.get_token("=".join(line.split('=')[1:]))))
         if ('-' in line):
             return MinusToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
         if ('+' in line):
