@@ -30,8 +30,14 @@ unsigned char vm_fetch(vm_t *vm)
 
 void vm_decode(vm_t *vm, unsigned char opcode)
 {
-    (void)vm;
-    (void)opcode;
+    unsigned char address = NULL;
+
+    switch (opcode) {
+        case OP_LOAD:
+            address = vm_fetch(vm) + 1;
+            vm->register_a = ((unsigned char *)vm->memory)[address];
+        break;
+    }
 }
 
 void vm_execute(vm_t *vm)
