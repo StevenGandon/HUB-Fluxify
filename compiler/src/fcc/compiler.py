@@ -5,7 +5,10 @@
 -- compiler
 """
 
+from re import match as match_regex
+
 from .tokens import *
+from .locals import *
 # from .debug import FCCWarning, FCCError
 
 class Compiler(object):
@@ -18,7 +21,7 @@ class Compiler(object):
         self.debug: list = []
 
     @staticmethod
-    def lexer(string: str):
+    def lexer(string: str) -> str:
         return (string
             .replace('\\\n', '')
             .replace(']', '\n]\n')
@@ -26,7 +29,7 @@ class Compiler(object):
             .split("\n")
         )
 
-    def tokenize(self):
+    def tokenize(self) -> None:
         tokenized: list = self.tokens.body
         fields: list = []
 
@@ -60,11 +63,11 @@ class Compiler(object):
         self.tokens.body = [item for item in self.tokens.body if not isinstance(item, TokenBranchGrowth)]
         print(self.tokens)
 
-    def compile(self):
+    def compile(self) -> None:
         pass
 
     @staticmethod
-    def get_token(line: str):
+    def get_token(line: str) -> Token:
         line = line.strip()
 
         if (line.split(' ')[0] == "var"):
@@ -92,3 +95,13 @@ class Compiler(object):
             return PlusToken(Compiler.get_token(line.split('+')[0]), Compiler.get_token("+".join(line.split('+')[1:])))
         if (line.isnumeric()):
             return IntToken(line)
+        if (bool(match_regex(REGEX_OCTAL, line))):
+            return IntToken(line.split('0o')[1], 8)
+        if (bool(match_regex(REGEX_HEX, line))):
+            return IntToken(line.split('0x')[1], 16)
+        if (bool(match_regex(REGEX_BINARY, line))):
+            return IntToken(line.split('0b')[1], 2)
+        if (line.startswith('"') and line.endswith('"')):
+            return (StringToken('"'.join('"'.join(line.split('"')[1:]).split('"')[:-1])))
+        if (line.startswith("'") and line.endswith("'")):
+            return (StringToken("'".join("'".join(line.split("'")[1:]).split("'")[:-1])))

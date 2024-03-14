@@ -133,6 +133,16 @@ class IntToken(Token):
     def __str__(self):
         return self.__repr__()
 
+class StringToken(Token):
+    def __init__(self, value: str) -> None:
+        self.value = str(value)
+
+    def __repr__(self):
+        return f"<StringToken ({self.value})>"
+
+    def __str__(self):
+        return self.__repr__()
+
 class MinusToken(Token):
     def __init__(self, value: Token, value2: Token) -> None:
         if (value == None):
