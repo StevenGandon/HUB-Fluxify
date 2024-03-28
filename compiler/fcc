@@ -23,6 +23,7 @@ def read_code(file_path: str) -> str:
 
 def main() -> int:
     code: str = None
+    return_status: int = 0
 
     if len(argv) < 2:
         print("Usage: fcc <filename>")
@@ -31,11 +32,12 @@ def main() -> int:
         code: str = read_code(file)
 
         if (not code):
-            return (84)
+            return_status: int = 84
+            continue
         compiler: Compiler = Compiler(code, [], [], file)
         compiler.tokenize()
         compiler.compile()
-    return (0)
+    return (return_status)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,18 @@
+#!/bin/python3
+
+"""
+-- EPITECH PROJECT, 2024
+-- Hub project
+-- File description:
+-- unit tests
+"""
+
+from test_compiler import *
+
+from test_common import tests
+
+def main() -> int:
+    tests.run_debug(tests_outputs=True)
+
+if __name__ == "__main__":
+    exit(main())
