@@ -20,7 +20,7 @@ def test() -> bool:
 def test() -> bool:
     return (exec_shell('../compiler/fcc assets')[0] == 84)
 
-@tests(name="test_compiler_invalid_multiple")
+@tests(name="test_compiler_invalid_multiple_argv")
 def test() -> bool:
     return (exec_shell('../compiler/fcc assets/test0.fly ezfzezef assets')[0] == 84)
 
