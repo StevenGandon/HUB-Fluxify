@@ -31,7 +31,7 @@ class VarToken(Token):
         self.value = value
 
     def __repr__(self):
-        return f"<VarToken ({self.name}, {self.value})>"
+        return f"var {self.name} = {self.value}"
 
     def __str__(self):
         return self.__repr__()
@@ -42,7 +42,7 @@ class AssignToken(Token):
         self.value = value
 
     def __repr__(self):
-        return f"<AssignToken ({self.name}, {self.value})>"
+        return f"{self.name} = {self.value}"
 
     def __str__(self):
         return self.__repr__()
@@ -54,7 +54,7 @@ class ClassToken(Token):
 
     def __repr__(self):
         temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
-        return f"<ClassToken ({self.name}, [\n{temp}\n])>"
+        return f"Class {self.name} [\n{temp}\n]"
 
     def __str__(self):
         return self.__repr__()
@@ -67,7 +67,7 @@ class FunctionToken(Token):
 
     def __repr__(self):
         temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
-        return f"<FunctionToken ({self.name}, {self.args}, [\n{temp}\n])>"
+        return f"fun {self.name} ({self.args}) [\n{temp}\n]"
 
     def __str__(self):
         return self.__repr__()
@@ -80,8 +80,8 @@ class IfToken(TokenBranch):
 
     def __repr__(self):
         temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
-        branch_temp = '\n  '.join(str(self.next_branch).split('\n'))
-        return f"<IfToken ({self.condition}, {branch_temp}, [\n{temp}\n])>"
+        branch_temp = '\n'.join(str(self.next_branch).split('\n'))
+        return f"If ({self.condition}) [\n{temp}\n]\n{branch_temp}"
 
     def __str__(self):
         return self.__repr__()
@@ -94,8 +94,8 @@ class ElseIfToken(TokenBranchGrowth, TokenBranch):
 
     def __repr__(self):
         temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
-        branch_temp = '\n  '.join(str(self.next_branch).split('\n'))
-        return f"<ElseIfToken ({self.condition}, {branch_temp}, [\n{temp}\n])>"
+        branch_temp = '\n'.join(str(self.next_branch).split('\n'))
+        return f"ElseIf ({self.condition}) [\n{temp}\n]\n{branch_temp}"
 
     def __str__(self):
         return self.__repr__()
@@ -106,7 +106,7 @@ class ElseToken(TokenBranchGrowth):
 
     def __repr__(self):
         temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
-        return f"<Else ([\n{temp}\n])>"
+        return f"Else [\n{temp}\n]"
 
     def __str__(self):
         return self.__repr__()
@@ -118,7 +118,7 @@ class WhileToken(Token):
 
     def __repr__(self):
         temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
-        return f"<WhileToken ({self.condition}, [\n{temp}\n])>"
+        return f"while ({self.condition}) [\n{temp}\n]"
 
     def __str__(self):
         return self.__repr__()
@@ -128,7 +128,7 @@ class IntToken(Token):
         self.value = int(value, base)
 
     def __repr__(self):
-        return f"<IntToken ({self.value})>"
+        return f"{self.value}"
 
     def __str__(self):
         return self.__repr__()
@@ -138,7 +138,7 @@ class StringToken(Token):
         self.value = str(value)
 
     def __repr__(self):
-        return f"<StringToken ({self.value})>"
+        return f"{self.value}"
 
     def __str__(self):
         return self.__repr__()
@@ -152,7 +152,7 @@ class MinusToken(Token):
         self.value2 = value2
 
     def __repr__(self):
-        return f"<MinusToken ({self.value}, {self.value2})>"
+        return f"({self.value} - {self.value2})"
 
     def __str__(self):
         return self.__repr__()
@@ -166,11 +166,24 @@ class PlusToken(Token):
         self.value2 = value2
 
     def __repr__(self):
-        return f"<PlusToken ({self.value}, {self.value2})>"
+        return f"({self.value} + {self.value2})"
 
     def __str__(self):
         return self.__repr__()
 
+class EQOperatorToken(Token):
+    def __init__(self, value: Token, value2: Token) -> None:
+        if (value == None):
+            self.value = 0
+        else:
+            self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} == {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
 
 class RootToken(Token):
     def __init__(self, body: list) -> None:

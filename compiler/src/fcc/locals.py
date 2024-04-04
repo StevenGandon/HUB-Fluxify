@@ -6,7 +6,7 @@
 """
 
 from re import compile as compile_regex
-from re import Pattern
+from re import Pattern, M
 
 INFO_COLOR: str = '\033[0;96m'
 WARNING_COLOR: str = '\033[0;95m'
@@ -18,3 +18,9 @@ WHITE_COLOR: str = '\033[97m'
 REGEX_HEX: Pattern = compile_regex(r'^0x([0-9]|[A-F]|[a-f])*$')
 REGEX_OCTAL: Pattern = compile_regex(r'^0o([0-8])*$')
 REGEX_BINARY: Pattern = compile_regex(r'^0b([0-1])*$')
+
+REGEX_EQUAL: Pattern = compile_regex(r'(?<!=)=(?!=)', M)
+REGEX_EQUAL_EQUAL: Pattern = compile_regex(r'(?<!=)==(?!=)', M)
+
+REGEX_LINE_COMMENT: Pattern = compile_regex(r'(=>)(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)')
+REGEX_MULTILINE_COMMENT: Pattern = compile_regex(r'((==>)(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$))+([^>]|)+((<==))', M)

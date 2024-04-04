@@ -5,7 +5,7 @@
 -- compiler
 """
 
-from re import match as match_regex
+from re import match as match_regex, split, search, sub
 
 from .tokens import *
 from .locals import *
@@ -22,19 +22,18 @@ class Compiler(object):
 
     @staticmethod
     def lexer(string: str) -> str:
-        return (string
+        return sub(REGEX_MULTILINE_COMMENT, '', string
             .replace('\\\n', '')
             .replace(']', '\n]\n')
             .replace('[', '\n[\n')
-            .split("\n")
-        )
+        ).split("\n")
 
     def tokenize(self) -> None:
         tokenized: list = self.tokens.body
         fields: list = []
 
         for line in Compiler.lexer(self.code):
-            line: str = line.strip()
+            line: str = split(REGEX_LINE_COMMENT, line.strip())[0]
             if not line:
                 continue
 
@@ -71,39 +70,50 @@ class Compiler(object):
         line = line.strip()
 
         if (line.split(' ')[0] == "var"):
-            return VarToken((line.split('=')[0].split("var")[1].strip()),
-                            Compiler.get_token(line.split("=")[1]) if '=' in line else None)
+            return VarToken((split(REGEX_EQUAL, line)[0].split("var")[1].strip()),
+                            (Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))) if bool(search(REGEX_EQUAL, line)) else None)
+
         if (line.startswith('[')):
             return FieldStart()
         if (line.startswith(']')):
             return FieldEnd()
+
+        if (line.startswith('"') and line.endswith('"')):
+            return (StringToken('"'.join('"'.join(line.split('"')[1:]).split('"')[:-1])))
+        if (line.startswith("'") and line.endswith("'")):
+            return (StringToken("'".join("'".join(line.split("'")[1:]).split("'")[:-1])))
+
         if (line.split(' ')[0] == "class"):
             return ClassToken(line.split(' ')[1].strip(), [])
         if (line.split(' ')[0] == "fun"):
             return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].split('(')[1].split(')')[0].split(',') if item), [])
+
         if (line.split(' ')[0] == "if"):
             return IfToken(Compiler.get_token(line.split('if ')[1]), [])
         if (line.split(' ')[0] == "elif"):
             return ElseIfToken(Compiler.get_token(line.split('elif ')[1]), [])
         if (line.split(' ')[0] == "else"):
             return ElseToken([])
+
         if (line.split(' ')[0] == "while"):
             return WhileToken(Compiler.get_token(line.split('while ')[1]), [])
-        if ('=' in line):
-            return (AssignToken(line.split('=')[0].strip(), Compiler.get_token("=".join(line.split('=')[1:]))))
+
+        if (bool(search(REGEX_EQUAL, line))):
+            return (AssignToken(split(REGEX_EQUAL, line)[0].strip(), Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))))
+        if (bool(search(REGEX_EQUAL_EQUAL, line))):
+            return (EQOperatorToken(split(REGEX_EQUAL_EQUAL, line)[0].strip(), Compiler.get_token("==".join(split(REGEX_EQUAL_EQUAL, line)[1:]))))
+
         if ('-' in line):
             return MinusToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
         if ('+' in line):
             return PlusToken(Compiler.get_token(line.split('+')[0]), Compiler.get_token("+".join(line.split('+')[1:])))
+
         if (line.isnumeric()):
             return IntToken(line)
+
         if (bool(match_regex(REGEX_OCTAL, line))):
             return IntToken(line.split('0o')[1], 8)
         if (bool(match_regex(REGEX_HEX, line))):
             return IntToken(line.split('0x')[1], 16)
         if (bool(match_regex(REGEX_BINARY, line))):
             return IntToken(line.split('0b')[1], 2)
-        if (line.startswith('"') and line.endswith('"')):
-            return (StringToken('"'.join('"'.join(line.split('"')[1:]).split('"')[:-1])))
-        if (line.startswith("'") and line.endswith("'")):
-            return (StringToken("'".join("'".join(line.split("'")[1:]).split("'")[:-1])))
