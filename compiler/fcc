@@ -36,7 +36,7 @@ def main() -> int:
         if (not code):
             return_status: int = 84
             continue
-        compiler: Compiler = Compiler(code, [], [invalid_token_error], file)
+        compiler: Compiler = Compiler(code, [], [invalid_token_error, unnamed_variable_error], file)
         compiler.parse()
         compiler.tokenize()
         compiler.compile()

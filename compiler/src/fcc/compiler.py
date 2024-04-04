@@ -30,11 +30,11 @@ class Compiler(object):
 
     def check_warnings(self) -> None:
         for item in self.warnings:
-            item(self, FCCWarning, WARNING_COLOR, 'W')
+            item(self, FCCWarning, WARNING_COLOR, 'W.')
 
     def check_errors(self) -> None:
         for item in self.errors:
-            item(self, FCCError, ERROR_COLOR, 'E')
+            item(self, FCCError, ERROR_COLOR, 'E.')
 
     def parse(self) -> None:
         self.check_warnings()
