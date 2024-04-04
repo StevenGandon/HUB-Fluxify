@@ -11,6 +11,8 @@ from sys import exit, argv
 from genericpath import isfile
 from src.floff import *
 from src.fcc.compiler import Compiler
+from src.fcc.errors import *
+from src.fcc.warnings import *
 
 def read_code(file_path: str) -> str:
     data: str = None
@@ -34,9 +36,13 @@ def main() -> int:
         if (not code):
             return_status: int = 84
             continue
-        compiler: Compiler = Compiler(code, [], [], file)
+        compiler: Compiler = Compiler(code, [], [invalid_token_error], file)
+        compiler.parse()
         compiler.tokenize()
         compiler.compile()
+
+        for item in compiler.debug:
+            print(item)
     return (return_status)
 
 

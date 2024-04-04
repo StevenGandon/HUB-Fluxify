@@ -9,7 +9,7 @@ from re import match as match_regex, split, search, sub
 
 from .tokens import *
 from .locals import *
-# from .debug import FCCWarning, FCCError
+from .debug import *
 
 class Compiler(object):
     def __init__(self, code: str, warnings: list = [], errors: list = [], filename: str = None) -> None:
@@ -28,9 +28,24 @@ class Compiler(object):
             .replace('[', '\n[\n')
         ).split("\n")
 
+    def check_warnings(self) -> None:
+        for item in self.warnings:
+            item(self, FCCWarning, WARNING_COLOR, 'W')
+
+    def check_errors(self) -> None:
+        for item in self.errors:
+            item(self, FCCError, ERROR_COLOR, 'E')
+
+    def parse(self) -> None:
+        self.check_warnings()
+        self.check_errors()
+
     def tokenize(self) -> None:
         tokenized: list = self.tokens.body
         fields: list = []
+
+        if (FCCError in self.debug):
+            return
 
         for line in Compiler.lexer(self.code):
             line: str = split(REGEX_LINE_COMMENT, line.strip())[0]
@@ -63,7 +78,8 @@ class Compiler(object):
         print(self.tokens)
 
     def compile(self) -> None:
-        pass
+        if (FCCError in self.debug):
+            return
 
     @staticmethod
     def get_token(line: str) -> Token:
