@@ -91,36 +91,58 @@ class Compiler(object):
 
         if (line.startswith('[')):
             return FieldStart()
+
         if (line.startswith(']')):
             return FieldEnd()
 
         if (line.startswith('"') and line.endswith('"')):
             return (StringToken('"'.join('"'.join(line.split('"')[1:]).split('"')[:-1])))
+
         if (line.startswith("'") and line.endswith("'")):
             return (StringToken("'".join("'".join(line.split("'")[1:]).split("'")[:-1])))
 
         if (line.split(' ')[0] == "class"):
             return ClassToken(line.split(' ')[1].strip(), [])
+
         if (line.split(' ')[0] == "fun"):
             return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].split('(')[1].split(')')[0].split(',') if item), [])
 
         if (line.split(' ')[0] == "if"):
             return IfToken(Compiler.get_token(line.split('if ')[1]), [])
+
         if (line.split(' ')[0] == "elif"):
             return ElseIfToken(Compiler.get_token(line.split('elif ')[1]), [])
+
         if (line.split(' ')[0] == "else"):
             return ElseToken([])
 
         if (line.split(' ')[0] == "while"):
             return WhileToken(Compiler.get_token(line.split('while ')[1]), [])
 
+        if (line.split(' ')[0] == "for"):
+            return None
+
         if (bool(search(REGEX_EQUAL, line))):
             return (AssignToken(split(REGEX_EQUAL, line)[0].strip(), Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))))
+
+        if (line.startswith('{') and line.endswith('}')):
+            return (ListToken([Compiler.get_token(item) for item in line[1:][:-1].split(',')]))
+
         if (bool(search(REGEX_EQUAL_EQUAL, line))):
             return (EQOperatorToken(split(REGEX_EQUAL_EQUAL, line)[0].strip(), Compiler.get_token("==".join(split(REGEX_EQUAL_EQUAL, line)[1:]))))
 
+        if ('*' in line):
+            return MulToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
+
+        if ('/' in line):
+            return DivToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
+
+        if ('%' in line):
+            return ModToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
+
         if ('-' in line):
             return MinusToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
+
         if ('+' in line):
             return PlusToken(Compiler.get_token(line.split('+')[0]), Compiler.get_token("+".join(line.split('+')[1:])))
 
@@ -129,7 +151,9 @@ class Compiler(object):
 
         if (bool(match_regex(REGEX_OCTAL, line))):
             return IntToken(line.split('0o')[1], 8)
+
         if (bool(match_regex(REGEX_HEX, line))):
             return IntToken(line.split('0x')[1], 16)
+
         if (bool(match_regex(REGEX_BINARY, line))):
             return IntToken(line.split('0b')[1], 2)

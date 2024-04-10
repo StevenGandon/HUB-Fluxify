@@ -143,6 +143,18 @@ class StringToken(Token):
     def __str__(self):
         return self.__repr__()
 
+class ListToken(Token):
+    def __init__(self, value: list) -> None:
+        super().__init__()
+
+        self.value = value
+
+    def __repr__(self):
+        return f"{self.value}"
+
+    def __str__(self):
+        return self.__repr__()
+
 class MinusToken(Token):
     def __init__(self, value: Token, value2: Token) -> None:
         if (value == None):
@@ -167,6 +179,48 @@ class PlusToken(Token):
 
     def __repr__(self):
         return f"({self.value} + {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
+class MulToken(Token):
+    def __init__(self, value: Token, value2: Token) -> None:
+        if (value == None):
+            self.value = 0
+        else:
+            self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} * {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
+class DivToken(Token):
+    def __init__(self, value: Token, value2: Token) -> None:
+        if (value == None):
+            self.value = 0
+        else:
+            self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} / {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
+class ModToken(Token):
+    def __init__(self, value: Token, value2: Token) -> None:
+        if (value == None):
+            self.value = 0
+        else:
+            self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} % {self.value2})"
 
     def __str__(self):
         return self.__repr__()
