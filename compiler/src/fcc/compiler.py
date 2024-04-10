@@ -120,13 +120,16 @@ class Compiler(object):
             return WhileToken(Compiler.get_token(line.split('while ')[1]), [])
 
         if (line.split(' ')[0] == "for"):
-            return None
+            return ForToken(Compiler.get_token(' '.join(line.split('for '))[1:].split(',')[0]), Compiler.get_token(','.join(line.split(',')[1:])), [])
 
         if (bool(search(REGEX_EQUAL, line))):
             return (AssignToken(split(REGEX_EQUAL, line)[0].strip(), Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))))
 
         if (line.startswith('{') and line.endswith('}')):
             return (ListToken([Compiler.get_token(item) for item in line[1:][:-1].split(',')]))
+
+        if ('(' in line and line.endswith(')') and not line.startswith('(')):
+            return (FunctionCall(line.split('(')[0], [Compiler.get_token(item) for item in ')'.join('('.join(line.split('(')[1:]).split(')')[:-1]).split(',')]))
 
         if (bool(search(REGEX_EQUAL_EQUAL, line))):
             return (EQOperatorToken(split(REGEX_EQUAL_EQUAL, line)[0].strip(), Compiler.get_token("==".join(split(REGEX_EQUAL_EQUAL, line)[1:]))))

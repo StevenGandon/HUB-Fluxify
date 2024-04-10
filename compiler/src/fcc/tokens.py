@@ -123,6 +123,30 @@ class WhileToken(Token):
     def __str__(self):
         return self.__repr__()
 
+class ForToken(Token):
+    def __init__(self, prefix_var: Token, iterator_list: str, body: list) -> None:
+        self.prefix_var = prefix_var
+        self.iterator_list = iterator_list
+        self.body = body
+
+    def __repr__(self):
+        temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
+        return f"for {self.prefix_var}, {self.iterator_list} [\n{temp}\n]"
+
+    def __str__(self):
+        return self.__repr__()
+
+class FunctionCall(Token):
+    def __init__(self, name: str, args: list) -> None:
+        self.name = name
+        self.args = args
+
+    def __repr__(self):
+        return f"{self.name}({self.args})"
+
+    def __str__(self):
+        return self.__repr__()
+
 class IntToken(Token):
     def __init__(self, value: int, base: int = 10) -> None:
         self.value = int(value, base)
