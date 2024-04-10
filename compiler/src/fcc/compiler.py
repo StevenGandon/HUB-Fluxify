@@ -129,19 +129,19 @@ class Compiler(object):
             return (ListToken([Compiler.get_token(item) for item in line[1:][:-1].split(',')]))
 
         if ('(' in line and line.endswith(')') and not line.startswith('(')):
-            return (FunctionCall(line.split('(')[0], [Compiler.get_token(item) for item in ')'.join('('.join(line.split('(')[1:]).split(')')[:-1]).split(',')]))
+            return (FunctionCall(line.split('(')[0], [Compiler.get_token(item) for item in ')'.join('('.join(line.split('(')[1:]).split(')')[:-1]).split(',') if item.strip()]))
 
         if (bool(search(REGEX_EQUAL_EQUAL, line))):
             return (EQOperatorToken(split(REGEX_EQUAL_EQUAL, line)[0].strip(), Compiler.get_token("==".join(split(REGEX_EQUAL_EQUAL, line)[1:]))))
 
         if ('*' in line):
-            return MulToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
+            return MulToken(Compiler.get_token(line.split('*')[0]), Compiler.get_token("*".join(line.split('*')[1:])))
 
         if ('/' in line):
-            return DivToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
+            return DivToken(Compiler.get_token(line.split('/')[0]), Compiler.get_token("/".join(line.split('/')[1:])))
 
         if ('%' in line):
-            return ModToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
+            return ModToken(Compiler.get_token(line.split('%')[0]), Compiler.get_token("%".join(line.split('%')[1:])))
 
         if ('-' in line):
             return MinusToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
