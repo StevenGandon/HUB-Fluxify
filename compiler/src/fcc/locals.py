@@ -21,6 +21,7 @@ REGEX_BINARY: Pattern = compile_regex(r'^0b([0-1])*$')
 
 REGEX_EQUAL: Pattern = compile_regex(r'(?<!=)=(?!=)', M)
 REGEX_EQUAL_EQUAL: Pattern = compile_regex(r'(?<!=)==(?!=)', M)
+REGEX_MINUS: Pattern = compile_regex(r'-(?!>)', M)
 
 REGEX_LINE_COMMENT: Pattern = compile_regex(r'(=>)(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)')
 REGEX_MULTILINE_COMMENT: Pattern = compile_regex(r'((==>)(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$))+([^>]|)+((<==))', M)

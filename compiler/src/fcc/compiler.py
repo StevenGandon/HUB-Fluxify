@@ -123,10 +123,14 @@ class Compiler(object):
             return ForToken(Compiler.get_token(' '.join(line.split('for '))[1:].split(',')[0]), Compiler.get_token(','.join(line.split(',')[1:])), [])
 
         if (bool(search(REGEX_EQUAL, line))):
-            return (AssignToken(split(REGEX_EQUAL, line)[0].strip(), Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))))
+            start = Compiler.get_token(split(REGEX_EQUAL, line)[0].strip())
+            return (AssignToken(start if start else split(REGEX_EQUAL, line)[0].strip(), Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))))
 
         if (line.startswith('{') and line.endswith('}')):
             return (ListToken([Compiler.get_token(item) for item in line[1:][:-1].split(',')]))
+
+        if (line.endswith(')') and line.startswith('(')):
+            return (Compiler.get_token(')'.join('('.join(line.split('(')[1:]).split(')')[:-1])))
 
         if ('(' in line and line.endswith(')') and not line.startswith('(')):
             return (FunctionCall(line.split('(')[0], [Compiler.get_token(item) for item in ')'.join('('.join(line.split('(')[1:]).split(')')[:-1]).split(',') if item.strip()]))
@@ -143,11 +147,16 @@ class Compiler(object):
         if ('%' in line):
             return ModToken(Compiler.get_token(line.split('%')[0]), Compiler.get_token("%".join(line.split('%')[1:])))
 
-        if ('-' in line):
-            return MinusToken(Compiler.get_token(line.split('-')[0]), Compiler.get_token("-".join(line.split('-')[1:])))
+        if (bool(search(REGEX_MINUS, line))):
+            return MinusToken(Compiler.get_token(split(line, REGEX_MINUS)[0]), Compiler.get_token("-".join(split(line, REGEX_MINUS)[1:])))
 
         if ('+' in line):
             return PlusToken(Compiler.get_token(line.split('+')[0]), Compiler.get_token("+".join(line.split('+')[1:])))
+
+        if ('->' in line):
+            start = Compiler.get_token(line.split('->')[0])
+            end = Compiler.get_token("->".join(line.split('->')[1:]))
+            return ReadToken(start if start else line.split('->')[0].strip(), end if end else Compiler.get_token("->".join(line.split('->')[1:]).strip()))
 
         if (line.isnumeric()):
             return IntToken(line)

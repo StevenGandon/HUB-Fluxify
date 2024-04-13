@@ -47,6 +47,17 @@ class AssignToken(Token):
     def __str__(self):
         return self.__repr__()
 
+class ReadToken(Token):
+    def __init__(self, name: str, key) -> None:
+        self.name = name
+        self.key = key
+
+    def __repr__(self):
+        return f"{self.name}->{self.key}"
+
+    def __str__(self):
+        return self.__repr__()
+
 class ClassToken(Token):
     def __init__(self, name: str, body: list) -> None:
         self.name = name
