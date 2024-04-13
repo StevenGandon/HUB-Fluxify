@@ -148,7 +148,7 @@ class Compiler(object):
             return ModToken(Compiler.get_token(line.split('%')[0]), Compiler.get_token("%".join(line.split('%')[1:])))
 
         if (bool(search(REGEX_MINUS, line))):
-            return MinusToken(Compiler.get_token(split(line, REGEX_MINUS)[0]), Compiler.get_token("-".join(split(line, REGEX_MINUS)[1:])))
+            return MinusToken(Compiler.get_token(split(REGEX_MINUS, line)[0]), Compiler.get_token("-".join(split(REGEX_MINUS, line)[1:])))
 
         if ('+' in line):
             return PlusToken(Compiler.get_token(line.split('+')[0]), Compiler.get_token("+".join(line.split('+')[1:])))
