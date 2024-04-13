@@ -1,0 +1,52 @@
+{
+	"name": "fly-code",
+	"displayName": "Fluxify",
+	"description": "Fluxify language support and debugger for Visual Studio Code.",
+	"version": "1.0.0-dev",
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"extensionKind": [
+		"workspace"
+	],
+	"capabilities": {
+		"virtualWorkspaces": {
+			"supported": "limited",
+			"description": "Some functionality may be limited for remote files in virtual workspaces."
+		},
+		"untrustedWorkspaces": {
+			"supported": false
+		}
+	},
+	"categories": [
+		"Programming Languages",
+		"Snippets"
+	],
+	"keywords": [
+		"fly",
+		"fluxify"
+	],
+	"icon": "",
+	"main": "./out/dist/extension",
+	"contributes": {
+		"languages": [
+			{
+				"id": "fly",
+				"extensions": [
+					".fly"
+				],
+				"aliases": [
+					"fly"
+				],
+				"configuration": "./syntaxes/fly-language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "fly",
+				"scopeName": "source.fly",
+				"path": "./syntaxes/fly.json"
+			}
+		]
+    }
+}
