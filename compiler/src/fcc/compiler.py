@@ -129,10 +129,10 @@ class Compiler(object):
         if (line.startswith('{') and line.endswith('}')):
             return (ListToken([Compiler.get_token(item) for item in line[1:][:-1].split(',')]))
 
-        if (line.endswith(')') and line.startswith('(')):
+        if (line.endswith(')') and line.startswith('(') and (line.rfind('(') == 0 or line.find(')', line.rfind('(')) != len(line) - 1)):
             return (Compiler.get_token(')'.join('('.join(line.split('(')[1:]).split(')')[:-1])))
 
-        if ('(' in line and line.endswith(')') and not line.startswith('(')):
+        if ('(' in line and line.endswith(')') and not line.startswith('(') and bool(REGEX_FUNCTION.match(line.split('(')[0]))):
             return (FunctionCall(line.split('(')[0], [Compiler.get_token(item) for item in ')'.join('('.join(line.split('(')[1:]).split(')')[:-1]).split(',') if item.strip()]))
 
         if (bool(search(REGEX_EQUAL_EQUAL, line))):
