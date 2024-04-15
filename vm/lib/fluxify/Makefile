@@ -6,7 +6,7 @@
 ##
 
 SRC	=	./main.c \
-		./vm.c
+		./object.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
 CFLAGS	=	-O2 -I ./ -Wall -Wextra -Werror	\

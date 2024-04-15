@@ -34,4 +34,9 @@
 
     typedef struct _object_s FlObject;
 
-#endif /* FLOFF_H_ */
+    FlObject *create_object(struct _type_object_s *object_type);
+    void delete_object(FlObject *obj);
+    struct _type_object_s *create_type(const char *name, struct _type_object_s *parent_type);
+    void delete_type(struct _type_object_s *type);
+
+#endif /* FLUXIFY_H_ */
