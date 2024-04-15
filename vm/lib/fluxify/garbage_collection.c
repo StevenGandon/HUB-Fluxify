@@ -5,6 +5,8 @@
 ** garbage_collection.c
 */
 
+#include "fluxify.h"
+
 void incref(FlObject *obj)
 {
     if (obj)
