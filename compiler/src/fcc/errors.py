@@ -64,9 +64,26 @@ def missing_operand_error(code: object, debug_constructor: object, color: str, p
 
             continue
 
+        stack = []
         token = code.get_token(item)
+        stack.append(token)
 
-        if (not isinstance(token, TokenOperator) or (token.value is not None and token.value2 is not None)):
+        null_token = False
+
+        while len(stack):
+            token = stack.pop()
+
+            if (not isinstance(token, TokenOperator)):
+                continue
+
+            if ((token.value is None or token.value2 is None)):
+                null_token = True
+                break
+
+            stack.append(token.value)
+            stack.append(token.value2)
+
+        if (not null_token):
             continue
 
         code.debug.append(
