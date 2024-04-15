@@ -38,5 +38,8 @@
     void delete_object(FlObject *obj);
     struct _type_object_s *create_type(const char *name, struct _type_object_s *parent_type);
     void delete_type(struct _type_object_s *type);
+    void incref(FlObject *obj);
+    void decref(FlObject *obj);
+    void decref(FlObject *obj);
 
 #endif /* FLUXIFY_H_ */

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Hub project
 ** File description:
-** vm.c
+** object.c
 */
 
 #include "fluxify.h"
