@@ -4,6 +4,9 @@ class Token(object):
     def compile_instruction(self) -> bytes:
         return (bytes(0x00))
 
+class TokenOperator(Token):
+    pass
+
 class TokenBranch(Token):
     pass
 
@@ -211,10 +214,10 @@ class ListToken(Token):
         STATIC_ADDR_TABLE[self.value] = (self, len(STATIC_ADDR_TABLE))
         return (STATIC_ADDR_TABLE[self.value][1])
 
-class MinusToken(Token):
+class MinusToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         if (value == None):
-            self.value = 0
+            self.value = IntToken('0')
         else:
             self.value = value
         self.value2 = value2
@@ -225,10 +228,10 @@ class MinusToken(Token):
     def __str__(self):
         return self.__repr__()
 
-class PlusToken(Token):
+class PlusToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         if (value is None):
-            self.value = IntToken(0)
+            self.value = IntToken('0')
         else:
             self.value = value
         self.value2 = value2
@@ -246,12 +249,9 @@ class PlusToken(Token):
             self.value2.compile_instruction()
         )))
 
-class MulToken(Token):
+class MulToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
-        if (value == None):
-            self.value = 0
-        else:
-            self.value = value
+        self.value = value
         self.value2 = value2
 
     def __repr__(self):
@@ -260,12 +260,9 @@ class MulToken(Token):
     def __str__(self):
         return self.__repr__()
 
-class DivToken(Token):
+class DivToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
-        if (value == None):
-            self.value = 0
-        else:
-            self.value = value
+        self.value = value
         self.value2 = value2
 
     def __repr__(self):
@@ -274,12 +271,9 @@ class DivToken(Token):
     def __str__(self):
         return self.__repr__()
 
-class ModToken(Token):
+class ModToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
-        if (value == None):
-            self.value = 0
-        else:
-            self.value = value
+        self.value = value
         self.value2 = value2
 
     def __repr__(self):
@@ -288,12 +282,9 @@ class ModToken(Token):
     def __str__(self):
         return self.__repr__()
 
-class EQOperatorToken(Token):
+class EQOperatorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
-        if (value == None):
-            self.value = 0
-        else:
-            self.value = value
+        self.value = value
         self.value2 = value2
 
     def __repr__(self):

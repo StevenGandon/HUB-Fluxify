@@ -47,6 +47,9 @@ class Compiler(object):
         self.check_errors()
 
     def tokenize(self) -> None:
+        if (any(map(lambda x: isinstance(x, FCCError), self.debug))):
+            return
+
         tokenized: list = self.tokens.body
         fields: list = []
 
@@ -84,7 +87,7 @@ class Compiler(object):
         print(self.tokens)
 
     def compile(self, object_file_class: FloffAuto = Floff64) -> None:
-        if (FCCError in self.debug):
+        if (any(map(lambda x: isinstance(x, FCCError), self.debug))):
             return
 
         object_file: FloffAuto = object_file_class()
