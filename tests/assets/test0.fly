@@ -1,0 +1,55 @@
+==>
+    multiline
+    comment
+<==
+
+class obj
+==>
+    multiline
+    comment2
+<==
+[
+    fun .init(test)
+    [
+        self->data = 1+ 1 => test
+    ]
+
+    fun .del()
+    [
+    ]
+
+    fun test()
+    [
+        return 1
+    ]
+
+    var data
+]
+
+=> comment2
+fun main(argc, argv) [ var test = 0
+    var name = "5 e => ==> <=="
+
+    0 * 1 + 1 * 5
+    0x5
+    0b101
+    0o5
+    "5!"
+    '5:'
+    {4, 5, 6, 10}
+]
+
+
+if a == 0 [ 1  + 1 ] elif a == 1 [ 2 - 4 ] else [ var i ]
+
+for var i, range(0, 5) [
+
+]
+
+
+while a == 0 [
+
+]
+
+var t = obj()
+t->test()
