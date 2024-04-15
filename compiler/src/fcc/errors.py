@@ -74,6 +74,8 @@ def missing_operand_error(code: object, debug_constructor: object, color: str, p
             token = stack.pop()
 
             if (not isinstance(token, TokenOperator)):
+                if (hasattr(token, "value")):
+                    stack.append(token.value)
                 continue
 
             if ((token.value is None or token.value2 is None)):

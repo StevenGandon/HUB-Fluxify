@@ -42,6 +42,16 @@ class VarToken(Token):
     def __str__(self):
         return self.__repr__()
 
+class ReturnToken(Token):
+    def __init__(self, value) -> None:
+        self.value = value
+
+    def __repr__(self):
+        return f"return {self.value}"
+
+    def __str__(self):
+        return self.__repr__()
+
 class AssignToken(Token):
     def __init__(self, name: str, value) -> None:
         self.name = name

@@ -135,6 +135,9 @@ class Compiler(object):
         if (line.split(' ')[0] == "fun"):
             return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].split('(')[1].split(')')[0].split(',') if item), [])
 
+        if (line.split(' ')[0] == "return"):
+            return ReturnToken(Compiler.get_token(line.split('return ')[1]))
+
         if (line.split(' ')[0] == "if"):
             return IfToken(Compiler.get_token(line.split('if ')[1]), [])
 
