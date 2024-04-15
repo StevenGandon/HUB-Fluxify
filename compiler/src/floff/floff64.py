@@ -72,7 +72,7 @@ class Floff64(object):
             f"  version: {'.'.join(map(str, self.version))}\n" + \
             f"  architecture: {Floff64.arch_to_string(self.arch)}\n" + \
             f"  compiler: {self.compiler}\n" + \
-            f"  start label: 0x{self.start_label}\n" + \
+            f"  start label: 0x{self.start_label}\n\n  " + \
             '\n  '.join(map(str, self.tables))
 
     def __repr__(self) -> str:

@@ -28,3 +28,11 @@ REGEX_MINUS: Pattern = compile_regex(r'-(?!>)', M)
 REGEX_LINE_COMMENT: Pattern = compile_regex(r'(=>)(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)')
 REGEX_MULTILINE_COMMENT: Pattern = compile_regex(r'((==>)(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$))+([^>]|)+((<==))', M)
 REGEX_MULTILINE_COMMENT_PREFIX: Pattern = compile_regex(r'((==>)(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$))', M)
+
+INSTRUCTIONS: dict = {
+    "NOOP": 0x00,
+    "ADD": 0x01,
+    "SUB": 0x02
+}
+
+STATIC_ADDR_TABLE: dict = {}

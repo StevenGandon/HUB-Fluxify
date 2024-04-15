@@ -6,19 +6,25 @@
 """
 
 from re import match as match_regex, split, search, sub
+from hashlib import sha1
 
 from .tokens import *
 from .locals import *
 from .debug import *
+
+from ..floff import *
 
 class Compiler(object):
     def __init__(self, code: str, warnings: list = [], errors: list = [], filename: str = None) -> None:
         self.code = code
         self.warnings = warnings
         self.errors = errors
-        self.filename = filename
+        self.filename = filename if (filename) else self.get_code_hash()
         self.tokens = RootToken([])
         self.debug: list = []
+
+    def get_code_hash(self) -> str:
+        return sha1(self.code.encode()).hexdigest()
 
     @staticmethod
     def lexer(string: str) -> str:
@@ -77,9 +83,28 @@ class Compiler(object):
         self.tokens.body = [item for item in self.tokens.body if not isinstance(item, TokenBranchGrowth)]
         print(self.tokens)
 
-    def compile(self) -> None:
+    def compile(self, object_file_class: FloffAuto = Floff64) -> None:
         if (FCCError in self.debug):
             return
+
+        object_file: FloffAuto = object_file_class()
+        instructions: bytes = self.tokens.compile_instruction()
+        temp: bytearray = bytearray()
+
+        object_file.add_table(Floff64Table(TABLE_PROGRAM, instructions))
+
+        for item in STATIC_ADDR_TABLE:
+            temp.extend(STATIC_ADDR_TABLE[item][1].to_bytes())
+            temp.extend(item.to_bytes())
+
+        object_file.add_table(Floff64Table(TABLE_CONSTANT, bytes(temp)))
+
+        object_file.add_table(Floff64Table(TABLE_LABEL, 0x00.to_bytes() + b"_start"))
+
+        object_file.code_hash = self.get_code_hash()
+
+        object_file.write()
+        object_file.flush('.'.join(self.filename.split('.')[:-1]) + '.flo')
 
     @staticmethod
     def get_token(line: str) -> Token:

@@ -1,5 +1,8 @@
+from .locals import INSTRUCTIONS, STATIC_ADDR_TABLE
+
 class Token(object):
-    pass
+    def compile_instruction(self) -> bytes:
+        return (bytes(0x00))
 
 class TokenBranch(Token):
     pass
@@ -168,6 +171,12 @@ class IntToken(Token):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self) -> bytes:
+        if (self.value in STATIC_ADDR_TABLE):
+            return (STATIC_ADDR_TABLE[self.value][1])
+        STATIC_ADDR_TABLE[self.value] = (self, len(STATIC_ADDR_TABLE))
+        return (STATIC_ADDR_TABLE[self.value][1])
+
 class StringToken(Token):
     def __init__(self, value: str) -> None:
         self.value = str(value)
@@ -177,6 +186,12 @@ class StringToken(Token):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self) -> bytes:
+        if (self.value in STATIC_ADDR_TABLE):
+            return (STATIC_ADDR_TABLE[self.value][1])
+        STATIC_ADDR_TABLE[self.value] = (self, len(STATIC_ADDR_TABLE))
+        return (STATIC_ADDR_TABLE[self.value][1])
 
 class ListToken(Token):
     def __init__(self, value: list) -> None:
@@ -189,6 +204,12 @@ class ListToken(Token):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self) -> bytes:
+        if (self.value in STATIC_ADDR_TABLE):
+            return (STATIC_ADDR_TABLE[self.value][1])
+        STATIC_ADDR_TABLE[self.value] = (self, len(STATIC_ADDR_TABLE))
+        return (STATIC_ADDR_TABLE[self.value][1])
 
 class MinusToken(Token):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -206,8 +227,8 @@ class MinusToken(Token):
 
 class PlusToken(Token):
     def __init__(self, value: Token, value2: Token) -> None:
-        if (value == None):
-            self.value = 0
+        if (value is None):
+            self.value = IntToken(0)
         else:
             self.value = value
         self.value2 = value2
@@ -217,6 +238,13 @@ class PlusToken(Token):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self) -> bytes:
+        return (bytes((
+            INSTRUCTIONS["ADD"],
+            self.value.compile_instruction(),
+            self.value2.compile_instruction()
+        )))
 
 class MulToken(Token):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -285,3 +313,10 @@ class RootToken(Token):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self) -> bytes:
+        temp: bytearray = bytearray()
+
+        for item in self.body:
+            temp.extend(item.compile_instruction())
+        return bytes(temp)
