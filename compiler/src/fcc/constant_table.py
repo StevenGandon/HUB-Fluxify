@@ -1,8 +1,4 @@
-from .locals import STATIC_ADDR_TABLE
-
-CONSTANT_UNKNOWN: int = 0
-CONSTANT_INT: int = 0x01
-CONSTANT_STRING: int = 0x02
+from .locals import *
 
 class ConstantItem64(object):
     def __init__(self, item) -> None:

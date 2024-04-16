@@ -36,3 +36,8 @@ INSTRUCTIONS: dict = {
 }
 
 STATIC_ADDR_TABLE: dict = {}
+
+CONSTANT_UNKNOWN: int = 0
+CONSTANT_INT: int = 0x01
+CONSTANT_STRING: int = 0x02
+
