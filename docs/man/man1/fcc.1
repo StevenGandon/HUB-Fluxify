@@ -1,0 +1,45 @@
+.\" Manpage for fcc (Fluxify Code Compiler).
+.TH fcc 1 "16 Avril 2024" "1.0" "fcc man page"
+.SH NAME
+fcc \- fluxify default compiler
+.SH SYNOPSIS
+fcc [-c] [-o]
+.br
+    [-Wwarn] [-Eerr]
+.br
+    [@file]
+
+.br
+
+.br
+Only the most useful options are listed here; see below for the remainder.
+
+.SH DESCRIPTION
+Fluxify compiler fcc is the default compiler for the fluxify language.
+.br
+fcc is written in Python and generate .flo object files from .fly code.
+.br
+
+.SH OPTIONS
+-c
+    compile code as a linkable object
+
+-o <path>
+    specify the output name and path of the object
+
+-W<warn>
+    specify the compilation warning rules
+
+-E<err>
+    specify the compilation error rules
+
+@file
+    code to compile
+
+.SH EXIT STATUS
+0: Success
+.br
+84: Compilation failed
+
+.SH SEE ALSO
+flo(1), flvm(1)
