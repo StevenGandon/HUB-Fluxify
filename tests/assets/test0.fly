@@ -1,12 +1,12 @@
 ==>
-    multiline
-    comment
+  multiline
+  comment
 <==
 
 class obj
 ==>
-    multiline
-    comment2
+  multiline
+  comment2
 <==
 [
     fun .init(test)
