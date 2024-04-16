@@ -82,12 +82,12 @@ instructions are referenced via another table "Label" (0x01) containing all refe
 .br
 
 .br
-contant datas are stored in a table "Contants" that contain primitive C types such as:
+contant datas are stored in a table "Constants" (0x03) that contain primitive C types such as:
 numbers and strings
 .br
   64 bits:
     ┌─────────────────────────────────────────────┐
-    │               Contants table                │
+    │               Constants table               │
     ├─────────────────────────────────────────────┤
     │  Size   Name                                │
     ├─────────────────────────────────────────────┤
@@ -100,7 +100,7 @@ numbers and strings
 .br
   32 bits:
     ┌─────────────────────────────────────────────┐
-    │               Contants table                │
+    │               Constants table               │
     ├─────────────────────────────────────────────┤
     │  Size   Name                                │
     ├─────────────────────────────────────────────┤
@@ -111,7 +111,7 @@ numbers and strings
 .br
 
 .br
-Contant types :
+Constant types :
     Int(): 0x01
     String(): 0x02
 .br
