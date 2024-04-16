@@ -72,8 +72,8 @@ class Floff64(object):
             f"  version: {'.'.join(map(str, self.version))}\n" + \
             f"  architecture: {Floff64.arch_to_string(self.arch)}\n" + \
             f"  compiler: {self.compiler}\n" + \
-            f"  start label: 0x{self.start_label}\n\n  " + \
-            '\n  '.join(map(str, self.tables))
+            f"  start label: 0x{self.start_label}\n  " + \
+            '  '.join(map(str, self.tables))
 
     def __repr__(self) -> str:
         return (self.__str__())
@@ -171,7 +171,9 @@ class Floff64(object):
         self.raw_bytes = bytes(temp)
 
     def flush(self, file_path: str) -> None:
-        if (not access('/'.join(file_path.split('/')[:-1]), W_OK)):
+        path: str = '/'.join(file_path.split('/')[:-1])
+
+        if (not access(path if path else "./", W_OK)):
             raise (FloFFFilePermissionDenied(file_path))
 
         with open(file_path, 'wb') as fp:

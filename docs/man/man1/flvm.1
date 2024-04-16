@@ -22,3 +22,96 @@ here is the opcode of the differents instructions
 .br
 
 .br
+instructions are set in a table "Program" (0x02) containing all the instructions side by side
+.br
+  64 bits:
+    ┌─────────────────────────────────────────────┐
+    │                Program table                │
+    ├─────────────────────────────────────────────┤
+    │  Size   Name                                │
+    ├─────────────────────────────────────────────┤
+    │  08     Instruction                         │
+    │  01     Argument size                       │
+    │  08     Arg0                                │
+    │  08     Arg1                                │
+    │  08     ...                                 │
+    └─────────────────────────────────────────────┘
+.br
+
+.br
+  32 bits:
+    ┌─────────────────────────────────────────────┐
+    │                Program table                │
+    ├─────────────────────────────────────────────┤
+    │  Size   Name                                │
+    ├─────────────────────────────────────────────┤
+    │  04     Instruction                         │
+    │  01     Argument size                       │
+    │  04     Arg0                                │
+    │  04     Arg1                                │
+    │  04     ...                                 │
+    └─────────────────────────────────────────────┘
+.br
+
+.br
+instructions are referenced via another table "Label" (0x01) containing all reference to code segments
+.br
+  64 bits:
+    ┌─────────────────────────────────────────────┐
+    │                 Label table                 │
+    ├─────────────────────────────────────────────┤
+    │  Size   Name                                │
+    ├─────────────────────────────────────────────┤
+    │  01     Label name size                     │
+    │  --     Label name                          │
+    │  08     Refdest                             │
+    └─────────────────────────────────────────────┘
+.br
+
+.br
+  32 bits:
+    ┌─────────────────────────────────────────────┐
+    │                 Label table                 │
+    ├─────────────────────────────────────────────┤
+    │  Size   Name                                │
+    ├─────────────────────────────────────────────┤
+    │  01     Label name size                     │
+    │  --     Label name                          │
+    │  04     Refdest                             │
+    └─────────────────────────────────────────────┘
+.br
+
+.br
+contant datas are stored in a table "Contants" that contain primitive C types such as:
+numbers and strings
+.br
+  64 bits:
+    ┌─────────────────────────────────────────────┐
+    │               Contants table                │
+    ├─────────────────────────────────────────────┤
+    │  Size   Name                                │
+    ├─────────────────────────────────────────────┤
+    │  01     Value type                          │
+    │  08     Value size                          │
+    │  --     Value                               │
+    └─────────────────────────────────────────────┘
+.br
+
+.br
+  32 bits:
+    ┌─────────────────────────────────────────────┐
+    │               Contants table                │
+    ├─────────────────────────────────────────────┤
+    │  Size   Name                                │
+    ├─────────────────────────────────────────────┤
+    │  01     Value type                          │
+    │  04     Value size                          │
+    │  --     Value                               │
+    └─────────────────────────────────────────────┘
+.br
+
+.br
+Contant types :
+    Int(): 0x01
+    String(): 0x02
+.br

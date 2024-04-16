@@ -32,6 +32,8 @@ def str_mem(mem: Any) -> None:
         final += (15 - i % 16) * '   ' + (' ' if i % 16 < 8 else '')
         final += (f' |{text}|\n')
         final += (f'{hex(i + 1).replace("0x", "").zfill(8)}\n')
+    else:
+        final += '\n'
     return (final)
 
 

@@ -48,7 +48,7 @@ def main() -> int:
         for item in compiler.debug:
             print(item)
 
-        #print(FloffAuto.from_file("compile_test.flo"))
+        print(FloffAuto.from_file("compile_test.flo"))
     return (return_status)
 
 

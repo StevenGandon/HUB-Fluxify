@@ -1,4 +1,5 @@
 from .locals import INSTRUCTIONS, STATIC_ADDR_TABLE
+from .constant_table import add_constant_primitive
 
 class Token(object):
     def compile_instruction(self) -> bytes:
@@ -185,10 +186,7 @@ class IntToken(Token):
         return self.__repr__()
 
     def compile_instruction(self) -> bytes:
-        if (self.value in STATIC_ADDR_TABLE):
-            return (STATIC_ADDR_TABLE[self.value][1])
-        STATIC_ADDR_TABLE[self.value] = (self, len(STATIC_ADDR_TABLE))
-        return (STATIC_ADDR_TABLE[self.value][1])
+        return add_constant_primitive(self.value)
 
 class StringToken(Token):
     def __init__(self, value: str) -> None:
@@ -201,10 +199,7 @@ class StringToken(Token):
         return self.__repr__()
 
     def compile_instruction(self) -> bytes:
-        if (self.value in STATIC_ADDR_TABLE):
-            return (STATIC_ADDR_TABLE[self.value][1])
-        STATIC_ADDR_TABLE[self.value] = (self, len(STATIC_ADDR_TABLE))
-        return (STATIC_ADDR_TABLE[self.value][1])
+        return add_constant_primitive(self.value)
 
 class ListToken(Token):
     def __init__(self, value: list) -> None:
@@ -219,10 +214,8 @@ class ListToken(Token):
         return self.__repr__()
 
     def compile_instruction(self) -> bytes:
-        if (self.value in STATIC_ADDR_TABLE):
-            return (STATIC_ADDR_TABLE[self.value][1])
-        STATIC_ADDR_TABLE[self.value] = (self, len(STATIC_ADDR_TABLE))
-        return (STATIC_ADDR_TABLE[self.value][1])
+        pass
+        # return add_constant_primitive()
 
 class MinusToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
