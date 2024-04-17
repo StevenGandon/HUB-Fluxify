@@ -5,7 +5,9 @@ class Parser:
         self.arch: str = "X86_64"
         self.options: dict = {
             "-c": False,
-            "-h": False
+            "-h": False,
+            "-help": False,
+            "-?": False
         }
         self.entry: str = "_start"
         self.outputName: str = "a.out"

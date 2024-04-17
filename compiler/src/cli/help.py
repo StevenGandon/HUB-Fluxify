@@ -1,0 +1,12 @@
+def show_help() -> int:
+    print("Usage: fcc [options] files")
+    print("\nOptions:")
+    print("  > -h               Display this help message.")
+    print("  > -o <output>      Specify the output file.")
+    print("  > -e <entry>       Specify the entry point.")
+    print("  > -E<error>        Specify an error to be thrown.")
+    print("  > -W<warning>      Specify a warning to be thrown.")
+    print("  > -arch=<arch>     Specify the architecture to compile for.")
+    print("\nExamples:")
+    print("  fcc -Werror -arch=X86_64 -o my_progName file.fly file2.fly")
+    return(0)
