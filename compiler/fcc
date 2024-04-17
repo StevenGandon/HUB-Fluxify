@@ -7,12 +7,13 @@
 -- fcc
 """
 
-from sys import exit, argv
+from sys import exit, argv, stderr
 from genericpath import isfile
 from src.floff import *
 from src.fcc.compiler import Compiler, FCCError
 from src.fcc.errors import *
 from src.fcc.warnings import *
+from src.cli.parser import Parser, parse_args
 
 def read_code(file_path: str) -> str:
     data: str = None
@@ -29,6 +30,11 @@ def main() -> int:
 
     if len(argv) < 2:
         print("Usage: fcc <filename>")
+        return (84)
+    parser: Parser = parse_args(argv[1:])
+    if parser.stop:
+        for err in parser.whyStop:
+            stderr.write(err)
         return (84)
     for file in argv[1:]:
         code: str = read_code(file)
