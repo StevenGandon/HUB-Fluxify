@@ -25,6 +25,14 @@ def read_code(file_path: str) -> str:
         data: str = fp.read()
     return (data)
 
+ERRORS = {
+    "invalid_token_error": invalid_token_error,
+    "missing_operand_error": missing_operand_error,
+    "unnamed_variable_error": unnamed_variable_error
+}
+
+WARNINGS = {}
+
 def main() -> int:
     code: str = None
     return_status: int = 0
@@ -38,6 +46,33 @@ def main() -> int:
         for err in parser.whyStop:
             stderr.write(err)
         return (84)
+
+    active_error_list: list = []
+    active_warning_list: list = []
+    invalid_flags = False
+
+    for item in parser.errors:
+        if (item in ERRORS and item not in active_error_list):
+            active_error_list.append(ERRORS[item])
+            continue
+        if (item.startswith("no") and item[2:] in ERRORS):
+            active_error_list = list(filter(lambda x: x != ERRORS[item[2:]], active_error_list))
+            continue
+        stderr.write(f"[-] Invalid error flag -E{item}\n")
+        invalid_flags = True
+    for item in parser.warns:
+        if (item in WARNINGS and item not in active_warning_list):
+            active_warning_list.append(WARNINGS[item])
+            continue
+        if (item.startswith("no") and item[2:] in WARNINGS):
+            active_warning_list = list(filter(lambda x: x != WARNINGS[item[2:]], active_warning_list))
+            continue
+        stderr.write(f"[-] Invalid warning flag -W{item}\n")
+        invalid_flags = True
+
+    if (invalid_flags):
+        return (84)
+
     for file in parser.files:
         code: str = read_code(file)
 
@@ -45,7 +80,7 @@ def main() -> int:
             return_status: int = 84
             continue
 
-        compiler: Compiler = Compiler(code, [], [invalid_token_error, unnamed_variable_error, missing_operand_error], file)
+        compiler: Compiler = Compiler(code, active_warning_list, active_error_list, file)
         compiler.parse()
         compiler.tokenize()
         compiler.compile()
