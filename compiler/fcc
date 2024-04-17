@@ -29,13 +29,16 @@ def main() -> int:
     return_status: int = 0
 
     if len(argv) < 2:
-        print("Usage: fcc <filename>")
+        print("Usage: fcc <filename>.fly")
         return (84)
     parser: Parser = parse_args(argv[1:])
     if parser.stop:
         for err in parser.whyStop:
             stderr.write(err)
         return (84)
+    if parser.options['-h']:
+        print("Usage: fcc <filename>.fly")
+        return (0)
     for file in argv[1:]:
         code: str = read_code(file)
 
