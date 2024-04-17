@@ -30,15 +30,14 @@ def main() -> int:
     return_status: int = 0
 
     if len(argv) < 2:
-        print("Usage: fcc <filename>.fly")
-        return (84)
+        return show_help(error=True)
     parser: Parser = parse_args(argv[1:])
+    if parser.options['-h'] or parser.options['-help'] or parser.options['-?']:
+        return show_help()
     if parser.stop:
         for err in parser.whyStop:
             stderr.write(err)
         return (84)
-    if parser.options['-h'] or parser.options['-help'] or parser.options['-?']:
-        return show_help()
     for file in parser.files:
         code: str = read_code(file)
 
