@@ -26,9 +26,9 @@ def read_code(file_path: str) -> str:
     return (data)
 
 ERRORS = {
-    "invalid_token_error": invalid_token_error,
-    "missing_operand_error": missing_operand_error,
-    "unnamed_variable_error": unnamed_variable_error
+    "invalid_syntax": invalid_token_error,
+    "missing_operand": missing_operand_error,
+    "unnamed_variable": unnamed_variable_error
 }
 
 WARNINGS = {}
