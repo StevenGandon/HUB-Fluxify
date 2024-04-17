@@ -10,7 +10,7 @@ builtins.exit = exit
 tests: Sample = Sample()
 
 def exec_shell(command: str) -> tuple:
-    result = Popen([command], stdout=PIPE, shell=True)
+    result = Popen([command], stdout=PIPE, stderr=PIPE, shell=True)
     output = result.communicate(timeout=10)[0].decode()
     status = result.wait(10)
 

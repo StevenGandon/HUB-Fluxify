@@ -12,7 +12,7 @@ from test_compiler import *
 from test_common import tests
 
 def main() -> int:
-    tests.run_debug(tests_outputs=True)
+    tests.run_debug(tests_outputs=False)
 
 if __name__ == "__main__":
     exit(main())
