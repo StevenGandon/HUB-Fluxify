@@ -33,7 +33,9 @@ ERRORS = {
     "all": (invalid_token_error, missing_operand_error, unnamed_variable_error)
 }
 
-WARNINGS = {}
+WARNINGS = {
+    "all": tuple()
+}
 
 def main() -> int:
     code: str = None
@@ -68,7 +70,10 @@ def main() -> int:
 
     for item in parser.warns:
         if (item in WARNINGS and item not in active_warning_list):
-            active_warning_list.append(WARNINGS[item])
+            if isinstance(WARNINGS[item], Iterable):
+                active_warning_list.extend(WARNINGS[item])
+            else:
+                active_warning_list.append(WARNINGS[item])
             continue
         if (item.startswith("no") and item[2:] in WARNINGS):
             active_warning_list = list(filter(lambda x: x != WARNINGS[item[2:]], active_warning_list))
