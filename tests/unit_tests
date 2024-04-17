@@ -11,8 +11,10 @@ from test_compiler import *
 
 from test_common import tests
 
+from sys import argv
+
 def main() -> int:
-    tests.run_debug(tests_outputs=False)
+    tests.run_debug(tests_outputs=("-d" in argv))
 
 if __name__ == "__main__":
     exit(main())
