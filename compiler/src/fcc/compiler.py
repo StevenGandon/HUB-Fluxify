@@ -100,7 +100,7 @@ class Compiler(object):
             constants.extend(STATIC_ADDR_TABLE[item][1].get_byte_codes())
 
         object_file.add_table(Floff64Table(TABLE_CONSTANT, bytes(constants)))
-        print(bytes(constants)[0x11])
+
         object_file.add_table(Floff64Table(TABLE_LABEL, 0x06.to_bytes(1) + b"_start" + 0x00.to_bytes(8)))
 
         object_file.code_hash = self.get_code_hash()

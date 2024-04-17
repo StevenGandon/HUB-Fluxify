@@ -1,0 +1,32 @@
+.\" Manpage for fvm (Fluxify Virtual Machine).
+.TH fvm 1 "16 Avril 2024" "1.0" "fvm man page"
+.SH NAME
+fvm \- fluxify default virtual machine
+.SH SYNOPSIS
+fvm [file]
+
+.br
+
+.br
+Only the most useful options are listed here; see below for the remainder.
+
+.SH DESCRIPTION
+Fluxify virtual machine fvm is the default virtual machine for the fluxify language.
+.br
+fvm is written in C and run linked object files.
+.br
+
+.SH OPTIONS
+-arch=<arch>
+    specify the architecture of files passed as argument (X86_64, X64_32)
+
+file
+    object to run
+
+.SH EXIT STATUS
+0: Success
+.br
+84: Run failed
+
+.SH SEE ALSO
+fcc(1), flo(5), flvm(5)
