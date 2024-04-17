@@ -7,27 +7,25 @@
 
 SRC	=	./main.c \
 		./object.c \
-		./garbage_collection.c
+		./garbage_collection.c \
+		./read.c
 OBJ	=	$(SRC:.c=.o)
-NAME	=	libfluxify
+NAME	=	fluxify
 CFLAGS	=	-O2 -I ./ -Wall -Wextra -Werror	\
 			-Wshadow -pedantic	\
 			-Waggregate-return -Wdouble-promotion	\
 			-Walloc-zero -Wcast-qual -Wconversion -Winit-self	\
-			-Wlogical-op -L ./lib -lfluxify
+			-Wlogical-op
 
 all: $(NAME)
-	cp fluxify.h ../../include
-	cp command_line.h ../../include
 
 $(NAME): $(OBJ)
-	ar rc $(NAME).a $(OBJ)
-	cp $(NAME).a ..
+	$(CC) $(OBJ) -o $(NAME)
 
 clean:
 	rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME).a
+	rm -f $(NAME)
 
 re: fclean all
