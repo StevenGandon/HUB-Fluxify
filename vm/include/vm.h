@@ -48,5 +48,9 @@ typedef struct {
 } constants_table_t;
 
 int read_program(FILE *file, program_table_t *program);
+int read_tables(FILE *file, label_table_t *labels,
+    constants_table_t *constants);
+int read_flo_file(const char *filename, program_table_t *program,
+    label_table_t *labels, constants_table_t *constants);
 
 #endif
