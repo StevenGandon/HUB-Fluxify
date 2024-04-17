@@ -71,3 +71,16 @@ def test() -> bool:
         return (False)
     return (True)
 
+
+@tests(
+    name="[COMPILER] in_file_obj_method_dont_exist",
+   description="fcc should return 84 if the method called in the .fly file does not exist in the .obj file"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/invalid_syntax.fly')
+    return (ok[0] == 84) # will fail but will be fixed when compiler will be finished
+
+# tester :
+# lancer avec des fichiers syntaxe invalide
+# vérifier après la compilations les données du binaire (hash, magic, architecture, label de départ, données de prog...)
+# lancer avec des fichiers syntaxe valide

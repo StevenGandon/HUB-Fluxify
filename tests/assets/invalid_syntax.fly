@@ -1,0 +1,30 @@
+==>
+  multiline
+  comment
+<==
+
+class obj
+==>
+  multiline
+  comment2
+<==
+[
+    fun .init(test)
+    [
+        self->data = 1+ 1 => test
+    ]
+
+    fun .del()
+    [
+    ]
+
+    fun test()
+    [
+        return 1
+    ]
+
+    var data
+]
+
+var t = obj()
+t->omg() => method that does not exist
