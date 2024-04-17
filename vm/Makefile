@@ -7,7 +7,7 @@
 
 SRC	= ./main.c
 OBJ	=	$(SRC:.c=.o)
-NAME	=	fluxify-vm
+NAME	=	fvm
 
 CC	=	gcc
 CFLAGS	=	-O2 -I ./include -Wall -Wextra -Werror	\
