@@ -23,9 +23,9 @@ class ConstantItem64(object):
         if (self.type == CONSTANT_STRING):
             item = self.item.encode()
         else:
-            item = self.item.to_bytes(self.size)
+            item = self.item.to_bytes(self.size, "big")
 
-        return (bytes((self.type.to_bytes(1) + self.size.to_bytes(self.size_size) + item)))
+        return (bytes((self.type.to_bytes(1, "big") + self.size.to_bytes(self.size_size, "big") + item)))
 
 class ConstantItem32(ConstantItem64):
     def __init__(self, item) -> None:
