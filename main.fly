@@ -11,11 +11,7 @@ fun name (arg1, arg2, arg3, arg4)
     <==
 
     var name = value
-    list name = {
-        value1,
-        value2,
-        value3
-    }
+    list name = {value1, value2, value3}
 ]
 
 class name

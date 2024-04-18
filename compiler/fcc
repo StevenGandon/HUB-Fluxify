@@ -8,6 +8,7 @@
 """
 
 from sys import exit, argv, stderr
+from typing import Iterable
 from genericpath import isfile
 from src.floff import *
 from src.fcc.compiler import Compiler, FCCError
@@ -26,12 +27,15 @@ def read_code(file_path: str) -> str:
     return (data)
 
 ERRORS = {
-    "invalid_token_error": invalid_token_error,
-    "missing_operand_error": missing_operand_error,
-    "unnamed_variable_error": unnamed_variable_error
+    "invalid_syntax": invalid_token_error,
+    "missing_operand": missing_operand_error,
+    "unnamed_variable": unnamed_variable_error,
+    "all": (invalid_token_error, missing_operand_error, unnamed_variable_error)
 }
 
-WARNINGS = {}
+WARNINGS = {
+    "all": tuple()
+}
 
 def main() -> int:
     code: str = None
@@ -53,16 +57,23 @@ def main() -> int:
 
     for item in parser.errors:
         if (item in ERRORS and item not in active_error_list):
-            active_error_list.append(ERRORS[item])
+            if isinstance(ERRORS[item], Iterable):
+                active_error_list.extend(ERRORS[item])
+            else:
+                active_error_list.append(ERRORS[item])
             continue
         if (item.startswith("no") and item[2:] in ERRORS):
             active_error_list = list(filter(lambda x: x != ERRORS[item[2:]], active_error_list))
             continue
         stderr.write(f"[-] Invalid error flag -E{item}\n")
         invalid_flags = True
+
     for item in parser.warns:
         if (item in WARNINGS and item not in active_warning_list):
-            active_warning_list.append(WARNINGS[item])
+            if isinstance(WARNINGS[item], Iterable):
+                active_warning_list.extend(WARNINGS[item])
+            else:
+                active_warning_list.append(WARNINGS[item])
             continue
         if (item.startswith("no") and item[2:] in WARNINGS):
             active_warning_list = list(filter(lambda x: x != WARNINGS[item[2:]], active_warning_list))

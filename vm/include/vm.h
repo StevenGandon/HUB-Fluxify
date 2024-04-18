@@ -6,32 +6,51 @@
 */
 
 #ifndef VM_H
-#define VM_H
+    #define VM_H
 
-#include <stdlib.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <stdint.h>
 
-#define INITIAL_MEMORY_SIZE = 256
-
-enum {
-    OP_LOAD = 0,
-    OP_ADD,
-    OP_SUB,
-    OP_HALT
+enum Instruction {
+    NOOP = 0x00,
+    ADD = 0x01,
+    SUB = 0x02
 };
 
-typedef struct vm_t {
-    void *memory;
-    size_t memory_size;
-    unsigned char register_a;
-    int program_counter;
-} vm_t;
+typedef struct {
+    uint8_t code;
+    uint8_t arg_size;
+    uint64_t args[2];
+} instruction_t;
 
-void vm_init(vm_t *vm);
-void vm_destroy(vm_t *vm);
-unsigned char vm_fetch(vm_t *vm);
-void vm_decode(vm_t *vm, unsigned char opcode);
-void vm_execute(vm_t *vm);
-void *vm_allocate_memory(vm_t *vm, size_t size);
-void vm_free_memory(vm_t *vm);
+typedef struct {
+    size_t size;
+    instruction_t *instructions;
+} program_table_t;
+
+typedef struct {
+    size_t size;
+    char **label_names;
+    uint64_t *ref_dests;
+} label_table_t;
+
+typedef struct {
+    uint8_t value_type;
+    uint32_t value_size;
+    void *value;
+} constant_t;
+
+typedef struct {
+    size_t size;
+    constant_t *constants;
+} constants_table_t;
+
+int read_program(FILE *file, program_table_t *program);
+int read_tables(FILE *file, label_table_t *labels,
+    constants_table_t *constants);
+int read_flo_file(const char *filename, program_table_t *program,
+    label_table_t *labels, constants_table_t *constants);
 
 #endif
