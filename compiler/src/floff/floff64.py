@@ -38,7 +38,7 @@ class Floff64Table(object):
         self.bytes: bytes = table_bytes
 
     def __str__(self) -> str:
-        return f"{Floff64Table.type_to_string(self.type)}:\n{str_mem(self.bytes)}"
+        return f"{Floff64Table.type_to_string(self.type)}:\n{str_mem(self.bytes) if self.bytes else 'NULL'}"
 
     def __repr__(self) -> str:
         return (self.__str__())
