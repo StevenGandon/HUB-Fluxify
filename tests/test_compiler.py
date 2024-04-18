@@ -80,6 +80,75 @@ def test() -> bool:
     ok: tuple = exec_shell('../compiler/fcc assets/invalid_syntax.fly')
     return (ok[0] == 84) # will fail but will be fixed when compiler will be finished
 
+@tests(
+    name="[COMPILER] in_file_obj_method_exist",
+    description="fcc should return 0 if the method called in the .fly file exist in the .obj file"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/test0.fly')
+    return (ok[0] == 0)
+
+@tests(
+    name="[COMPILER] in_file_bad_fun_declaration",
+    description="fcc should return 84 if the function declaration is invalid"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/test1.fly')
+    return (ok[0] == 0)
+
+
+# That test will fail because the compiler is not finished (const redeclaration is not handled)
+@tests(
+    name="[COMPILER] constant_declaration",
+    description="fcc should return 84 if you try to redeclare a constant"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/constant.fly')
+    return (ok[0] == 84)
+
+# That test will fail because the compiler is not finished (variable declaration without var is not handled)
+@tests(
+    name="[COMPILER] variable_declaration_without_var",
+    description="fcc should return 84 if you declare a variable without var"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/no_var.fly')
+    return (ok[0] == 84)
+
+# That test will fail because the compiler is not finished (variable declaration with himself is not handled)
+@tests(
+    name="[COMPILER] variable_declaration_with_himself",
+    description="fcc should return 84 if you declare a variable with himself"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/var_with_himself.fly')
+    return (ok[0] == 84)
+
+@tests(
+    name="[COMPILER] good_variables_declaration",
+    description="fcc should return 0 if you declare good variables"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/good_var.fly')
+    return (ok[0] == 0)
+
+@tests(
+    name="[COMPILER] good_function_declaration",
+    description="fcc should return 0 if you declare good functions"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/good_fun_declar.fly')
+    return (ok[0] == 0)
+
+@tests(
+    name="[COMPILER] bad_function_declaration",
+    description="fcc should return 84 if you declare bad functions"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc assets/bad_fun_declar.fly')
+    print(ok[0])
+    return (ok[0] == 84)
+
 # tester :
 # lancer avec des fichiers syntaxe invalide
 # vérifier après la compilations les données du binaire (hash, magic, architecture, label de départ, données de prog...)

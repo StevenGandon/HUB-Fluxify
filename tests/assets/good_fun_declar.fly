@@ -1,0 +1,20 @@
+
+fun omg() [
+    var ok = 1
+]
+
+fun omg() [
+    var ok = 1
+    var ok = 2
+]
+
+fun                          is_ok()        [
+    var ok = 1
+    var ok = 2
+
+
+
+
+
+
+]

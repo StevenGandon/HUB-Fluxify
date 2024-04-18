@@ -1,0 +1,9 @@
+
+fun omg [
+    var ok = 1
+]
+
+fun omg() [
+    var ok = 1
+    var ok = 2
+]

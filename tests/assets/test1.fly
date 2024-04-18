@@ -1,0 +1,36 @@
+class obj [
+    fun .init(test)
+    [
+        self->data = 1+ 1 => test
+    ]
+
+    => Bad function declaration
+    fun 
+    
+    
+    
+    
+    .del()
+    [
+    ]
+
+    fun test()
+    [
+        return 
+    ]
+
+    fun write()
+    [
+        return self->data
+    ]
+
+    var data
+]
+
+=> comment2
+fun main(argc, argv) [
+    var test = 0
+    var name = "5 e => ==> <=="
+
+    var my_obj = obj("ok")
+]
