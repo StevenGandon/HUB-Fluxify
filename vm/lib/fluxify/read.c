@@ -62,11 +62,12 @@ void run_program(program_t *program)
 
 void free_program(program_t *program)
 {
-    if (!program)
-        return;
-
-    free(program->instructions);
-    free(program);
+    if (program) {
+        free(program->instructions);
+        free(program->labels);
+        free(program->constants);
+        free(program);
+    }
 }
 
 void gc_collect(program_t *program)
