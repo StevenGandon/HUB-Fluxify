@@ -5,88 +5,86 @@
 ** read.c
 */
 
-#include "vm.h"
+#include "fluxify.h"
+#include <stdio.h>
+#include <string.h>
 
-int read_program(FILE *file, program_table_t *program)
-{
-    if (fread(&program->size, sizeof(size_t), 1, file) != 1)
-        return 84;
-    program->instructions = malloc(program->size * sizeof(instruction_t));
-    if (!program->instructions)
-        return 84;
-    if (fread(program->instructions, sizeof(instruction_t),
-        program->size, file) != program->size) {
-        free(program->instructions);
-        return 84;
-    }
-    return 0;
-}
-
-int read_tables(FILE *file, label_table_t *labels,
-    constants_table_t *constants)
-{
-    size_t name_size;
-
-    if (fread(&labels->size, sizeof(size_t), 1, file) != 1)
-        return 84;
-    labels->label_names = malloc(labels->size * sizeof(char *));
-    labels->ref_dests = malloc(labels->size * sizeof(uint64_t));
-    if (!labels->label_names || !labels->ref_dests) {
-        return 84;
-    }
-    for (size_t i = 0; i < labels->size; ++i) {
-        if (fread(&name_size, sizeof(size_t), 1, file) != 1)
-            return 84;
-        labels->label_names[i] = malloc(name_size * sizeof(char));
-        if (!labels->label_names[i])
-            return 84;
-        if (fread(labels->label_names[i], sizeof(char),
-            name_size, file) != name_size)
-            return 84;
-        if (fread(&labels->ref_dests[i], sizeof(uint64_t), 1, file) != 1)
-            return 84;
-    }
-    if (fread(&constants->size, sizeof(size_t), 1, file) != 1)
-        return 84;
-    constants->constants = malloc(constants->size * sizeof(constant_t));
-    if (!constants->constants)
-        return 84;
-    for (size_t i = 0; i < constants->size; ++i) {
-        if (fread(&constants->constants[i].value_type,
-            sizeof(uint8_t), 1, file) != 1) {
-            return 84;
-        }
-        if (fread(&constants->constants[i].value_size,
-            sizeof(uint32_t), 1, file) != 1)
-            return 84;
-        constants->constants[i].value =
-            malloc(constants->constants[i].value_size);
-        if (!constants->constants[i].value)
-            return 84;
-        if (fread(constants->constants[i].value, sizeof(char),
-            constants->constants[i].value_size, file)
-            != constants->constants[i].value_size) {
-            return 84;
-        }
-    }
-    return 0;
-}
-
-int read_flo_file(const char *filename, program_table_t *program,
-    label_table_t *labels, constants_table_t *constants)
+program_t *load_program(const char *filename)
 {
     FILE *file = fopen(filename, "rb");
-    int error = 0;
 
     if (!file)
-        return 84;
-    if (read_program(file, program) != 0) {
-        error = 84;
-    } else {
-        if (read_tables(file, labels, constants) != 0) {
-            error = 84;
-        }
+        return NULL;
+
+    header64_t header;
+    size_t result = fread(&header, sizeof(header64_t), 1, file);
+
+    if (result != 1) {
+        fclose(file);
+        return NULL;
     }
     fclose(file);
-    return error;
+
+    program_t *program = malloc(sizeof(header64_t));
+
+    if (!program)
+        return NULL;
+    program->instructions = NULL;
+    program->num_instructions = 0;
+    program->labels = NULL;
+    program->num_labels = 0;
+    program->constants = NULL;
+    program->num_constants = 0;
+    program->objects = NULL;
+    program->num_objects = 0;
+    program->capacity_objects = 0;
+    return program;
+}
+
+void run_program(program_t *program)
+{
+    for (size_t i = 0; i < program->num_instructions; i++) {
+        instructions_t instr = program->instructions[i];
+
+        switch (instr.code) {
+            case ADD:
+                printf("Executing ADD\n");
+                break;
+            case SUB:
+                printf("Executing SUB\n");
+                break;
+            default:
+                printf("Unknown instruction\n");
+                break;
+        }
+    }
+}
+
+void free_program(program_t *program)
+{
+    if (!program)
+        return;
+
+    free(program->instructions);
+    free(program);
+}
+
+void gc_collect(program_t *program)
+{
+    size_t compactIndex = 0;
+
+    if (program == NULL)
+        return;
+    for (size_t i = 0; i < program->num_objects; i++) {
+        if (program->objects[i]->ref_cnt == 0) {
+            free_object(program->objects[i]);
+            program->objects[i] = NULL;
+        }
+    }
+    for (size_t i = 0; i < program->num_objects; i++) {
+        if (program->objects[i] != NULL) {
+            program->objects[compactIndex++] = program->objects[i];
+        }
+    }
+    program->num_objects = compactIndex;
 }

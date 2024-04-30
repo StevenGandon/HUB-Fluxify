@@ -19,8 +19,6 @@ CFLAGS	=	-O2 -I ./ -Wall -Wextra -Werror	\
 
 all: $(NAME)
 	cp fluxify.h ../../include
-	cp command_line.h ../../include
-	cp vm.h ../../include
 
 $(NAME): $(OBJ)
 	ar rc $(NAME).a $(OBJ)

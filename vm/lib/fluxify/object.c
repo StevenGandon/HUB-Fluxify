@@ -7,7 +7,7 @@
 
 #include "fluxify.h"
 
-FlObject *create_object(struct _type_object_s *object_type)
+FlObject *create_object(_type_object_t *object_type)
 {
     FlObject *obj = malloc(sizeof(FlObject));
 
@@ -26,22 +26,11 @@ void delete_object(FlObject *obj)
         free(obj);
 }
 
-struct _type_object_s *create_type(const char *name,
-    struct _type_object_s *parent_type)
+void free_object(FlObject *obj)
 {
-    struct _type_object_s *type = malloc(sizeof(struct _type_object_s));
-
-    if (!type)
-        return NULL;
-    type->name = name;
-    type->members = NULL;
-    type->parent_type = parent_type;
-    return type;
-}
-
-void delete_type(struct _type_object_s *type)
-{
-    if (!type)
+    if (obj == NULL)
         return;
-    free(type);
+    for (_member_list_t **members = obj->object_type->members; members && *members; members++)
+        decref((*members)->value);
+    free(obj);
 }
