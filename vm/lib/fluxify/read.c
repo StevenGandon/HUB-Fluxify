@@ -16,10 +16,15 @@ program_t *load_program(const char *filename)
     if (!file)
         return NULL;
 
-    header64_t header;
-    size_t result = fread(&header, sizeof(header64_t), 1, file);
+    uint32_t magic;
+    uint16_t format_version, architecture;
 
-    if (result != 1) {
+    size_t result = fread(&magic, sizeof(uint32_t), 1, file);
+    size_t result1 = fread(&format_version, sizeof(uint16_t), 1, file);
+    size_t result2 = fread(&architecture, sizeof(uint16_t), 1, file);
+
+    if (result != 1 || result1 != 1 || result2 != 1) {
+        printf("Your .flo file is corrupted");
         fclose(file);
         return NULL;
     }
