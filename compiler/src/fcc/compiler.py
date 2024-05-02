@@ -94,14 +94,20 @@ class Compiler(object):
         instructions: bytes = self.tokens.compile_instruction()
         constants: bytearray = bytearray()
 
-        object_file.add_table(Floff64Table(TABLE_PROGRAM, instructions))
+        object_table_class = Floff32Table
+        if (isinstance(object_file, Floff64)):
+            object_table_class = Floff64Table
+        elif (isinstance(object_file, Floff32)):
+            object_table_class = Floff32Table
+
+        object_file.add_table(object_table_class(TABLE_PROGRAM, instructions))
 
         for item in STATIC_ADDR_TABLE:
             constants.extend(STATIC_ADDR_TABLE[item][1].get_byte_codes())
 
-        object_file.add_table(Floff64Table(TABLE_CONSTANT, bytes(constants)))
+        object_file.add_table(object_table_class(TABLE_CONSTANT, bytes(constants)))
 
-        object_file.add_table(Floff64Table(TABLE_LABEL, 0x06.to_bytes(1, "big") + b"_start" + 0x00.to_bytes(8, "big")))
+        object_file.add_table(object_table_class(TABLE_LABEL, 0x06.to_bytes(1, "big") + b"_start" + 0x00.to_bytes(8, "big")))
 
         object_file.code_hash = self.get_code_hash()
 

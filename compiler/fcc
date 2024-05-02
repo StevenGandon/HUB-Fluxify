@@ -84,10 +84,10 @@ def main() -> int:
     if (invalid_flags):
         return (84)
 
-    floffClass = Floff64
+    floffClass = Floff32
     if parser.arch == "X86_64":
         floffClass = Floff64
-    elif parser.arch == "X86":
+    elif parser.arch == "X64_32":
         floffClass = Floff32
 
     for file in parser.files:
