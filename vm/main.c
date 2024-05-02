@@ -16,7 +16,7 @@ static void print_usage(const char *program_name)
     fprintf(stderr, "Usage: %s [-arch ARCH] <filename>\n", program_name);
 }
 
-static int handle_arch_option(const char *option, config_t *config)
+static int handle_arch_option(const char *option, vm_state_t *config)
 {
     if (strcmp(option, "X86_64") == 0) {
         config->arch = ARCH_X86_64;
@@ -26,7 +26,7 @@ static int handle_arch_option(const char *option, config_t *config)
     return 0;
 }
 
-static int parse_arguments(int argc, char **argv, config_t *config)
+static int parse_arguments(int argc, char **argv, vm_state_t *config)
 {
     int i = 1;
 
@@ -56,21 +56,21 @@ static int parse_arguments(int argc, char **argv, config_t *config)
     return 0;
 }
 
-static void load_program(const char *filename, unsigned short arch)
+static void load_program(vm_state_t *vm)
 {
-    void *result = auto_floff(filename);
+    void *result = auto_floff(vm->filename);
 
     if (result == NULL) {
-        fprintf(stderr, "Corruped .flo file: %s\n", filename);
+        fprintf(stderr, "Corruped .flo file: %s\n", vm->filename);
         return;
     }
 
-    if (arch == ARCH_X86_64) {
+    if (vm->arch == ARCH_X86_64) {
         floff64_t *flo_data = (floff64_t *)result;
 
         (void)flo_data;
         printf("Loaded 64-bit .flo file successfully.\n");
-    } else if (arch == ARCH_X64_32) {
+    } else if (vm->arch == ARCH_X64_32) {
         floff32_t *flo_data = (floff32_t *)result;
 
         (void)flo_data;
@@ -80,10 +80,10 @@ static void load_program(const char *filename, unsigned short arch)
 
 int main(int argc, char **argv)
 {
-    config_t config;
+    vm_state_t vm;
 
-    if (parse_arguments(argc, argv, &config) != 0)
+    if (parse_arguments(argc, argv, &vm) != 0)
         return 84;
-    load_program(config.filename, config.arch);
+    load_program(&vm);
     return 0;
 }
