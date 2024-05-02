@@ -11,7 +11,7 @@ SRC	=	./main.c \
 		./read.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
-CFLAGS	=	-O2 -I ./ -Wall -Wextra -Werror	\
+CFLAGS	=	-O2 -I ../../include -Wall -Wextra -Werror	\
 			-Wshadow -pedantic	\
 			-Waggregate-return -Wdouble-promotion	\
 			-Walloc-zero -Wcast-qual -Wconversion -Winit-self	\
