@@ -28,7 +28,13 @@ class name
 
     fun name(arg1, arg2)
     [
-        
+        while 5 == 2
+        [
+        ]
+
+        for var i = 0, range(1, 5)
+        [
+        ]
     ]
 
     var value

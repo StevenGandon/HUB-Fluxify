@@ -30,7 +30,9 @@ ERRORS = {
     "invalid_syntax": invalid_token_error,
     "missing_operand": missing_operand_error,
     "unnamed_variable": unnamed_variable_error,
-    "all": (invalid_token_error, missing_operand_error, unnamed_variable_error)
+    "invalid_while_condition": invalid_while_condition,
+    "invalid_for_condition": invalid_for_condition,
+    "all": (invalid_token_error, missing_operand_error, unnamed_variable_error, invalid_while_condition, invalid_for_condition)
 }
 
 WARNINGS = {
@@ -108,7 +110,7 @@ def main() -> int:
         for item in compiler.debug:
             print(item)
 
-        print(FloffAuto.from_file(f"./compile_test.flo"))
+        print(FloffAuto.from_file(f"./main.flo"))
     return (return_status)
 
 
