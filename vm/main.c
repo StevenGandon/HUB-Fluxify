@@ -11,39 +11,52 @@
 #include <unistd.h>
 #include <stdio.h>
 
-int parse_arguments(int argc, char **argv, config_t *config)
+static void print_usage(const char *program_name)
 {
-    int opt;
-    config->arch = ARCH_X64_32;
+    fprintf(stderr, "Usage: %s [-arch ARCH] <filename>\n", program_name);
+}
 
-    while ((opt = getopt(argc, argv, "a:")) != -1) {
-        switch (opt) {
-            case 'a':
-                if (strcmp(optarg, "X86_64") == 0) {
-                    config->arch = ARCH_X86_64;
-                } else if (strcmp(optarg, "X64_32") == 0) {
-                    config->arch = ARCH_X64_32;
-                } else {
-                    fprintf(stderr, "Unsupported architecture: %s\n", optarg);
-                    return -1;
-                }
-                break;
-            default:
-                fprintf(stderr, "Usage: %s [-a ARCH] <filename>\n", argv[0]);
+static int handle_arch_option(const char *option, config_t *config)
+{
+    if (strcmp(option, "X86_64") == 0) {
+        config->arch = ARCH_X86_64;
+    } else if (strcmp(option, "X64_32") == 0) {
+        config->arch = ARCH_X64_32;
+    }
+    return 0;
+}
+
+static int parse_arguments(int argc, char **argv, config_t *config)
+{
+    int i = 1;
+
+    config->arch = ARCH_X64_32;
+    while (i < argc) {
+        if (strcmp(argv[i], "-arch") == 0) {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "Option -arch requires an argument.\n");
+                print_usage(argv[0]);
                 return -1;
+            }
+            if (handle_arch_option(argv[i + 1], config) != 0) {
+                print_usage(argv[0]);
+                return -1;
+            }
+            i += 2;
+        } else {
+            config->filename = argv[i];
+            i++;
         }
     }
-
-    if (optind < argc) {
-        config->filename = argv[optind];
-    } else {
+    if (config->filename == NULL) {
         fprintf(stderr, "Missing filename.\n");
+        print_usage(argv[0]);
         return -1;
     }
     return 0;
 }
 
-static void load_program(const char *filename)
+static void load_program(const char *filename, unsigned short arch)
 {
     void *result = auto_floff(filename);
 
@@ -51,20 +64,15 @@ static void load_program(const char *filename)
         fprintf(stderr, "Corruped .flo file: %s\n", filename);
         return;
     }
-    // TODO
-    // program = convert_floff64_to_program(&floff64);
-    // if (program == NULL) {
-    //     fprintf(stderr, "Failed to convert .flo data to program structure\n");
-    //     return NULL;
-    // }
+    (void)arch;
 }
 
 int main(int argc, char **argv)
 {
     config_t config;
+
     if (parse_arguments(argc, argv, &config) != 0)
         return 84;
-
-    load_program(config.filename);
+    load_program(config.filename, config.arch);
     return 0;
 }
