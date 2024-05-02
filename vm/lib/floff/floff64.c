@@ -77,8 +77,8 @@ read_file_informations(fd, object)
         return (file_failed(fd));
     if (0 > read(fd, &object->architecture, 2))
         return (file_failed(fd));
-    object->architecture = ((object->architecture >> 8) & 0xFF) |
-        ((object->architecture << 8) & 0xFF00);
+    object->architecture = (unsigned short)(((object->architecture >> 8) & 0xFF) |
+        ((object->architecture << 8) & 0xFF00));
     if (0 > read(fd, &object->compiler_name_size, 1))
         return (file_failed(fd));
     if (object->compiler_name)
