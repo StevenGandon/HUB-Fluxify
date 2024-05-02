@@ -64,7 +64,18 @@ static void load_program(const char *filename, unsigned short arch)
         fprintf(stderr, "Corruped .flo file: %s\n", filename);
         return;
     }
-    (void)arch;
+
+    if (arch == ARCH_X86_64) {
+        floff64_t *flo_data = (floff64_t *)result;
+
+        (void)flo_data;
+        printf("Loaded 64-bit .flo file successfully.\n");
+    } else if (arch == ARCH_X64_32) {
+        floff32_t *flo_data = (floff32_t *)result;
+
+        (void)flo_data;
+        printf("Loaded 32-bit .flo file successfully.\n");
+    }
 }
 
 int main(int argc, char **argv)
