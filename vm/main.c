@@ -11,6 +11,57 @@
 #include <unistd.h>
 #include <stdio.h>
 
+static void adjust_endianness(int *value)
+{
+    *value = ((*value >> 24) & 0xff)      |
+             ((*value << 8) & 0xff0000)   |
+             ((*value >> 8) & 0xff00)     |
+             ((*value << 24) & 0xff000000);
+}
+
+static void decode_and_execute_instructions(vm_state_t *vm,
+    const unsigned char *byte_stream, size_t size)
+{
+    size_t offset = 0;
+
+    while (vm->is_running && offset < size) {
+        if (size - offset < sizeof(int)) {
+            fprintf(stderr, "Unexpected end of instruction stream\n");
+            break;
+        }
+        instruction_t inst;
+        inst.opcode = byte_stream[offset];
+        inst.operands[0] = *((int *)(byte_stream + offset + 1));
+        inst.operands[1] = *((int *)(byte_stream + offset + 5));
+        adjust_endianness(&inst.operands[0]);
+        adjust_endianness(&inst.operands[1]);
+        execute_instruction(vm, &inst);
+        offset += 9;
+    }
+}
+
+static void initialize_vm_state(vm_state_t *vm, size_t memory_size)
+{
+    vm->memory = calloc(memory_size, sizeof(int));
+    vm->memory_size = memory_size;
+    vm->program_counter = 0;
+    vm->is_running = 1;
+}
+
+void cleanup_vm_state(vm_state_t *vm)
+{
+    free(vm->memory);
+}
+
+void execute_program(vm_state_t *vm, const unsigned char *bytes, size_t size)
+{
+    while (vm->is_running && vm->program_counter < size) {
+        instruction_t inst;
+        decode_and_execute_instructions(&inst, &bytes[vm->program_counter], size);
+        vm->program_counter += sizeof(instruction_t);
+    }
+}
+
 static void print_usage(const char *program_name)
 {
     fprintf(stderr, "Usage: %s [-arch ARCH] <filename>\n", program_name);
