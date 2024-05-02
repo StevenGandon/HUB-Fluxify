@@ -16,7 +16,7 @@ void incref(FlObject *obj)
 
 void decref(FlObject *obj)
 {
-    if (obj && --obj->ref_cnt == 0) {
+    if (obj && obj->ref_cnt-- == 0) {
         free_object(obj);
     }
 }
