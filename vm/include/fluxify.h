@@ -48,7 +48,12 @@
     typedef struct vm_state_s {
         unsigned short arch;
         const char *filename;
-        void *memory;
-    } vm_state_t ;
+        int *memory;
+        int *registers;
+        int program_counter;
+        int is_running;
+        size_t memory_size;
+        size_t num_registers;
+    } vm_state_t;
 
 #endif /* FLUXIFY_H_ */
