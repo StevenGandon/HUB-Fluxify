@@ -32,7 +32,8 @@ ERRORS = {
     "unnamed_variable": unnamed_variable_error,
     "invalid_while_condition": invalid_while_condition,
     "invalid_for_condition": invalid_for_condition,
-    "all": (invalid_token_error, missing_operand_error, unnamed_variable_error, invalid_while_condition, invalid_for_condition)
+    "invalid_assign_name": invalid_assign_name,
+    "all": (invalid_token_error, missing_operand_error, unnamed_variable_error, invalid_while_condition, invalid_for_condition, invalid_assign_name)
 }
 
 WARNINGS = {
