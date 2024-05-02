@@ -6,9 +6,6 @@
 ##
 
 SRC	=	./main.c \
-		./object.c \
-		./garbage_collection.c \
-		./read.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
 CFLAGS	=	-O2 -I ../../include -Wall -Wextra -Werror	\
