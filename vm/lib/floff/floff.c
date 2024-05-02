@@ -54,7 +54,7 @@ auto_floff(file_path)
         (void)close(fd);
         return (NULL);
     }
-    temp = ((temp >> 8) & 0xFF) | ((temp << 8) & 0xFF00);
+    temp = (unsigned short)(((temp >> 8) & 0xFF) | ((temp << 8) & 0xFF00));
     (void)close(fd);
     return (handle_arch(temp, file_path));
 }
