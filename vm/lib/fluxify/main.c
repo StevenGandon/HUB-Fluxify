@@ -11,13 +11,10 @@
 
 static void load_x64_program(const char *filename)
 {
-    floff64_t floff64;
-    int result = 0;
+    void *result = auto_floff(filename);
 
-    memset(&floff64, 0, sizeof(floff64));
-    result = read_floff64(&floff64, filename);
-    if (result == -1) {
-        fprintf(stderr, "Failed to read .flo file: %s\n", filename);
+    if (result == NULL) {
+        fprintf(stderr, "Corruped .flo file: %s\n", filename);
         return;
     }
     // TODO
@@ -26,7 +23,6 @@ static void load_x64_program(const char *filename)
     //     fprintf(stderr, "Failed to convert .flo data to program structure\n");
     //     return NULL;
     // }
-    destroy_floff64(&floff64);
 }
 
 int main(int argc, char **argv)
