@@ -45,7 +45,7 @@ class Parser:
     def handle_arch(self, arg: str) -> None:
         if (arg.startswith("-arch=")):
             self.arch = arg.replace("-arch=", "")
-            if (not self.arch in ["X86_64", "X86_32"]):
+            if (not self.arch in ["X86_64", "X64_32"]):
                 self.error(f"[-] Invalid architecture {self.arch}.\n")
 
     def handle_name(self, arg: str, i: int, args: list) -> bool:
@@ -73,6 +73,24 @@ class Parser:
                 self.error("[-] No entry point specified after -e flag.\n")
             return True
         return False
+
+    def invalid_flag(self, flag: str) -> None:
+        isInvalid = True
+        if (flag.startswith("-")):
+            if (flag in self.options):
+                isInvalid = False
+            if (flag.startswith("-arch=")):
+                isInvalid = False
+            if (flag.startswith("-E")):
+                isInvalid = False
+            if (flag.startswith("-W")):
+                isInvalid = False
+            if (flag.startswith("-o")):
+                isInvalid = False
+            if (flag.startswith("-e")):
+                isInvalid = False
+            if (isInvalid):
+                self.error(f"[-] Invalid flag {flag}.\n")
 
 def check_files(files: list) -> list:
     return_value: list = []
@@ -105,6 +123,7 @@ def parse_args(args: list) -> object:
                 parser.error(f"[-] Invalid file extension for {arg}. Must be '.fly'.\n")
             else:
                 parser.files.append(arg)
+        parser.invalid_flag(arg)
     checked_files: list = check_files(parser.files)
     for item in checked_files:
         parser.error(item)

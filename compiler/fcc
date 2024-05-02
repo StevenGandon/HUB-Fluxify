@@ -84,6 +84,12 @@ def main() -> int:
     if (invalid_flags):
         return (84)
 
+    floffClass = Floff64
+    if parser.arch == "X86_64":
+        floffClass = Floff64
+    elif parser.arch == "X86":
+        floffClass = Floff32
+
     for file in parser.files:
         code: str = read_code(file)
 
@@ -94,7 +100,7 @@ def main() -> int:
         compiler: Compiler = Compiler(code, active_warning_list, active_error_list, file)
         compiler.parse()
         compiler.tokenize()
-        compiler.compile()
+        compiler.compile(floffClass)
 
         if (any(map(lambda x: isinstance(x, FCCError), compiler.debug))):
             return_status: int = 84
