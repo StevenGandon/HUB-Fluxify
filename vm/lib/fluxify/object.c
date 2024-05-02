@@ -22,7 +22,7 @@ void delete_object(FlObject *obj)
 {
     if (!obj)
         return;
-    if (obj->ref_cnt-- == 0)
+    if (--obj->ref_cnt == 0)
         free(obj);
 }
 
