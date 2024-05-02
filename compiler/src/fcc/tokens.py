@@ -296,6 +296,61 @@ class EQOperatorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
+class AndOperatorToken(TokenOperator):
+    def __init__(self, value: Token, value2: Token) -> None:
+        self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} && {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
+class OrOperatorToken(TokenOperator):
+    def __init__(self, value: Token, value2: Token) -> None:
+        self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} || {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
+class AndToken(TokenOperator):
+    def __init__(self, value: Token, value2: Token) -> None:
+        self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} & {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
+class OrToken(TokenOperator):
+    def __init__(self, value: Token, value2: Token) -> None:
+        self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} | {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
+class XorToken(TokenOperator):
+    def __init__(self, value: Token, value2: Token) -> None:
+        self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} ^ {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
 class RootToken(Token):
     def __init__(self, body: list) -> None:
         self.body = body

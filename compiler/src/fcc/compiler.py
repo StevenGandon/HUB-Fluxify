@@ -168,6 +168,21 @@ class Compiler(object):
         if (bool(search(REGEX_EQUAL_EQUAL, line))):
             return (EQOperatorToken(split(REGEX_EQUAL_EQUAL, line)[0].strip(), Compiler.get_token("==".join(split(REGEX_EQUAL_EQUAL, line)[1:]))))
 
+        if ('&&' in line):
+            return AndOperatorToken(Compiler.get_token(line.split('&&')[0]), Compiler.get_token("&&".join(line.split('&&')[1:])))
+
+        if ('||' in line):
+            return OrOperatorToken(Compiler.get_token(line.split('||')[0]), Compiler.get_token("||".join(line.split('||')[1:])))
+
+        if ('&' in line):
+            return AndToken(Compiler.get_token(line.split('&')[0]), Compiler.get_token("&".join(line.split('&')[1:])))
+
+        if ('|' in line):
+            return OrToken(Compiler.get_token(line.split('|')[0]), Compiler.get_token("|".join(line.split('|')[1:])))
+
+        if ('^' in line):
+            return XorToken(Compiler.get_token(line.split('^')[0]), Compiler.get_token("^".join(line.split('^')[1:])))
+
         if ('*' in line):
             return MulToken(Compiler.get_token(line.split('*')[0]), Compiler.get_token("*".join(line.split('*')[1:])))
 
