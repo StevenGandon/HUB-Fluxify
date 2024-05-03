@@ -23,6 +23,14 @@ void cleanup_vm_state(vm_state_t *vm)
     free(vm->memory);
 }
 
+// todo : rework this
+void execute_program(vm_state_t *vm, const unsigned char *bytes, size_t size)
+{
+    initialize_vm_state(vm, size);
+    decode_and_execute_instructions(vm, bytes, size);
+    cleanup_vm_state(vm);
+}
+
 void load_program(vm_state_t *vm)
 {
     void *result = auto_floff(vm->filename);
@@ -35,12 +43,16 @@ void load_program(vm_state_t *vm)
     if (vm->arch == ARCH_X86_64) {
         floff64_t *flo_data = (floff64_t *)result;
 
-        (void)flo_data;
+        for (size_t i = 0; i < flo_data->table_number; ++i) {
+            execute_program(vm, flo_data->body[i]->table_bytes, flo_data->body[i]->table_size);
+        }
         printf("Loaded 64-bit .flo file successfully.\n");
     } else if (vm->arch == ARCH_X64_32) {
         floff32_t *flo_data = (floff32_t *)result;
 
-        (void)flo_data;
+        for (size_t i = 0; i < flo_data->table_number; ++i) {
+            execute_program(vm, flo_data->body[i]->table_bytes, flo_data->body[i]->table_size);
+        }
         printf("Loaded 32-bit .flo file successfully.\n");
     }
 }

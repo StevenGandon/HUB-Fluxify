@@ -56,6 +56,8 @@
         size_t num_registers;
     } vm_state_t;
 
+    void decode_and_execute_instructions(vm_state_t *vm,
+        const unsigned char *byte_stream, size_t size);
     int parse_arguments(int argc, char **argv, vm_state_t *config);
     void adjust_endianness(int *value);
     void execute_instruction(vm_state_t *vm, instruction_t *inst);
