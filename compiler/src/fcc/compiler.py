@@ -28,8 +28,8 @@ class Compiler(object):
 
     @staticmethod
     def lexer(string: str) -> str:
-        return sub(REGEX_MULTILINE_COMMENT, '', string
-            .replace('\\\n', '')
+        return sub(REGEX_MULTILINE_COMMENT, '', '\n'.join(split(REGEX_LINE_COMMENT, item.strip())[0] for item in string
+            .replace('\\\n', '').split('\n'))
             .replace(']', '\n]\n')
             .replace('[', '\n[\n')
         ).split("\n")
@@ -57,7 +57,6 @@ class Compiler(object):
             return
 
         for line in Compiler.lexer(self.code):
-            line: str = split(REGEX_LINE_COMMENT, line.strip())[0]
             if not line:
                 continue
 

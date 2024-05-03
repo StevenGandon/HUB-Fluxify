@@ -42,7 +42,7 @@ fun main(argc, argv) [
 
 if a == 0 [ 1  + 1 ] elif a == 1 [ 2 - 4 ] else [ var i ]
 
-for var i, range(0, 5) [
+for var i [
 
 ]
 
