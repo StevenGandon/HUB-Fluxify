@@ -157,6 +157,15 @@ def test() -> bool:
     ok: tuple = exec_shell('../compiler/fcc -Eall assets/for_only_var.fly')
     return (ok[0] == 84)
 
+# This test will fail compiler not finished (for loop badly handled with -Eall option)
+@tests(
+    name="[COMPILER] good use for loop",
+    description="fcc should return 0 if you declare a var and a condition in the for loop"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc -Eall assets/for_good.fly')
+    return (ok[0] == 0)
+
 # tester :
 # lancer avec des fichiers syntaxe invalide
 # vérifier après la compilations les données du binaire (hash, magic, architecture, label de départ, données de prog...)
