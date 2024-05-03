@@ -1,0 +1,11 @@
+=> comment2
+fun main(argc, argv) [
+    var test = 0
+    var name = "5 e => ==> <=="
+    var inc = 0
+
+    => This loop must at least have a condition : for *var*, *condition* []
+    for var i [
+        inc++
+    ]
+]

@@ -149,6 +149,14 @@ def test() -> bool:
     print(ok[0])
     return (ok[0] == 84)
 
+@tests(
+    name="[COMPILER] bad use for loop",
+    description="fcc should return 84 if you only declare a var and not a condition in the for loop"
+)
+def test() -> bool:
+    ok: tuple = exec_shell('../compiler/fcc -Eall assets/for_only_var.fly')
+    return (ok[0] == 84)
+
 # tester :
 # lancer avec des fichiers syntaxe invalide
 # vérifier après la compilations les données du binaire (hash, magic, architecture, label de départ, données de prog...)
