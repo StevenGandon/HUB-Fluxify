@@ -56,9 +56,11 @@
         size_t num_registers;
     } vm_state_t;
 
+    int parse_arguments(int argc, char **argv, vm_state_t *config);
+    void adjust_endianness(int *value);
+    void execute_instruction(vm_state_t *vm, instruction_t *inst);
     void initialize_vm_state(vm_state_t *vm, size_t memory_size);
     void cleanup_vm_state(vm_state_t *vm);
-    void execute_program(vm_state_t *vm, const unsigned char *bytes, size_t size);
-    void execute_instruction(vm_state_t *vm, instruction_t *inst);
+    void load_program(vm_state_t *vm);
 
 #endif /* FLUXIFY_H_ */

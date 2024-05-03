@@ -5,7 +5,9 @@
 ## Makefile
 ##
 
-SRC	=	./main.c \
+SRC	=	./vm_operation.c \
+		./argument_parser.c \
+		./instructions_utils.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
 CFLAGS	=	-O2 -I ../../include -Wall -Wextra -Werror	\
