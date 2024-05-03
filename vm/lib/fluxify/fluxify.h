@@ -50,10 +50,19 @@
         const char *filename;
         int *memory;
         int *registers;
-        int program_counter;
+        size_t program_counter;
         int is_running;
         size_t memory_size;
         size_t num_registers;
     } vm_state_t;
+
+    void decode_and_execute_instructions(vm_state_t *vm,
+        const unsigned char *byte_stream, size_t size);
+    int parse_arguments(int argc, char **argv, vm_state_t *config);
+    void adjust_endianness(int *value);
+    void execute_instruction(vm_state_t *vm, instruction_t *inst);
+    void initialize_vm_state(vm_state_t *vm, size_t memory_size);
+    void cleanup_vm_state(vm_state_t *vm);
+    void load_program(vm_state_t *vm);
 
 #endif /* FLUXIFY_H_ */
