@@ -111,7 +111,7 @@ def main() -> int:
         for item in compiler.debug:
             print(item)
 
-        print(FloffAuto.from_file(f"./main.flo"))
+        print(FloffAuto.from_file(f"{file.replace('.fly', '.flo')}"))
     return (return_status)
 
 
