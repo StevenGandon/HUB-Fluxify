@@ -135,6 +135,7 @@ def invalid_while_condition(code: object, debug_constructor: object, color: str,
             in_comment: bool = True
         if ("<==" in item):
             in_comment: bool = False
+        item = item.split('[')[0]
         token = code.get_token(item)
 
         if (in_comment or not isinstance(token, WhileToken)):
@@ -162,6 +163,7 @@ def invalid_for_condition(code: object, debug_constructor: object, color: str, p
             in_comment: bool = True
         if ("<==" in item):
             in_comment: bool = False
+        item = item.split('[')[0]
         token = code.get_token(item)
 
         if (in_comment or not isinstance(token, ForToken)):
