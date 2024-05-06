@@ -20,6 +20,7 @@ RUN apt install pip -y
 RUN apt install gcc -y
 RUN apt install make -y
 RUN apt install man -y
+RUN apt install nano -y
 
 #        * Install fluxify *
 RUN mkdir /tmp/fluxify
