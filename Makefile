@@ -25,6 +25,14 @@ tests_run:
 	chmod +x ./tests/unit_tests
 	cd tests && ./unit_tests
 
+install-docker-image:
+	docker build --tag fluxify . --no-cache
+
+run-docker: install-docker-image
+	docker run fluxify
+
 re:
 	@make -C vm re
 	@make -C compiler re
+
+.PHONY: all vm compiler
