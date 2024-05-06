@@ -13,6 +13,7 @@ RUN apt dist-upgrade -y
 
 #        * Install Bins & Deps *
 RUN apt install git -y
+RUN apt install valgrind -y
 RUN apt install libc6 -y
 RUN apt install python3 -y
 RUN apt install pip -y
@@ -29,8 +30,8 @@ RUN make
 RUN mkdir /var/lib/fcc
 RUN cp ./vm/fvm /bin
 RUN cp ./compiler/fcc /var/lib/fcc/
-RUN cp ./compiler/src /var/lib/fcc/
-RUN ln -s /var/lib/fcc /bin/fcc
+RUN cp -r ./compiler/src /var/lib/fcc/
+RUN ln -s /var/lib/fcc/fcc /bin/fcc
 RUN cp ./docs/man/* /usr/share/man/ -r
 
 #        * Create user *
@@ -54,3 +55,5 @@ USER fluxify
 
 #        * Switching working dir *
 WORKDIR /app
+
+CMD ["/bin/bash"]
