@@ -33,6 +33,8 @@ int parse_arguments(int argc, char **argv, vm_state_t *config)
 {
     int i = 1;
 
+    if (argc < 2)
+        return (-1);
     config->arch = ARCH_X64_32;
     while (i < argc) {
         if (strcmp(argv[i], "-arch") == 0) {
