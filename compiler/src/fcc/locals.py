@@ -32,7 +32,10 @@ REGEX_MULTILINE_COMMENT_PREFIX: Pattern = compile_regex(r'((==>)(?=([^"\\]*(\\.|
 INSTRUCTIONS: dict = {
     "NOOP": 0x00,
     "ADD": 0x01,
-    "SUB": 0x02
+    "SUB": 0x02,
+    "MUL": 0x03,
+    "DIV": 0x04,
+    "MOD": 0x05,
 }
 
 STATIC_ADDR_TABLE: dict = {}

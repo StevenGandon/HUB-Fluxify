@@ -252,6 +252,13 @@ class MinusToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self) -> bytes:
+        return (bytes((
+            INSTRUCTIONS["SUB"],
+            self.value.compile_instruction(),
+            self.value2.compile_instruction()
+        )))
+
 class PlusToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         if (value is None):
@@ -284,6 +291,13 @@ class MulToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self) -> bytes:
+        return (bytes((
+            INSTRUCTIONS["MUL"],
+            self.value.compile_instruction(),
+            self.value2.compile_instruction()
+        )))
+
 class DivToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         self.value = value
@@ -295,6 +309,13 @@ class DivToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self) -> bytes:
+        return (bytes((
+            INSTRUCTIONS["DIV"],
+            self.value.compile_instruction(),
+            self.value2.compile_instruction()
+        )))
+
 class ModToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         self.value = value
@@ -305,6 +326,13 @@ class ModToken(TokenOperator):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self) -> bytes:
+        return (bytes((
+            INSTRUCTIONS["MOD"],
+            self.value.compile_instruction(),
+            self.value2.compile_instruction()
+        )))
 
 class EQOperatorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
