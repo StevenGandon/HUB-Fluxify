@@ -210,3 +210,87 @@ def invalid_assign_name(code: object, debug_constructor: object, color: str, pre
                         ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
                     ]
                 ))
+
+def invalid_if_condition(code: object, debug_constructor: object, color: str, prefix: str = 'E') -> None:
+    in_comment: bool = False
+
+    for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
+        if (bool(search(REGEX_MULTILINE_COMMENT_PREFIX, item))):
+            in_comment: bool = True
+        if ("<==" in item):
+            in_comment: bool = False
+        item = item.split('[')[0]
+        token = code.get_token(item)
+
+        if (in_comment or not isinstance(token, IfToken)):
+            continue
+
+        if (token.condition is None):
+            code.debug.append(
+                debug_constructor(
+                    code.filename,
+                    (len(item) - len(item.lstrip())) + 1,
+                    i + 1,
+                    f"{prefix}invalid_if_condition",
+                    f"Invalid if condition.",
+                    display=[
+                        color + item + RESET_COLOR,
+                        ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
+                    ]
+                ))
+
+def invalid_else_if_condition(code: object, debug_constructor: object, color: str, prefix: str = 'E') -> None:
+    in_comment: bool = False
+
+    for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
+        if (bool(search(REGEX_MULTILINE_COMMENT_PREFIX, item))):
+            in_comment: bool = True
+        if ("<==" in item):
+            in_comment: bool = False
+        item = item.split('[')[0]
+        token = code.get_token(item)
+
+        if (in_comment or not isinstance(token, ElseIfToken)):
+            continue
+
+        if (token.condition is None):
+            code.debug.append(
+                debug_constructor(
+                    code.filename,
+                    (len(item) - len(item.lstrip())) + 1,
+                    i + 1,
+                    f"{prefix}invalid_else_if_condition",
+                    f"Invalid else if condition.",
+                    display=[
+                        color + item + RESET_COLOR,
+                        ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
+                    ]
+                ))
+
+def invalid_function_name(code: object, debug_constructor: object, color: str, prefix: str = 'E') -> None:
+    in_comment: bool = False
+
+    for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
+        if (bool(search(REGEX_MULTILINE_COMMENT_PREFIX, item))):
+            in_comment: bool = True
+        if ("<==" in item):
+            in_comment: bool = False
+        item = item.split('=>')[0]
+        token = code.get_token(item)
+
+        if (in_comment or not isinstance(token, FunctionToken)):
+            continue
+
+        if (not token.name):
+            code.debug.append(
+                debug_constructor(
+                    code.filename,
+                    (len(item) - len(item.lstrip())) + 1,
+                    i + 1,
+                    f"{prefix}invalid_function_name",
+                    f"Invalid function name.",
+                    display=[
+                        color + item + RESET_COLOR,
+                        ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
+                    ]
+                ))

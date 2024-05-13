@@ -32,7 +32,10 @@ ERRORS = {
     "unnamed_variable": unnamed_variable_error,
     "invalid_while_condition": invalid_while_condition,
     "invalid_for_condition": invalid_for_condition,
-    "invalid_assign_name": invalid_assign_name
+    "invalid_assign_name": invalid_assign_name,
+    "invalid_if_condition": invalid_if_condition,
+    "invalid_else_if_condition": invalid_else_if_condition,
+    "invalid_function_name": invalid_function_name,
 }
 ERRORS["all"] = tuple(ERRORS.values())
 
