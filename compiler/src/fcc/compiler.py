@@ -30,11 +30,11 @@ class Compiler(object):
 
     @staticmethod
     def lexer(string: str) -> str:
-        return sub(REGEX_MULTILINE_COMMENT, '', '\n'.join(split(REGEX_LINE_COMMENT, item.strip())[0] for item in string
+        return ('\n'
+            .join(split(REGEX_LINE_COMMENT, item.strip())[0] for item in sub(REGEX_MULTILINE_COMMENT, '', string)
             .replace('\\\n', '').split('\n'))
             .replace(']', '\n]\n')
-            .replace('[', '\n[\n')
-        ).split("\n")
+            .replace('[', '\n[\n')).split('\n')
 
     def check_warnings(self) -> None:
         for item in self.warnings:
@@ -62,20 +62,28 @@ class Compiler(object):
             if not line:
                 continue
 
+            print(line)
+
             token: Token = Compiler.get_token(line)
 
             if (not token):
                 continue
 
             if (isinstance(token, TokenBranchGrowth)):
+                if (not tokenized or not hasattr(tokenized[-1], "next_branch")):
+                    continue
                 tokenized[-1].next_branch = token
                 tokenized.append(token)
                 continue
 
             if (token.__class__ is FieldStart):
+                if (not tokenized or not hasattr(tokenized[-1], "body")):
+                    continue
                 fields.append(tokenized[-1].body if len(fields) == 0 else fields[-1][-1].body)
                 continue
             if (token.__class__ is FieldEnd):
+                if (not tokenized):
+                    continue
                 fields.pop()
                 continue
 
