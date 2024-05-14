@@ -28,8 +28,7 @@ class Compiler(object):
 
     @staticmethod
     def lexer(string: str) -> str:
-        return ('\n'
-            .join(split(REGEX_LINE_COMMENT, item.strip())[0] for item in sub(REGEX_MULTILINE_COMMENT, '', string)
+        return sub(REGEX_MULTILINE_COMMENT, '', '\n'.join(split(REGEX_LINE_COMMENT, item.strip())[0] for item in string
             .replace('\\\n', '').split('\n'))
             .replace(']', '\n]\n')
             .replace('[', '\n[\n')
@@ -138,7 +137,10 @@ class Compiler(object):
             return ClassToken(line.split(' ')[1].strip(), [])
 
         if (line.split(' ')[0] == "fun"):
-            return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].split('(')[1].split(')')[0].split(',') if item), [])
+            if ('(' in line):
+                return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].split('(')[1].split(')')[0].split(',') if item), [])
+            else:
+                return FunctionToken(line.split('fun ')[1].strip(), [], [])
 
         if (line.split(' ')[0] == "return"):
             return ReturnToken(Compiler.get_token(line.split('return ')[1]))
