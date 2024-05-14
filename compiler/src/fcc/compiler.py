@@ -157,6 +157,8 @@ class Compiler(object):
                 return FunctionToken(line.split('fun ')[1].strip(), [], [])
 
         if (line.split(' ')[0] == "return"):
+            if ('return ' not in line):
+                return ReturnToken(None)
             return ReturnToken(Compiler.get_token(line.split('return ')[1]))
 
         if (line.split(' ')[0] == "if"):
