@@ -281,7 +281,7 @@ def invalid_function_name(code: object, debug_constructor: object, color: str, p
         if (in_comment or not isinstance(token, FunctionToken)):
             continue
 
-        if (not token.name):
+        if (not token.name or token.name.isnumeric()):
             code.debug.append(
                 debug_constructor(
                     code.filename,
