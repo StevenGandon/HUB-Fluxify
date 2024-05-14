@@ -20,6 +20,36 @@ void adjust_endianness(int *value)
     *value = (int)uval;
 }
 
+void execute_instruction(vm_state_t *vm, instruction_t *inst)
+{
+    switch (inst->opcode) {
+        case OP_ADD:
+            vm->registers[0] = inst->operands[0] + inst->operands[1];
+            printf("ADD: %d + %d = %d\n", inst->operands[0], inst->operands[1], vm->registers[0]);
+            break;
+        case OP_SUB:
+            vm->registers[0] = inst->operands[0] - inst->operands[1];
+            printf("SUB: %d - %d = %d\n", inst->operands[0], inst->operands[1], vm->registers[0]);
+            break;
+        case OP_MUL:
+            vm->registers[0] = inst->operands[0] * inst->operands[1];
+            printf("MUL: %d * %d = %d\n", inst->operands[0], inst->operands[1], vm->registers[0]);
+            break;
+        case OP_DIV:
+            if (inst->operands[1] != 0) {
+                vm->registers[0] = inst->operands[0] / inst->operands[1];
+                printf("DIV: %d / %d = %d\n", inst->operands[0], inst->operands[1], vm->registers[0]);
+            } else {
+                fprintf(stderr, "Error: Division by zero\n");
+            }
+            break;
+        default:
+            fprintf(stderr, "Unknown opcode: %d\n", inst->opcode);
+            vm->is_running = 0;
+            break;
+    }
+}
+
 void decode_and_execute_instructions(vm_state_t *vm,
     const unsigned char *byte_stream, size_t size)
 {
@@ -37,7 +67,7 @@ void decode_and_execute_instructions(vm_state_t *vm,
         memcpy(&inst.operands[1], byte_stream + offset + 5, sizeof(int));
         adjust_endianness(&inst.operands[0]);
         adjust_endianness(&inst.operands[1]);
-        //execute_instruction(vm, &inst);
+        execute_instruction(vm, &inst);
         offset += 9;
     }
 }
