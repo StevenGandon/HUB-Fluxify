@@ -232,7 +232,7 @@ def invalid_if_condition(code: object, debug_constructor: object, color: str, pr
                     (len(item) - len(item.lstrip())) + 1,
                     i + 1,
                     f"{prefix}invalid_if_condition",
-                    f"Invalid if condition.",
+                    f"Missing condition.",
                     display=[
                         color + item + RESET_COLOR,
                         ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
@@ -260,7 +260,7 @@ def invalid_else_if_condition(code: object, debug_constructor: object, color: st
                     (len(item) - len(item.lstrip())) + 1,
                     i + 1,
                     f"{prefix}invalid_else_if_condition",
-                    f"Invalid else if condition.",
+                    f"Missing condition.",
                     display=[
                         color + item + RESET_COLOR,
                         ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
