@@ -62,8 +62,6 @@ class Compiler(object):
             if not line:
                 continue
 
-            print(line)
-
             token: Token = Compiler.get_token(line)
 
             if (not token):
