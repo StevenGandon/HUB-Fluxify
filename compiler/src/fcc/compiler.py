@@ -90,7 +90,7 @@ class Compiler(object):
     def compile(self, object_file_class: FloffAuto = Floff64) -> None:
         if (any(map(lambda x: isinstance(x, FCCError), self.debug))):
             return
-        
+
         pattern_stack = CodeStackGeneration()
 
         object_file: FloffAuto = object_file_class()
@@ -152,15 +152,21 @@ class Compiler(object):
             return ReturnToken(Compiler.get_token(line.split('return ')[1]))
 
         if (line.split(' ')[0] == "if"):
+            if ('if ' not in line):
+                return IfToken(None, [])
             return IfToken(Compiler.get_token(line.split('if ')[1]), [])
 
         if (line.split(' ')[0] == "elif"):
+            if ('elif ' not in line):
+                return ElseIfToken(None, [])
             return ElseIfToken(Compiler.get_token(line.split('elif ')[1]), [])
 
         if (line.split(' ')[0] == "else"):
             return ElseToken([])
 
         if (line.split(' ')[0] == "while"):
+            if ('while ' not in line):
+                return WhileToken(None, [])
             return WhileToken(Compiler.get_token(line.split('while ')[1]), [])
 
         if (line.split(' ')[0] == "for"):

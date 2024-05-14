@@ -1,4 +1,8 @@
-fun 10a
+==>if a == a
 [
-    var a = 10
+
+]<==
+elif a == a
+[
+    
 ]
