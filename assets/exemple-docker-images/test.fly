@@ -1,0 +1,12 @@
+==>
+>   example program
+>
+>
+<==
+
+fun main()
+[
+    var string = "Hello world!"
+]
+
+main()
