@@ -137,8 +137,10 @@ class Compiler(object):
             return ClassToken(line.split(' ')[1].strip(), [])
 
         if (line.split(' ')[0] == "fun"):
+            if ('fun ' not in line):
+                return FunctionToken(None, [], [])
             if ('(' in line):
-                return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].split('(')[1].split(')')[0].split(',') if item), [])
+                return FunctionToken(line.split('fun ')[1].strip().split('(')[0], list(item.strip() for item in line.split('fun ')[1].split('(')[1].split(')')[0].split(',') if item.strip()), [])
             else:
                 return FunctionToken(line.split('fun ')[1].strip(), [], [])
 
