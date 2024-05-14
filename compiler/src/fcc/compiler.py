@@ -8,6 +8,8 @@
 from re import match as match_regex, split, search, sub
 from hashlib import sha1
 
+from .patterns import *
+
 from .tokens import *
 from .locals import *
 from .debug import *
@@ -88,9 +90,11 @@ class Compiler(object):
     def compile(self, object_file_class: FloffAuto = Floff64) -> None:
         if (any(map(lambda x: isinstance(x, FCCError), self.debug))):
             return
+        
+        pattern_stack = CodeStackGeneration()
 
         object_file: FloffAuto = object_file_class()
-        instructions: bytes = self.tokens.compile_instruction()
+        instructions: bytes = self.tokens.compile_instruction(pattern_stack)
         constants: bytearray = bytearray()
 
         object_table_class = Floff32Table

@@ -1,8 +1,9 @@
 from .locals import INSTRUCTIONS, STATIC_ADDR_TABLE
+from  .patterns import CodeStackGeneration
 from .constant_table import add_constant_primitive
 
 class Token(object):
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return (bytes(0x00))
 
 class TokenOperator(Token):
@@ -185,7 +186,7 @@ class IntToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return add_constant_primitive(self.value)
 
 class StringToken(Token):
@@ -198,7 +199,7 @@ class StringToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return add_constant_primitive(self.value)
 
 class ListToken(Token):
@@ -213,7 +214,7 @@ class ListToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         pass
         # return add_constant_primitive()
 
@@ -231,10 +232,10 @@ class IncrementToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
     
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return (bytes((
             INSTRUCTIONS["ADD"],
-            self.value.compile_instruction(),
+            self.value.compile_instruction(code_stack),
             1
         )))
 
@@ -252,11 +253,11 @@ class MinusToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return (bytes((
             INSTRUCTIONS["SUB"],
-            self.value.compile_instruction(),
-            self.value2.compile_instruction()
+            self.value.compile_instruction(code_stack),
+            self.value2.compile_instruction(code_stack)
         )))
 
 class PlusToken(TokenOperator):
@@ -273,11 +274,11 @@ class PlusToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return (bytes((
             INSTRUCTIONS["ADD"],
-            self.value.compile_instruction(),
-            self.value2.compile_instruction()
+            self.value.compile_instruction(code_stack),
+            self.value2.compile_instruction(code_stack)
         )))
 
 class MulToken(TokenOperator):
@@ -291,11 +292,11 @@ class MulToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return (bytes((
             INSTRUCTIONS["MUL"],
-            self.value.compile_instruction(),
-            self.value2.compile_instruction()
+            self.value.compile_instruction(code_stack),
+            self.value2.compile_instruction(code_stack)
         )))
 
 class DivToken(TokenOperator):
@@ -309,11 +310,11 @@ class DivToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return (bytes((
             INSTRUCTIONS["DIV"],
-            self.value.compile_instruction(),
-            self.value2.compile_instruction()
+            self.value.compile_instruction(code_stack),
+            self.value2.compile_instruction(code_stack)
         )))
 
 class ModToken(TokenOperator):
@@ -327,11 +328,11 @@ class ModToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return (bytes((
             INSTRUCTIONS["MOD"],
-            self.value.compile_instruction(),
-            self.value2.compile_instruction()
+            self.value.compile_instruction(code_stack),
+            self.value2.compile_instruction(code_stack)
         )))
 
 class EQOperatorToken(TokenOperator):
@@ -412,9 +413,9 @@ class RootToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         temp: bytearray = bytearray()
 
         for item in self.body:
-            temp.extend(item.compile_instruction())
+            temp.extend(item.compile_instruction(code_stack))
         return bytes(temp)
