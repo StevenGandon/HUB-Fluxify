@@ -88,6 +88,13 @@ class ClassToken(Token):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+        temp: bytearray = bytearray()
+
+        for item in self.body:
+            temp.extend(item.compile_instruction(code_stack))
+        return bytes(temp)
+
 class FunctionToken(Token):
     def __init__(self, name: str, args: list, body: list) -> None:
         self.name = name
@@ -100,6 +107,13 @@ class FunctionToken(Token):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, function_prefix = '') -> bytes:
+        temp: bytearray = bytearray()
+
+        for item in self.body:
+            temp.extend(item.compile_instruction(code_stack))
+        return bytes(temp)
 
 class IfToken(TokenBranch):
     def __init__(self, condition: Token, body: list) -> None:
