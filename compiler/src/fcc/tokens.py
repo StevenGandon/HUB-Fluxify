@@ -65,36 +65,6 @@ class AssignToken(Token):
     def __str__(self):
         return self.__repr__()
 
-class ReadToken(Token):
-    def __init__(self, name: str, key) -> None:
-        self.name = name
-        self.key = key
-
-    def __repr__(self):
-        return f"{self.name}->{self.key}"
-
-    def __str__(self):
-        return self.__repr__()
-
-class ClassToken(Token):
-    def __init__(self, name: str, body: list) -> None:
-        self.name = name
-        self.body = body
-
-    def __repr__(self):
-        temp = '\n'.join('  ' + '\n  '.join(str(token).split('\n')) for token in self.body)
-        return f"Class {self.name} [\n{temp}\n]"
-
-    def __str__(self):
-        return self.__repr__()
-
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
-        temp: bytearray = bytearray()
-
-        for item in self.body:
-            temp.extend(item.compile_instruction(code_stack))
-        return bytes(temp)
-
 class FunctionToken(Token):
     def __init__(self, name: str, args: list, body: list) -> None:
         self.name = name

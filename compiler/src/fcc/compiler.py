@@ -143,9 +143,6 @@ class Compiler(object):
         if (line.startswith("'") and line.endswith("'")):
             return (StringToken("'".join("'".join(line.split("'")[1:]).split("'")[:-1])))
 
-        if (line.split(' ')[0] == "class"):
-            return ClassToken(line.split(' ')[1].strip(), [])
-
         if (line.split(' ')[0] == "fun"):
             if ('fun ' not in line):
                 return FunctionToken(None, [], [])
@@ -228,11 +225,6 @@ class Compiler(object):
 
         if ('+' in line):
             return PlusToken(Compiler.get_token(line.split('+')[0]), Compiler.get_token("+".join(line.split('+')[1:])))
-
-        if ('->' in line):
-            start = Compiler.get_token(line.split('->')[0])
-            end = Compiler.get_token("->".join(line.split('->')[1:]))
-            return ReadToken(start if start else line.split('->')[0].strip(), end if end else "->".join(line.split('->')[1:]).strip())
 
         if (line.isnumeric()):
             return IntToken(line)
