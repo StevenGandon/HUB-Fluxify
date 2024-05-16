@@ -11,6 +11,7 @@
 void fun_div(vm_state_t *vm)
 {
     instruction_t inst;
+
     inst.opcode = vm->memory[vm->program_counter];
     inst.operands[0] = vm->memory[vm->program_counter + 1];
     inst.operands[1] = vm->memory[vm->program_counter + 2];
