@@ -17,6 +17,18 @@
     #define OP_MUL  3
     #define OP_DIV  4
 
+    typedef enum {
+        FLO_TYPE_INT,
+        FLO_TYPE_STRING,
+        FLO_TYPE_LIST,
+        FLO_TYPE_OBJECT
+    } FloType;
+
+    typedef struct {
+        int64_t ref_cnt;
+        void *value;
+    } FloVar;
+
     typedef struct _object_s FlObject;
 
     typedef struct _member_list_s {
@@ -45,6 +57,12 @@
         int operands[2];
     } instruction_t;
 
+    typedef struct variable_map_s {
+        char *var_name;
+        FloVar *var_value;
+        struct variable_map_s *next;
+    } variable_map_t;
+
     typedef struct vm_state_s {
         unsigned short arch;
         const char *filename;
@@ -54,6 +72,7 @@
         int is_running;
         size_t memory_size;
         size_t num_registers;
+        variable_map_t *var_map;
     } vm_state_t;
 
     void decode_and_execute_instructions(vm_state_t *vm,
@@ -64,5 +83,10 @@
     void initialize_vm_state(vm_state_t *vm, size_t memory_size);
     void cleanup_vm_state(vm_state_t *vm);
     void load_program(vm_state_t *vm);
+
+    void fun_add(vm_state_t *vm);
+    void fun_sub(vm_state_t *vm);
+    void fun_mul(vm_state_t *vm);
+    void fun_div(vm_state_t *vm);
 
 #endif /* FLUXIFY_H_ */
