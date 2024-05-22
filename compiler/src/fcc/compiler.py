@@ -118,14 +118,19 @@ class Compiler(object):
         elif (isinstance(object_file, Floff32)):
             object_table_class = Floff32Table
 
-        object_file.add_table(object_table_class(TABLE_PROGRAM, instructions))
+        object_file.add_table(object_table_class(TABLE_PROGRAM, bytes(instructions)))
 
         for item in pattern_stack.symbols:
             constants.extend(item.get_byte_codes())
 
         object_file.add_table(object_table_class(TABLE_CONSTANT, bytes(constants)))
 
-        object_file.add_table(object_table_class(TABLE_LABEL, 0x06.to_bytes(1, "big") + b"_start" + 0x00.to_bytes(8, "big")))
+        labels = bytearray()
+
+        for item in pattern_stack.labels:
+            labels.extend(item.get_byte_codes())
+
+        object_file.add_table(object_table_class(TABLE_LABEL, bytes(labels)))
 
         object_file.code_hash = self.get_code_hash()
 
