@@ -14,6 +14,7 @@ void initialize_vm_state(vm_state_t *vm, size_t memory_size)
 {
     vm->memory = calloc(memory_size, sizeof(int));
     vm->memory_addresses = calloc(memory_size, sizeof(intptr_t));
+    vm->registers = calloc(vm->num_registers, sizeof(int));
     vm->memory_size = memory_size;
     vm->program_counter = 0;
     vm->is_running = 1;
@@ -23,6 +24,7 @@ void cleanup_vm_state(vm_state_t *vm)
 {
     free(vm->memory);
     free(vm->memory_addresses);
+    free(vm->registers);
 }
 
 // todo : rework this
