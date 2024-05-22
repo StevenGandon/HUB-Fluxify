@@ -32,10 +32,13 @@ void cleanup_vm_state(vm_state_t *vm)
 {
     free(vm->program);
     free(vm->constants);
-    for (size_t i = 0; i < vm->memory_size; ++i) {
-        free(vm->blocks[i]);
-    }
-    free(vm->blocks);
+    // if (vm->blocks) {
+    //     for (size_t i = 0; i < vm->memory_size; ++i) {
+    //         if (vm->blocks[i] != NULL && (i == 0 || vm->blocks[i] != vm->blocks[i - 1]))
+    //             free(vm->blocks[i]);
+    //     }
+    //     free(vm->blocks);
+    // }
 }
 
 // todo : rework this
