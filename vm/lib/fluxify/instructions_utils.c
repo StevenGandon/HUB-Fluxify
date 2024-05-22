@@ -68,14 +68,19 @@ void decode_and_execute_instructions(vm_state_t *vm,
             fprintf(stderr, "Unexpected end of instruction stream\n");
             break;
         }
+
         instruction_t inst;
 
         inst.opcode = byte_stream[vm->program_counter];
+        if (size - vm->program_counter < 1 + 2 * sizeof(int)) {
+            fprintf(stderr, "Unexpected end of instruction stream\n");
+            break;
+        }
         memcpy(&inst.operands[0], byte_stream + vm->program_counter + 1, sizeof(int));
         memcpy(&inst.operands[1], byte_stream + vm->program_counter + 5, sizeof(int));
         adjust_endianness(&inst.operands[0]);
         adjust_endianness(&inst.operands[1]);
         execute_instruction(vm, &inst);
-        vm->program_counter += 9;
+        vm->program_counter += 1 + 2 * sizeof(int);
     }
 }
