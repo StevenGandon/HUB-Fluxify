@@ -32,4 +32,9 @@ void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
     block_t *src_block = vm->blocks[src_addr];
 
     dest_block->value = src_block->value;
+
+    vm->fetch_dest = dest_block->value;
+    vm->fetch_src = src_block->value;
+
+    printf("Fetched dest: %ld, Fetched src: %ld\n", vm->fetch_dest, vm->fetch_src);
 }

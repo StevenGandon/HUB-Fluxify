@@ -54,4 +54,6 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
         new_area[i].value = 0;
         vm->blocks[address + i] = &new_area[i];
     }
+
+    printf("Reserved area at address: %u, size: %u\n", address, size);
 }

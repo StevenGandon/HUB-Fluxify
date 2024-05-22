@@ -27,5 +27,11 @@ void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst)
     }
 
     block_t *dest_block = vm->blocks[dest_addr];
+
     dest_block->value = constant;
+
+    vm->fetch_dest = dest_block->value;
+    vm->fetch_src = constant;
+
+    printf("Fetched dest: %ld, Fetched constant: %ld\n", vm->fetch_dest, vm->fetch_src);
 }
