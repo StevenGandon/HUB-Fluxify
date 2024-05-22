@@ -8,14 +8,19 @@
 #include "fluxify.h"
 #include <stdio.h>
 
-#include "fluxify.h"
-#include <stdio.h>
-
 void fun_add(vm_state_t *vm, instruction_t *inst)
 {
-    int dest_addr = inst->operands[0];
-    int src_addr1 = inst->operands[1];
-    int src_addr2 = inst->operands[2];
+    (void)inst;
+    size_t pc = vm->program_counter;
+    unsigned int dest_addr = 0;
+    unsigned int src_addr1 = 0;
+    unsigned int src_addr2 = 0;
+
+    for (unsigned int i = 0; i < 4; i++) {
+        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + 1 + i) << (i * 8);
+        src_addr1 |= (unsigned int)vm->fetch_char(vm, pc + 5 + i) << (i * 8);
+        src_addr2 |= (unsigned int)vm->fetch_char(vm, pc + 9 + i) << (i * 8);
+    }
 
     if (vm->blocks[dest_addr] == NULL || vm->blocks[src_addr1] == NULL || vm->blocks[src_addr2] == NULL) {
         fprintf(stderr, "Invalid block address in add operation\n");
