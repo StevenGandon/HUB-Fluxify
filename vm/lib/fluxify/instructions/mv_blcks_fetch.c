@@ -19,7 +19,7 @@ void fun_mv_blcks_fetch(vm_state_t *vm)
         memcpy(&vm->registers[destination_register], (void *)source, (size_t)block_size * sizeof(int));
         vm->program_counter += 4;
     } else {
-        fprintf(stderr, "Error: Invalid register\n");
+        fprintf(stderr, "Error mv_blcks_fetch: Invalid register\n");
         vm->is_running = 0;
     }
 }

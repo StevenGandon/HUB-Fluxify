@@ -17,7 +17,7 @@ void fun_mul(vm_state_t *vm)
     if (reg1 < (int)vm->num_registers && reg2 < (int)vm->num_registers && result_reg < (int)vm->num_registers) {
         vm->registers[result_reg] = vm->registers[reg1] * vm->registers[reg2];
     } else {
-        fprintf(stderr, "Error: Invalid register\n");
+        fprintf(stderr, "Error mul: Invalid register\n");
         vm->is_running = 0;
     }
     vm->program_counter += 4;

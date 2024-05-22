@@ -22,7 +22,7 @@ void fun_div(vm_state_t *vm)
             vm->is_running = 0;
         }
     } else {
-        fprintf(stderr, "Error: Invalid register\n");
+        fprintf(stderr, "Error div: Invalid register\n");
         vm->is_running = 0;
     }
     vm->program_counter += 4;
