@@ -85,16 +85,17 @@
         long int fetch_src;
         block_t **blocks;
 
+        unsigned char *program;
+
         long int *constants;
 
     } vm_state_t;
 
-    void decode_and_execute_instructions(vm_state_t *vm,
-        const unsigned char *byte_stream, size_t size);
+    void run_vm(vm_state_t *vm);
     int parse_arguments(int argc, char **argv, vm_state_t *config);
     void adjust_endianness(int *value);
     void execute_instruction(vm_state_t *vm, instruction_t *inst);
-    void initialize_vm_state(vm_state_t *vm, size_t memory_size);
+    void initialize_vm_state(vm_state_t *vm);
     void cleanup_vm_state(vm_state_t *vm);
     void load_program(vm_state_t *vm);
 

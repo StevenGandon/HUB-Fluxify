@@ -57,25 +57,19 @@ void execute_instruction(vm_state_t *vm, instruction_t *inst)
     }
 }
 
-void decode_and_execute_instructions(vm_state_t *vm,
-    const unsigned char *byte_stream, size_t size)
+void run_vm(vm_state_t *vm)
 {
-    while (vm->is_running && vm->program_counter < size) {
-        if (size - vm->program_counter < 13) {
-            fprintf(stderr, "Unexpected end of instruction stream\n");
-            break;
-        }
+    while (vm->is_running) {
+        // instruction_t inst;
 
-        instruction_t inst;
-
-        inst.opcode = byte_stream[vm->program_counter];
-        memcpy(&inst.operands[0], byte_stream + vm->program_counter + 1, sizeof(int));
-        memcpy(&inst.operands[1], byte_stream + vm->program_counter + 5, sizeof(int));
-        memcpy(&inst.operands[2], byte_stream + vm->program_counter + 9, sizeof(int));
-        adjust_endianness(&inst.operands[0]);
-        adjust_endianness(&inst.operands[1]);
-        adjust_endianness(&inst.operands[2]);
-        execute_instruction(vm, &inst);
-        vm->program_counter += 13;
+        // inst.opcode = byte_stream[vm->program_counter];
+        // memcpy(&inst.operands[0], byte_stream + vm->program_counter + 1, sizeof(int));
+        // memcpy(&inst.operands[1], byte_stream + vm->program_counter + 5, sizeof(int));
+        // memcpy(&inst.operands[2], byte_stream + vm->program_counter + 9, sizeof(int));
+        // adjust_endianness(&inst.operands[0]);
+        // adjust_endianness(&inst.operands[1]);
+        // adjust_endianness(&inst.operands[2]);
+        // execute_instruction(vm, &inst);
+        // vm->program_counter += 13;
     }
 }

@@ -11,20 +11,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void initialize_vm_state(vm_state_t *vm, size_t memory_size)
+void initialize_vm_state(vm_state_t *vm)//, size_t memory_size)
 {
-    vm->blocks = calloc(memory_size, sizeof(block_t *));
-    for (size_t i = 0; i < memory_size; ++i) {
-        vm->blocks[i] = calloc(1, sizeof(block_t));
-        vm->blocks[i]->address = i;
-    }
-    vm->memory_size = memory_size;
+    vm->blocks = NULL;
+    vm->memory_size = 0;
     vm->program_counter = 0;
     vm->is_running = 1;
 }
 
 void cleanup_vm_state(vm_state_t *vm)
 {
+    free(vm->program);
+    free(vm->constants);
     for (size_t i = 0; i < vm->memory_size; ++i) {
         free(vm->blocks[i]);
     }
@@ -32,10 +30,10 @@ void cleanup_vm_state(vm_state_t *vm)
 }
 
 // todo : rework this
-void execute_program(vm_state_t *vm, const unsigned char *bytes, size_t size)
+void execute_program(vm_state_t *vm)//, size_t size)
 {
-    initialize_vm_state(vm, size);
-    decode_and_execute_instructions(vm, bytes, size);
+    initialize_vm_state(vm); //, size);
+    run_vm(vm);
     cleanup_vm_state(vm);
 }
 
@@ -168,6 +166,56 @@ void load_constants64(floff64_t *flo_data, vm_state_t *vm)
     }
 }
 
+void load_instructions64(floff64_t *flo_data, vm_state_t *vm)
+{
+    size_t program_size = 0;
+
+    for (size_t i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_PROGRAM) {
+            program_size += flo_data->body[i]->table_size;
+        }
+    }
+    if (program_size == 0) {
+        vm->program = NULL;
+        return;
+    } else
+        vm->program = malloc(sizeof(unsigned char) * program_size);
+
+    size_t index = 0;
+
+    for (size_t i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_PROGRAM) {
+            memcpy(vm->program + index, flo_data->body[i]->table_bytes, flo_data->body[i]->table_size);
+            index += flo_data->body[i]->table_size;
+        }
+    }
+}
+
+void load_instructions32(floff32_t *flo_data, vm_state_t *vm)
+{
+    unsigned int program_size = 0;
+
+    for (unsigned int i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_PROGRAM) {
+            program_size += flo_data->body[i]->table_size;
+        }
+    }
+    if (program_size == 0) {
+        vm->program = NULL;
+        return;
+    } else
+        vm->program = malloc(sizeof(unsigned char) * program_size);
+
+    unsigned int index = 0;
+
+    for (unsigned int i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_PROGRAM) {
+            memcpy(vm->program + index, flo_data->body[i]->table_bytes, flo_data->body[i]->table_size);
+            index += flo_data->body[i]->table_size;
+        }
+    }
+}
+
 void load_program(vm_state_t *vm)
 {
     void *result = auto_floff(vm->filename);
@@ -186,21 +234,15 @@ void load_program(vm_state_t *vm)
         floff64_t *flo_data = (floff64_t *)result;
 
         load_constants64(flo_data, vm);
-        for (size_t i = 0; i < flo_data->table_number; ++i) {
-            if (flo_data->body[i]->table_type == TABLE_PROGRAM) {
-                execute_program(vm, flo_data->body[i]->table_bytes, flo_data->body[i]->table_size);
-            }
-        }
+        load_instructions64(flo_data, vm);
         printf("Loaded 64-bit .flo file successfully.\n");
+        execute_program(vm);
     } else if (vm->arch == ARCH_X64_32) {
         floff32_t *flo_data = (floff32_t *)result;
 
         load_constants32(flo_data, vm);
-        for (size_t i = 0; i < flo_data->table_number; ++i) {
-            if (flo_data->body[i]->table_type == TABLE_PROGRAM) {
-                execute_program(vm, flo_data->body[i]->table_bytes, flo_data->body[i]->table_size);
-            }
-        }
+        load_instructions32(flo_data, vm);
         printf("Loaded 32-bit .flo file successfully.\n");
+        execute_program(vm);
     }
 }
