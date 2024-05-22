@@ -10,16 +10,22 @@
 
 void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst)
 {
-    int dest_addr = inst->operands[0];
-    int constant = inst->operands[1];
+    (void)inst;
+    size_t pc = vm->program_counter;
+    unsigned int dest_addr = 0;
+    unsigned int constant = 0;
 
-    if (vm->blocks[dest_addr] == NULL) {
+    for (unsigned int i = 0; i < 4; i++) {
+        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + 1 + i) << (i * 8);
+        constant |= (unsigned int)vm->fetch_char(vm, pc + 5 + i) << (i * 8);
+    }
+
+    if (dest_addr >= vm->memory_size || vm->blocks[dest_addr] == NULL) {
         fprintf(stderr, "Invalid block address in mv_constant_fetch operation\n");
         vm->is_running = 0;
         return;
     }
 
     block_t *dest_block = vm->blocks[dest_addr];
-
     dest_block->value = constant;
 }

@@ -11,10 +11,18 @@
 
 void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
 {
-    int dest_addr = inst->operands[0];
-    int src_addr = inst->operands[1];
+    (void)inst;
+    size_t pc = vm->program_counter;
+    unsigned int dest_addr = 0;
+    unsigned int src_addr = 0;
 
-    if (vm->blocks[dest_addr] == NULL || vm->blocks[src_addr] == NULL) {
+    for (unsigned int i = 0; i < 4; i++) {
+        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + 1 + i) << (i * 8);
+        src_addr |= (unsigned int)vm->fetch_char(vm, pc + 5 + i) << (i * 8);
+    }
+
+    if (dest_addr >= vm->memory_size || src_addr >= vm->memory_size ||
+        vm->blocks[dest_addr] == NULL || vm->blocks[src_addr] == NULL) {
         fprintf(stderr, "Invalid block address in mv_fetch_blcks operation\n");
         vm->is_running = 0;
         return;

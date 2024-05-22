@@ -60,12 +60,6 @@ void execute_instruction(vm_state_t *vm, instruction_t *inst)
 void run_vm(vm_state_t *vm)
 {
     while (vm->is_running) {
-        if (vm->program_counter + 13 > vm->program_size) {
-            fprintf(stderr, "Program counter out of bounds\n");
-            vm->is_running = 0;
-            return;
-        }
-
         instruction_t instruction;
 
         instruction.opcode = vm->fetch_char(vm, vm->program_counter);
