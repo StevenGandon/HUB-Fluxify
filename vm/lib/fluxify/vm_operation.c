@@ -15,7 +15,7 @@ void initialize_vm_state(vm_state_t *vm, size_t memory_size)
     vm->blocks = calloc(memory_size, sizeof(block_t *));
     for (size_t i = 0; i < memory_size; ++i) {
         vm->blocks[i] = calloc(1, sizeof(block_t));
-        vm->blocks[i]->adress = i;
+        vm->blocks[i]->address = i;
     }
     vm->memory_size = memory_size;
     vm->program_counter = 0;
@@ -44,6 +44,11 @@ void load_program(vm_state_t *vm)
 
     if (result == NULL) {
         fprintf(stderr, "Corrupted .flo file: %s\n", vm->filename);
+        return;
+    }
+
+    if (((floff32_t *)result)->architecture != vm->arch) {
+        printf("Incompatible architecture, architecture passed as argument is not the same as the file architecture.\n");
         return;
     }
 

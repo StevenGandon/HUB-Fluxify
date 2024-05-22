@@ -69,7 +69,7 @@
     } variable_map_t;
 
     typedef struct block_s {
-        size_t adress;
+        size_t address;
         long long int value;
     } block_t;
 

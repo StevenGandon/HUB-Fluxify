@@ -28,7 +28,7 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     }
 
     for (size_t i = 0; i < (size_t)size; ++i) {
-        new_area[i].adress = (size_t)address + i;
+        new_area[i].address = (size_t)address + i;
         new_area[i].value = 0;
     }
 
