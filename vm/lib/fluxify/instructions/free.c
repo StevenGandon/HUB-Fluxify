@@ -10,14 +10,8 @@
 
 void fun_free_area(vm_state_t *vm)
 {
-    if (vm->program_counter + sizeof(int) > vm->memory_size) {
-        fprintf(stderr, "Error: Not enough memory to free area\n");
-        vm->is_running = 0;
-        return;
-    }
+    intptr_t address = vm->memory_addresses[vm->program_counter + 1];
 
-    int address = vm->memory[vm->program_counter + 1];
-
-    free((void*)address);
-    printf("Freed area at address %d\n", address);
+    free((void *)address);
+    vm->program_counter += 2;
 }

@@ -80,6 +80,7 @@
         const char *filename;
 
         int *memory;
+        intptr_t *memory_addresses;
         int *registers;
         size_t program_counter;
         size_t memory_size;

@@ -10,14 +10,14 @@
 
 void fun_reserve_area(vm_state_t *vm)
 {
-    if (vm->program_counter + sizeof(int) > vm->memory_size) {
-        fprintf(stderr, "Error: Not enough memory to reserve area\n");
+    int size = vm->memory[vm->program_counter + 1];
+    int *new_area = (int *)malloc((size_t)size * sizeof(int));
+
+    if (new_area == NULL) {
+        fprintf(stderr, "Error: Unable to allocate memory\n");
         vm->is_running = 0;
         return;
     }
-
-    int size = vm->memory[vm->program_counter + 1];
-
-    vm->memory[vm->program_counter + 2] = (int)malloc(size * sizeof(int));
-    printf("Reserved area of size %d at address %d\n", size, vm->memory[vm->program_counter + 2]);
+    vm->memory_addresses[vm->program_counter + 2] = (intptr_t)new_area;
+    vm->program_counter += 3;
 }

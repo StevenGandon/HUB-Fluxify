@@ -10,11 +10,15 @@
 
 void fun_sub(vm_state_t *vm)
 {
-    instruction_t inst;
+    int reg1 = vm->memory[vm->program_counter + 1];
+    int reg2 = vm->memory[vm->program_counter + 2];
+    int result_reg = vm->memory[vm->program_counter + 3];
 
-    inst.opcode = vm->memory[vm->program_counter];
-    inst.operands[0] = vm->memory[vm->program_counter + 1];
-    inst.operands[1] = vm->memory[vm->program_counter + 2];
-    vm->registers[0] = inst.operands[0] - inst.operands[1];
-    printf("SUB: %d - %d = %d\n", inst.operands[0], inst.operands[1], vm->registers[0]);
+    if (reg1 < (int)vm->num_registers && reg2 < (int)vm->num_registers && result_reg < (int)vm->num_registers) {
+        vm->registers[result_reg] = vm->registers[reg1] - vm->registers[reg2];
+    } else {
+        fprintf(stderr, "Error: Invalid register\n");
+        vm->is_running = 0;
+    }
+    vm->program_counter += 4;
 }

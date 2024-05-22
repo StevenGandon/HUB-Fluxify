@@ -16,6 +16,11 @@
     #define OP_SUB  2
     #define OP_MUL  3
     #define OP_DIV  4
+    #define OP_RESERVE_AREA 0x43
+    #define OP_FREE_AREA 0x44
+    #define OP_MV_FETCH_BLCKS 0x45
+    #define OP_MV_BLCKS_FETCH 0x46
+    #define OP_MV_CONSTANT_FETCH 0x47
 
     typedef enum {
         FLO_TYPE_INT,
@@ -63,16 +68,29 @@
         struct variable_map_s *next;
     } variable_map_t;
 
+    typedef struct block_s {
+        size_t adress;
+        long long int value;
+    } block_t;
+
     typedef struct vm_state_s {
+
+        int is_running;
         unsigned short arch;
         const char *filename;
+
         int *memory;
+        intptr_t *memory_addresses;
         int *registers;
         size_t program_counter;
-        int is_running;
         size_t memory_size;
         size_t num_registers;
         variable_map_t *var_map;
+
+        long long int fetchDest;
+        long long int fetchSrc;
+        block_t **blocks;
+
     } vm_state_t;
 
     void decode_and_execute_instructions(vm_state_t *vm,
@@ -88,5 +106,10 @@
     void fun_sub(vm_state_t *vm);
     void fun_mul(vm_state_t *vm);
     void fun_div(vm_state_t *vm);
+    void fun_reserve_area(vm_state_t *vm);
+    void fun_free_area(vm_state_t *vm);
+    void fun_mv_fetch_blcks(vm_state_t *vm);
+    void fun_mv_blcks_fetch(vm_state_t *vm);
+    void fun_mv_constant_fetch(vm_state_t *vm);
 
 #endif /* FLUXIFY_H_ */
