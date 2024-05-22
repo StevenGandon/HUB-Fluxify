@@ -7,6 +7,7 @@
 
 #include "fluxify.h"
 #include "floff.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -38,18 +39,131 @@ void execute_program(vm_state_t *vm, const unsigned char *bytes, size_t size)
     cleanup_vm_state(vm);
 }
 
-void load_constants64(floff64_t *flo_data)
+void load_constants32(floff32_t *flo_data, vm_state_t *vm)
 {
-    for (size_t i = 0; i < flo_data->table_number; ++i) {
+    unsigned int constant_number = 0;
+
+    for (unsigned int i = 0; i < flo_data->table_number; ++i) {
         if (flo_data->body[i]->table_type == TABLE_CONSTANT) {
+            for (unsigned int j = 0; j < flo_data->body[i]->table_size; ++j) {
+                unsigned int size;
+
+                j += 1;
+                *((unsigned char *)(&size) + 3) = flo_data->body[i]->table_bytes[j];
+                *((unsigned char *)(&size) + 2) = flo_data->body[i]->table_bytes[j + 1];
+                *((unsigned char *)(&size) + 1) = flo_data->body[i]->table_bytes[j + 2];
+                *((unsigned char *)(&size)) = flo_data->body[i]->table_bytes[j + 3];
+
+                j += 4 + size - 1;
+
+                constant_number += 1;
+            }
+        }
+    }
+    if (constant_number == 0) {
+        vm->constants = NULL;
+        return;
+    } else
+        vm->constants = malloc(sizeof(int *) * constant_number);
+
+    int number = 0;
+
+    for (unsigned int i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_CONSTANT) {
+            for (unsigned int j = 0; j < flo_data->body[i]->table_size; ++j) {
+                unsigned int size;
+                unsigned char type = flo_data->body[i]->table_bytes[j];
+
+                j += 1;
+                *((unsigned char *)(&size) + 3) = flo_data->body[i]->table_bytes[j];
+                *((unsigned char *)(&size) + 2) = flo_data->body[i]->table_bytes[j + 1];
+                *((unsigned char *)(&size) + 1) = flo_data->body[i]->table_bytes[j + 2];
+                *((unsigned char *)(&size)) = flo_data->body[i]->table_bytes[j + 3];
+
+                j += 4;
+
+                if (type == FLO_TYPE_INT) {
+                    *((unsigned char *)(vm->constants + number) + 3) = flo_data->body[i]->table_bytes[j];
+                    *((unsigned char *)(vm->constants + number) + 2) = flo_data->body[i]->table_bytes[j + 1];
+                    *((unsigned char *)(vm->constants + number) + 1) = flo_data->body[i]->table_bytes[j + 2];
+                    *((unsigned char *)(vm->constants + number)) = flo_data->body[i]->table_bytes[j + 3];
+                }
+                if (type == FLO_TYPE_STRING)
+                    vm->constants[number] = (int)strndup((char *)(flo_data->body[i]->table_bytes + j), size);
+                j += size - 1;
+                number += 1;
+            }
         }
     }
 }
 
-void load_constants32(floff32_t *flo_data)
+
+void load_constants64(floff64_t *flo_data, vm_state_t *vm)
 {
+    size_t constant_number = 0;
+
     for (size_t i = 0; i < flo_data->table_number; ++i) {
         if (flo_data->body[i]->table_type == TABLE_CONSTANT) {
+            for (size_t j = 0; j < flo_data->body[i]->table_size; ++j) {
+                unsigned long int size;
+
+                j += 1;
+                *((unsigned char *)(&size) + 7) = flo_data->body[i]->table_bytes[j];
+                *((unsigned char *)(&size) + 6) = flo_data->body[i]->table_bytes[j + 1];
+                *((unsigned char *)(&size) + 5) = flo_data->body[i]->table_bytes[j + 2];
+                *((unsigned char *)(&size) + 4) = flo_data->body[i]->table_bytes[j + 3];
+                *((unsigned char *)(&size) + 3) = flo_data->body[i]->table_bytes[j + 4];
+                *((unsigned char *)(&size) + 2) = flo_data->body[i]->table_bytes[j + 5];
+                *((unsigned char *)(&size) + 1) = flo_data->body[i]->table_bytes[j + 6];
+                *((unsigned char *)(&size)) = flo_data->body[i]->table_bytes[j + 7];
+
+                j += 8 + size - 1;
+
+                constant_number += 1;
+            }
+        }
+    }
+    if (constant_number == 0) {
+        vm->constants = NULL;
+        return;
+    } else
+        vm->constants = malloc(sizeof(long int *) * constant_number);
+
+    unsigned long int number = 0;
+
+    for (size_t i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_CONSTANT) {
+            for (size_t j = 0; j < flo_data->body[i]->table_size; ++j) {
+                unsigned long int size;
+                unsigned char type = flo_data->body[i]->table_bytes[j];
+
+                j += 1;
+                *((unsigned char *)(&size) + 7) = flo_data->body[i]->table_bytes[j];
+                *((unsigned char *)(&size) + 6) = flo_data->body[i]->table_bytes[j + 1];
+                *((unsigned char *)(&size) + 5) = flo_data->body[i]->table_bytes[j + 2];
+                *((unsigned char *)(&size) + 4) = flo_data->body[i]->table_bytes[j + 3];
+                *((unsigned char *)(&size) + 3) = flo_data->body[i]->table_bytes[j + 4];
+                *((unsigned char *)(&size) + 2) = flo_data->body[i]->table_bytes[j + 5];
+                *((unsigned char *)(&size) + 1) = flo_data->body[i]->table_bytes[j + 6];
+                *((unsigned char *)(&size)) = flo_data->body[i]->table_bytes[j + 7];
+
+                j += 8;
+
+                if (type == FLO_TYPE_INT) {
+                    *((unsigned char *)(vm->constants + number) + 7) = flo_data->body[i]->table_bytes[j];
+                    *((unsigned char *)(vm->constants + number) + 6) = flo_data->body[i]->table_bytes[j + 1];
+                    *((unsigned char *)(vm->constants + number) + 5) = flo_data->body[i]->table_bytes[j + 2];
+                    *((unsigned char *)(vm->constants + number) + 4) = flo_data->body[i]->table_bytes[j + 3];
+                    *((unsigned char *)(vm->constants + number) + 3) = flo_data->body[i]->table_bytes[j + 4];
+                    *((unsigned char *)(vm->constants + number) + 2) = flo_data->body[i]->table_bytes[j + 5];
+                    *((unsigned char *)(vm->constants + number) + 1) = flo_data->body[i]->table_bytes[j + 6];
+                    *((unsigned char *)(vm->constants + number)) = flo_data->body[i]->table_bytes[j + 7];
+                }
+                if (type == FLO_TYPE_STRING)
+                    vm->constants[number] = (long int)strndup((char *)(flo_data->body[i]->table_bytes + j), size);
+                j += size - 1;
+                number += 1;
+            }
         }
     }
 }
@@ -71,6 +185,7 @@ void load_program(vm_state_t *vm)
     if (vm->arch == ARCH_X86_64) {
         floff64_t *flo_data = (floff64_t *)result;
 
+        load_constants64(flo_data, vm);
         for (size_t i = 0; i < flo_data->table_number; ++i) {
             if (flo_data->body[i]->table_type == TABLE_PROGRAM) {
                 execute_program(vm, flo_data->body[i]->table_bytes, flo_data->body[i]->table_size);
@@ -80,6 +195,7 @@ void load_program(vm_state_t *vm)
     } else if (vm->arch == ARCH_X64_32) {
         floff32_t *flo_data = (floff32_t *)result;
 
+        load_constants32(flo_data, vm);
         for (size_t i = 0; i < flo_data->table_number; ++i) {
             if (flo_data->body[i]->table_type == TABLE_PROGRAM) {
                 execute_program(vm, flo_data->body[i]->table_bytes, flo_data->body[i]->table_size);

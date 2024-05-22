@@ -23,10 +23,8 @@
     #define OP_MV_CONSTANT_FETCH 0x47
 
     typedef enum {
-        FLO_TYPE_INT,
-        FLO_TYPE_STRING,
-        FLO_TYPE_LIST,
-        FLO_TYPE_OBJECT
+        FLO_TYPE_INT = 1,
+        FLO_TYPE_STRING = 2
     } FloType;
 
     typedef struct {
@@ -70,7 +68,7 @@
 
     typedef struct block_s {
         size_t address;
-        long long int value;
+        long int value;
     } block_t;
 
     typedef struct vm_state_s {
@@ -83,11 +81,11 @@
         size_t memory_size;
         variable_map_t *var_map;
 
-        long long int fetch_dest;
-        long long int fetch_src;
+        long int fetch_dest;
+        long int fetch_src;
         block_t **blocks;
 
-        long long int *constants;
+        long int *constants;
 
     } vm_state_t;
 
