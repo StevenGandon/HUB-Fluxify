@@ -11,7 +11,12 @@ SRC	=	./vm_operation.c \
 		./instructions/add.c \
 		./instructions/sub.c \
 		./instructions/mul.c \
-		./instructions/div.c
+		./instructions/div.c \
+		./instructions/reserve_area.c \
+		./instructions/free.c \
+		./instructions/mv_fetch_blcks.c \
+		./instructions/mv_blcks_fetch.c \
+		./instructions/mv_constant_fetch.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
 CFLAGS	=	-O2 -I ../../include -Wall -Wextra -Werror	\

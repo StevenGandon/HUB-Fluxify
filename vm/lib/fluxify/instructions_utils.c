@@ -24,24 +24,31 @@ void execute_instruction(vm_state_t *vm, instruction_t *inst)
 {
     switch (inst->opcode) {
         case OP_ADD:
-            vm->registers[0] = inst->operands[0] + inst->operands[1];
-            printf("ADD: %d + %d = %d\n", inst->operands[0], inst->operands[1], vm->registers[0]);
+            fun_add(vm);
             break;
         case OP_SUB:
-            vm->registers[0] = inst->operands[0] - inst->operands[1];
-            printf("SUB: %d - %d = %d\n", inst->operands[0], inst->operands[1], vm->registers[0]);
+            fun_sub(vm);
             break;
         case OP_MUL:
-            vm->registers[0] = inst->operands[0] * inst->operands[1];
-            printf("MUL: %d * %d = %d\n", inst->operands[0], inst->operands[1], vm->registers[0]);
+            fun_mul(vm);
             break;
         case OP_DIV:
-            if (inst->operands[1] != 0) {
-                vm->registers[0] = inst->operands[0] / inst->operands[1];
-                printf("DIV: %d / %d = %d\n", inst->operands[0], inst->operands[1], vm->registers[0]);
-            } else {
-                fprintf(stderr, "Error: Division by zero\n");
-            }
+            fun_div(vm);
+            break;
+        case OP_RESERVE_AREA:
+            fun_reserve_area(vm);
+            break;
+        case OP_FREE_AREA:
+            fun_free_area(vm);
+            break;
+        case OP_MV_FETCH_BLCKS:
+            fun_mv_fetch_blcks(vm);
+            break;
+        case OP_MV_BLCKS_FETCH:
+            fun_mv_blcks_fetch(vm);
+            break;
+        case OP_MV_CONSTANT_FETCH:
+            fun_mv_constant_fetch(vm);
             break;
         default:
             fprintf(stderr, "Unknown opcode: %d\n", inst->opcode);
@@ -53,22 +60,19 @@ void execute_instruction(vm_state_t *vm, instruction_t *inst)
 void decode_and_execute_instructions(vm_state_t *vm,
     const unsigned char *byte_stream, size_t size)
 {
-    size_t offset = 0;
-
-    while (vm->is_running && offset < size) {
-        if (size - offset < sizeof(int)) {
+    while (vm->is_running && vm->program_counter < size) {
+        if (size - vm->program_counter < 9) {
             fprintf(stderr, "Unexpected end of instruction stream\n");
             break;
         }
         instruction_t inst;
 
-        inst.opcode = byte_stream[offset];
-        memcpy(&inst.operands[0], byte_stream + offset + 1, sizeof(int));
-        memcpy(&inst.operands[1], byte_stream + offset + 5, sizeof(int));
+        inst.opcode = byte_stream[vm->program_counter];
+        memcpy(&inst.operands[0], byte_stream + vm->program_counter + 1, sizeof(int));
+        memcpy(&inst.operands[1], byte_stream + vm->program_counter + 5, sizeof(int));
         adjust_endianness(&inst.operands[0]);
         adjust_endianness(&inst.operands[1]);
         execute_instruction(vm, &inst);
-        offset += 9;
+        vm->program_counter += 9;
     }
 }
-

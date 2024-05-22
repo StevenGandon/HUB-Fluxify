@@ -16,6 +16,11 @@
     #define OP_SUB  2
     #define OP_MUL  3
     #define OP_DIV  4
+    #define OP_RESERVE_AREA 0x43
+    #define OP_FREE_AREA 0x44
+    #define OP_MV_FETCH_BLCKS 0x45
+    #define OP_MV_BLCKS_FETCH 0x46
+    #define OP_MV_CONSTANT_FETCH 0x47
 
     typedef enum {
         FLO_TYPE_INT,
@@ -100,5 +105,10 @@
     void fun_sub(vm_state_t *vm);
     void fun_mul(vm_state_t *vm);
     void fun_div(vm_state_t *vm);
+    void fun_reserve_area(vm_state_t *vm);
+    void fun_free_area(vm_state_t *vm);
+    void fun_mv_fetch_blcks(vm_state_t *vm);
+    void fun_mv_blcks_fetch(vm_state_t *vm);
+    void fun_mv_constant_fetch(vm_state_t *vm);
 
 #endif /* FLUXIFY_H_ */
