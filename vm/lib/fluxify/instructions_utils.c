@@ -60,7 +60,10 @@ void execute_instruction(vm_state_t *vm, instruction_t *inst)
 void run_vm(vm_state_t *vm)
 {
     while (vm->is_running) {
-        // instruction_t inst;
+        instruction_t instruction;
+
+        instruction.opcode = vm->fetch_char(vm, vm->program_counter);
+        printf("%d\n", instruction.opcode);
 
         // inst.opcode = byte_stream[vm->program_counter];
         // memcpy(&inst.operands[0], byte_stream + vm->program_counter + 1, sizeof(int));
@@ -70,6 +73,8 @@ void run_vm(vm_state_t *vm)
         // adjust_endianness(&inst.operands[1]);
         // adjust_endianness(&inst.operands[2]);
         // execute_instruction(vm, &inst);
-        // vm->program_counter += 13;
+        // if (vm->program_counter > vm->program_size)
+        //     return;
+        vm->program_counter += 1;
     }
 }

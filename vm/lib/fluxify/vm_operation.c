@@ -11,8 +11,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+unsigned char fetch_char(vm_state_t *vm, size_t offset)
+{
+    if (offset < vm->program_size)
+        return (*(vm->program + offset));
+    else
+        return (0);
+}
+
 void initialize_vm_state(vm_state_t *vm)//, size_t memory_size)
 {
+    vm->fetch_char = &fetch_char;
     vm->blocks = NULL;
     vm->memory_size = 0;
     vm->program_counter = 0;
@@ -58,6 +67,7 @@ void load_constants32(floff32_t *flo_data, vm_state_t *vm)
             }
         }
     }
+    vm->constant_size = constant_number;
     if (constant_number == 0) {
         vm->constants = NULL;
         return;
@@ -121,6 +131,7 @@ void load_constants64(floff64_t *flo_data, vm_state_t *vm)
             }
         }
     }
+    vm->constant_size = constant_number;
     if (constant_number == 0) {
         vm->constants = NULL;
         return;
@@ -175,6 +186,7 @@ void load_instructions64(floff64_t *flo_data, vm_state_t *vm)
             program_size += flo_data->body[i]->table_size;
         }
     }
+    vm->program_size = program_size;
     if (program_size == 0) {
         vm->program = NULL;
         return;
@@ -200,6 +212,7 @@ void load_instructions32(floff32_t *flo_data, vm_state_t *vm)
             program_size += flo_data->body[i]->table_size;
         }
     }
+    vm->program_size = program_size;
     if (program_size == 0) {
         vm->program = NULL;
         return;

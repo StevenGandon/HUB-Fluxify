@@ -85,10 +85,13 @@
         long int fetch_src;
         block_t **blocks;
 
+        size_t program_size;
         unsigned char *program;
 
+        size_t constant_size;
         long int *constants;
 
+        unsigned char (*fetch_char)(struct vm_state_s *vm, size_t offset);
     } vm_state_t;
 
     void run_vm(vm_state_t *vm);
