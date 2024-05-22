@@ -23,6 +23,9 @@ void adjust_endianness(int *value)
 void execute_instruction(vm_state_t *vm, instruction_t *inst)
 {
     switch (inst->opcode) {
+        case OP_NOOP:
+            // NOTHING
+            break;
         case OP_ADD:
             fun_add(vm);
             break;
