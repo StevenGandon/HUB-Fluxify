@@ -80,7 +80,7 @@ class Compiler(object):
                 fields.append(tokenized[-1].body if len(fields) == 0 else fields[-1][-1].body)
                 continue
             if (token.__class__ is FieldEnd):
-                if (not tokenized):
+                if (not tokenized or not fields):
                     continue
                 fields.pop()
                 continue
