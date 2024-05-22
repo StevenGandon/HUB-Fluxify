@@ -63,16 +63,27 @@
         struct variable_map_s *next;
     } variable_map_t;
 
+    typedef struct block_s {
+        size_t adress;
+        long long int value;
+    } block_t;
+
     typedef struct vm_state_s {
+
+        int is_running;
         unsigned short arch;
         const char *filename;
+
         int *memory;
         int *registers;
         size_t program_counter;
-        int is_running;
         size_t memory_size;
         size_t num_registers;
         variable_map_t *var_map;
+
+        long long int fetched;
+        block_t **blocks;
+
     } vm_state_t;
 
     void decode_and_execute_instructions(vm_state_t *vm,
