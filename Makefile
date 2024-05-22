@@ -26,7 +26,7 @@ tests_run:
 	cd tests && ./unit_tests
 
 install-docker-image:
-	docker build --tag fluxify .
+	docker build --no-cache --tag fluxify .
 
 run-docker: install-docker-image
 	docker run -it fluxify

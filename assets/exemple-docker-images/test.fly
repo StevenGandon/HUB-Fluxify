@@ -1,12 +1,1 @@
-==>
->   example program
->
->
-<==
-
-fun main()
-[
-    var string = "Hello world!"
-]
-
-main()
+1 + 1 - 5 + 3
