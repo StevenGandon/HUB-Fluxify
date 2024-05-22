@@ -43,7 +43,7 @@ void load_program(vm_state_t *vm)
     void *result = auto_floff(vm->filename);
 
     if (result == NULL) {
-        fprintf(stderr, "Corrupted .flo file: %s\n", vm->filename);
+        fprintf(stderr, "Invalid .flo file: %s\n", vm->filename);
         return;
     }
 
