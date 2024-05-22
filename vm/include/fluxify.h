@@ -59,7 +59,7 @@
 
     typedef struct instruction_s {
         int opcode;
-        int operands[2];
+        int operands[3];
     } instruction_t;
 
     typedef struct variable_map_s {
@@ -79,12 +79,8 @@
         unsigned short arch;
         const char *filename;
 
-        int *memory;
-        intptr_t *memory_addresses;
-        int *registers;
         size_t program_counter;
         size_t memory_size;
-        size_t num_registers;
         variable_map_t *var_map;
 
         long long int fetchDest;
@@ -102,14 +98,14 @@
     void cleanup_vm_state(vm_state_t *vm);
     void load_program(vm_state_t *vm);
 
-    void fun_add(vm_state_t *vm);
-    void fun_sub(vm_state_t *vm);
-    void fun_mul(vm_state_t *vm);
-    void fun_div(vm_state_t *vm);
-    void fun_reserve_area(vm_state_t *vm);
-    void fun_free_area(vm_state_t *vm);
-    void fun_mv_fetch_blcks(vm_state_t *vm);
-    void fun_mv_blcks_fetch(vm_state_t *vm);
-    void fun_mv_constant_fetch(vm_state_t *vm);
+    void fun_add(vm_state_t *vm, instruction_t *inst);
+    void fun_sub(vm_state_t *vm, instruction_t *inst);
+    void fun_mul(vm_state_t *vm, instruction_t *inst);
+    void fun_div(vm_state_t *vm, instruction_t *inst);
+    void fun_reserve_area(vm_state_t *vm, instruction_t *inst);
+    void fun_free_area(vm_state_t *vm, instruction_t *inst);
+    void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst);
+    void fun_mv_blcks_fetch(vm_state_t *vm, instruction_t *inst);
+    void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst);
 
 #endif /* FLUXIFY_H_ */

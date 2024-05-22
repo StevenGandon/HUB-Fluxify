@@ -9,17 +9,24 @@
 #include <stdio.h>
 #include <string.h>
 
-void fun_mv_blcks_fetch(vm_state_t *vm)
+void fun_mv_blcks_fetch(vm_state_t *vm, instruction_t *inst)
 {
-    intptr_t source = vm->memory_addresses[vm->program_counter + 1];
-    int destination_register = vm->memory[vm->program_counter + 2];
-    int block_size = vm->memory[vm->program_counter + 3];
+    int mem_addr = inst->operands[0];
+    int src_addr = inst->operands[1];
 
-    if (destination_register < (int)vm->num_registers) {
-        memcpy(&vm->registers[destination_register], (void *)source, (size_t)block_size * sizeof(int));
-        vm->program_counter += 4;
-    } else {
-        fprintf(stderr, "Error mv_blcks_fetch: Invalid register\n");
+    if ((size_t)mem_addr >= vm->memory_size || (size_t)src_addr >= vm->memory_size) {
+        fprintf(stderr, "Invalid memory address in move blocks fetch operation\n");
         vm->is_running = 0;
+        return;
     }
+
+    block_t *src_block = (block_t *)vm->blocks[src_addr];
+
+    if (vm->blocks[mem_addr] == NULL || src_block == NULL) {
+        fprintf(stderr, "Invalid block address in move blocks fetch operation\n");
+        vm->is_running = 0;
+        return;
+    }
+
+    vm->blocks[mem_addr]->value = src_block->value;
 }

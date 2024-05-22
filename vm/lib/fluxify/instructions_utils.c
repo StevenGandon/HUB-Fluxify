@@ -23,35 +23,32 @@ void adjust_endianness(int *value)
 void execute_instruction(vm_state_t *vm, instruction_t *inst)
 {
     switch (inst->opcode) {
-        case OP_NOOP:
-            vm->program_counter += 1;
-            break;
         case OP_ADD:
-            fun_add(vm);
+            fun_add(vm, inst);
             break;
         case OP_SUB:
-            fun_sub(vm);
+            fun_sub(vm, inst);
             break;
         case OP_MUL:
-            fun_mul(vm);
+            fun_mul(vm, inst);
             break;
         case OP_DIV:
-            fun_div(vm);
+            fun_div(vm, inst);
             break;
         case OP_RESERVE_AREA:
-            fun_reserve_area(vm);
+            fun_reserve_area(vm, inst);
             break;
         case OP_FREE_AREA:
-            fun_free_area(vm);
+            fun_free_area(vm, inst);
             break;
         case OP_MV_FETCH_BLCKS:
-            fun_mv_fetch_blcks(vm);
+            fun_mv_fetch_blcks(vm, inst);
             break;
         case OP_MV_BLCKS_FETCH:
-            fun_mv_blcks_fetch(vm);
+            fun_mv_blcks_fetch(vm, inst);
             break;
         case OP_MV_CONSTANT_FETCH:
-            fun_mv_constant_fetch(vm);
+            fun_mv_constant_fetch(vm, inst);
             break;
         default:
             fprintf(stderr, "Unknown opcode: %d\n", inst->opcode);
@@ -64,7 +61,7 @@ void decode_and_execute_instructions(vm_state_t *vm,
     const unsigned char *byte_stream, size_t size)
 {
     while (vm->is_running && vm->program_counter < size) {
-        if (size - vm->program_counter < 9) {
+        if (size - vm->program_counter < 13) {
             fprintf(stderr, "Unexpected end of instruction stream\n");
             break;
         }
@@ -72,15 +69,13 @@ void decode_and_execute_instructions(vm_state_t *vm,
         instruction_t inst;
 
         inst.opcode = byte_stream[vm->program_counter];
-        if (size - vm->program_counter < 1 + 2 * sizeof(int)) {
-            fprintf(stderr, "Unexpected end of instruction stream\n");
-            break;
-        }
         memcpy(&inst.operands[0], byte_stream + vm->program_counter + 1, sizeof(int));
         memcpy(&inst.operands[1], byte_stream + vm->program_counter + 5, sizeof(int));
+        memcpy(&inst.operands[2], byte_stream + vm->program_counter + 9, sizeof(int));
         adjust_endianness(&inst.operands[0]);
         adjust_endianness(&inst.operands[1]);
+        adjust_endianness(&inst.operands[2]);
         execute_instruction(vm, &inst);
-        vm->program_counter += 1 + 2 * sizeof(int);
+        vm->program_counter += 13;
     }
 }

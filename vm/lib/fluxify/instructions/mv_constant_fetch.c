@@ -8,11 +8,18 @@
 #include "fluxify.h"
 #include <stdio.h>
 
-void fun_mv_constant_fetch(vm_state_t *vm)
+void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst)
 {
-    int constant = vm->memory[vm->program_counter + 1];
-    intptr_t destination = vm->memory_addresses[vm->program_counter + 2];
+    int dest_addr = inst->operands[0];
+    int constant = inst->operands[1];
 
-    *((int *)destination) = constant;
-    vm->program_counter += 3;
+    if (vm->blocks[dest_addr] == NULL) {
+        fprintf(stderr, "Invalid block address in mv_constant_fetch operation\n");
+        vm->is_running = 0;
+        return;
+    }
+
+    block_t *dest_block = vm->blocks[dest_addr];
+
+    dest_block->value = constant;
 }

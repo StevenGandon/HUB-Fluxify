@@ -9,12 +9,19 @@
 #include <stdio.h>
 #include <string.h>
 
-void fun_mv_fetch_blcks(vm_state_t *vm)
+void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
 {
-    intptr_t source = vm->memory_addresses[vm->program_counter + 1];
-    intptr_t destination = vm->memory_addresses[vm->program_counter + 2];
-    int block_size = vm->memory[vm->program_counter + 3];
+    int dest_addr = inst->operands[0];
+    int src_addr = inst->operands[1];
 
-    memcpy((void *)destination, (void *)source, (size_t)block_size * sizeof(int));
-    vm->program_counter += 4;
+    if (vm->blocks[dest_addr] == NULL || vm->blocks[src_addr] == NULL) {
+        fprintf(stderr, "Invalid block address in mv_fetch_blcks operation\n");
+        vm->is_running = 0;
+        return;
+    }
+
+    block_t *dest_block = vm->blocks[dest_addr];
+    block_t *src_block = vm->blocks[src_addr];
+
+    dest_block->value = src_block->value;
 }

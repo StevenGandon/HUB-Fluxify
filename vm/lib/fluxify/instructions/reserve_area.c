@@ -6,18 +6,31 @@
 */
 
 #include "fluxify.h"
+#include <stdlib.h>
 #include <stdio.h>
 
-void fun_reserve_area(vm_state_t *vm)
+void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
 {
-    int size = vm->memory[vm->program_counter + 1];
-    int *new_area = (int *)malloc((size_t)size * sizeof(int));
+    int address = inst->operands[0];
+    int size = inst->operands[1];
 
-    if (new_area == NULL) {
-        fprintf(stderr, "Error: Unable to allocate memory\n");
+    if ((size_t)address >= vm->memory_size) {
+        fprintf(stderr, "Invalid memory address in reserve area operation\n");
         vm->is_running = 0;
         return;
     }
-    vm->memory_addresses[vm->program_counter + 2] = (intptr_t)new_area;
-    vm->program_counter += 3;
+
+    block_t *new_area = (block_t *)malloc((size_t)size * sizeof(block_t));
+    if (new_area == NULL) {
+        fprintf(stderr, "Memory allocation failed in reserve area operation\n");
+        vm->is_running = 0;
+        return;
+    }
+
+    for (size_t i = 0; i < (size_t)size; ++i) {
+        new_area[i].adress = (size_t)address + i;
+        new_area[i].value = 0;
+    }
+
+    vm->blocks[address] = new_area;
 }
