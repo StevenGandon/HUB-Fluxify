@@ -1,6 +1,7 @@
 from .locals import INSTRUCTIONS, STATIC_ADDR_TABLE
-from  .patterns import CodeStackGeneration
-from .constant_table import add_constant_primitive
+from  .patterns import *
+from .constant_table import *
+from .label_table import *
 
 class Token(object):
     def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
@@ -170,8 +171,10 @@ class IntToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
-        return add_constant_primitive(self.value)
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        addr = code_stack.add_symbol(ConstantItem64(self.value))
+
+        code_stack.add_code(PatternFetchConst(addr, fetch_num).to_code())
 
 class StringToken(Token):
     def __init__(self, value: str) -> None:
@@ -183,8 +186,10 @@ class StringToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
-        return add_constant_primitive(self.value)
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        addr = code_stack.add_symbol(ConstantItem64(self.value))
+
+        code_stack.add_code(PatternFetchConst(addr, fetch_num).to_code())
 
 class ListToken(Token):
     def __init__(self, value: list) -> None:
@@ -215,7 +220,7 @@ class IncrementToken(TokenOperator):
 
     def __str__(self):
         return self.__repr__()
-    
+
     def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
         return (bytes((
             INSTRUCTIONS["ADD"],
@@ -237,12 +242,28 @@ class MinusToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
-        return (bytes((
-            INSTRUCTIONS["SUB"],
-            self.value.compile_instruction(code_stack),
-            self.value2.compile_instruction(code_stack)
-        )))
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        blck_0 = PatternAlloc()
+        blck_1 = PatternAlloc()
+
+        code_stack.add_code(blck_0.to_code())
+        code_stack.add_code(blck_1.to_code())
+
+        self.value.compile_instruction(code_stack, fetch_num=0)
+
+        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+
+        self.value2.compile_instruction(code_stack, fetch_num=1)
+
+        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+
+        code_stack.add_code(b'\x02' + fetch_num.to_bytes(4, "big"))
+
+        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
 
 class PlusToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -258,12 +279,28 @@ class PlusToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
-        return (bytes((
-            INSTRUCTIONS["ADD"],
-            self.value.compile_instruction(code_stack),
-            self.value2.compile_instruction(code_stack)
-        )))
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        blck_0 = PatternAlloc()
+        blck_1 = PatternAlloc()
+
+        code_stack.add_code(blck_0.to_code())
+        code_stack.add_code(blck_1.to_code())
+
+        self.value.compile_instruction(code_stack, fetch_num=0)
+
+        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+
+        self.value2.compile_instruction(code_stack, fetch_num=1)
+
+        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+
+        code_stack.add_code(b'\x01' + fetch_num.to_bytes(4, "big"))
+
+        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
 
 class MulToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -398,8 +435,7 @@ class RootToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
-        temp: bytearray = bytearray()
+        code_stack.add_label(LabelItem64("_start", 0))
 
         for item in self.body:
-            temp.extend(item.compile_instruction(code_stack))
-        return bytes(temp)
+            item.compile_instruction(code_stack)

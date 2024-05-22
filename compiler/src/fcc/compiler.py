@@ -100,7 +100,16 @@ class Compiler(object):
         pattern_stack = CodeStackGeneration()
 
         object_file: FloffAuto = object_file_class()
-        instructions: bytes = self.tokens.compile_instruction(pattern_stack)
+        self.tokens.compile_instruction(pattern_stack)
+
+        print(pattern_stack.code)
+        print(pattern_stack.symbols)
+
+        instructions : bytearray = bytearray()
+
+        for item in pattern_stack.code:
+            instructions.extend(item)
+
         constants: bytearray = bytearray()
 
         object_table_class = Floff32Table
@@ -111,8 +120,8 @@ class Compiler(object):
 
         object_file.add_table(object_table_class(TABLE_PROGRAM, instructions))
 
-        for item in STATIC_ADDR_TABLE:
-            constants.extend(STATIC_ADDR_TABLE[item][1].get_byte_codes())
+        for item in pattern_stack.symbols:
+            constants.extend(item.get_byte_codes())
 
         object_file.add_table(object_table_class(TABLE_CONSTANT, bytes(constants)))
 
