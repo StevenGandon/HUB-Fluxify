@@ -83,9 +83,11 @@
         size_t memory_size;
         variable_map_t *var_map;
 
-        long long int fetchDest;
-        long long int fetchSrc;
+        long long int fetch_dest;
+        long long int fetch_src;
         block_t **blocks;
+
+        long long int *constants;
 
     } vm_state_t;
 
