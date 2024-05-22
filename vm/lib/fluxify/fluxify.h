@@ -81,7 +81,8 @@
         size_t num_registers;
         variable_map_t *var_map;
 
-        long long int fetched;
+        long long int fetchDest;
+        long long int fetchSrc;
         block_t **blocks;
 
     } vm_state_t;
