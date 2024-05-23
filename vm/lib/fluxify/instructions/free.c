@@ -19,6 +19,9 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
         address |= (unsigned int)vm->fetch_char(vm, pc + 1 + i);
     }
 
+    printf("%d\n", vm->blocks[address] == NULL);
+    fflush(stdout);
+
     if ((size_t)address >= vm->memory_size || vm->blocks[address] == NULL) {
         fprintf(stderr, "Invalid memory address in free area operation\n");
         vm->is_running = 0;
