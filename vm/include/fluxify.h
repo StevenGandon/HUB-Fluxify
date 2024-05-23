@@ -120,7 +120,7 @@
     void fun_mv_blcks_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst);
 
-    struct opcode_s OPCODES[] = {
+    static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
         {OP_ADD, 1, &fun_add},
         {OP_SUB, 1, &fun_sub},

@@ -7,6 +7,7 @@
 
 #include "fluxify.h"
 #include <string.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 void adjust_endianness(int *value)
@@ -22,38 +23,18 @@ void adjust_endianness(int *value)
 
 void execute_instruction(vm_state_t *vm, instruction_t *inst)
 {
-    switch (inst->opcode) {
-        case OP_ADD:
-            fun_add(vm, inst);
+    bool find = false;
+
+    for (int i = 0; OPCODES[i].callback != NULL; i++){
+        if (OPCODES[i].code == inst->opcode){
+            OPCODES[i].callback(vm, inst);
+            find = true;
             break;
-        case OP_SUB:
-            fun_sub(vm, inst);
-            break;
-        case OP_MUL:
-            fun_mul(vm, inst);
-            break;
-        case OP_DIV:
-            fun_div(vm, inst);
-            break;
-        case OP_RESERVE_AREA:
-            fun_reserve_area(vm, inst);
-            break;
-        case OP_FREE_AREA:
-            fun_free_area(vm, inst);
-            break;
-        case OP_MV_FETCH_BLCKS:
-            fun_mv_fetch_blcks(vm, inst);
-            break;
-        case OP_MV_BLCKS_FETCH:
-            fun_mv_blcks_fetch(vm, inst);
-            break;
-        case OP_MV_CONSTANT_FETCH:
-            fun_mv_constant_fetch(vm, inst);
-            break;
-        default:
-            fprintf(stderr, "Unknown opcode: %d\n", inst->opcode);
-            vm->is_running = 0;
-            break;
+        }
+    }
+    if (!find){
+        fprintf(stderr, "Unknown opcode: %d\n", inst->opcode);
+        vm->is_running = 0;
     }
 }
 
