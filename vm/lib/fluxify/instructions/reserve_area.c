@@ -45,7 +45,7 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
 
     for (; vm->blocks[count] != NULL; ++count);
 
-    vm->blocks[count] = malloc(sizeof(block_t *));
+    vm->blocks[count] = malloc(sizeof(block_t));
     vm->blocks[count]->address = address;
     vm->blocks[count]->value = 0;
     vm->blocks[count + 1] = NULL;
