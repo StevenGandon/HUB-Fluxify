@@ -48,10 +48,10 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
             vm->is_running = 0;
             return;
         }
-        new_area->address = address + i;
+        new_area->address = address;
         new_area->value = 0;
         new_area->size = (size_t)size;
-        vm->blocks[address + i] = new_area;
+        vm->blocks[i] = new_area;
     }
 
     vm->program_counter += 4;
