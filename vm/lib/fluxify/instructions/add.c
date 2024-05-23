@@ -18,6 +18,8 @@ void fun_add(vm_state_t *vm, instruction_t *inst)
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
+    printf("result %ld\n", vm->fetch_dest + vm->fetch_src);
+
     long int result = vm->fetch_dest + vm->fetch_src;
 
     if (fetch == 0) {
