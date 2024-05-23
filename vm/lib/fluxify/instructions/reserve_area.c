@@ -17,7 +17,7 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     long int size = sizeof(long int);
 
     for (unsigned int i = 0; i < 4; i++) {
-        address |= (unsigned int)vm->fetch_char(vm, pc + 1 + i) << (i * 8);
+        address |= (unsigned int)vm->fetch_char(vm, pc + 1 + i);
     }
 
     if (size <= 0) {
