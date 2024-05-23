@@ -94,6 +94,13 @@
         unsigned char (*fetch_char)(struct vm_state_s *vm, size_t offset);
     } vm_state_t;
 
+    struct opcode_s {
+        char code;
+
+        int argument_number;
+        void (*callback)(vm_state_t *vm, instruction_t *inst);
+    };
+
     void run_vm(vm_state_t *vm);
     int parse_arguments(int argc, char **argv, vm_state_t *config);
     void adjust_endianness(int *value);
@@ -102,6 +109,7 @@
     void cleanup_vm_state(vm_state_t *vm);
     void load_program(vm_state_t *vm);
 
+    void fun_noop(vm_state_t *vm, instruction_t *inst);
     void fun_add(vm_state_t *vm, instruction_t *inst);
     void fun_sub(vm_state_t *vm, instruction_t *inst);
     void fun_mul(vm_state_t *vm, instruction_t *inst);
@@ -111,5 +119,19 @@
     void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst);
     void fun_mv_blcks_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst);
+
+    struct opcode_s OPCODES[] = {
+        {OP_NOOP, 0, &fun_noop},
+        {OP_ADD, 1, &fun_add},
+        {OP_SUB, 1, &fun_sub},
+        {OP_MUL, 1, &fun_mul},
+        {OP_DIV, 1, &fun_div},
+        {OP_RESERVE_AREA, 1, &fun_reserve_area},
+        {OP_FREE_AREA, 1, &fun_free_area},
+        {OP_MV_FETCH_BLCKS, 2, &fun_mv_fetch_blcks},
+        {OP_MV_BLCKS_FETCH, 2, &fun_mv_blcks_fetch},
+        {OP_MV_CONSTANT_FETCH, 2, &fun_mv_constant_fetch},
+        {0, 0, NULL}
+    };
 
 #endif /* FLUXIFY_H_ */

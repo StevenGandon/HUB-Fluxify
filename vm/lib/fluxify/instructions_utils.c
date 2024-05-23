@@ -63,6 +63,9 @@ void run_vm(vm_state_t *vm)
         instruction_t instruction;
 
         instruction.opcode = vm->fetch_char(vm, vm->program_counter);
+
+        vm->program_counter += 1;
+
         execute_instruction(vm, &instruction);
 
         // inst.opcode = byte_stream[vm->program_counter];
@@ -74,6 +77,5 @@ void run_vm(vm_state_t *vm)
         // adjust_endianness(&inst.operands[2]);
         // if (vm->program_counter > vm->program_size)
         //     return;
-        vm->program_counter += 13;
     }
 }
