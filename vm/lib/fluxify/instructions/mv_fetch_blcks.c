@@ -13,28 +13,20 @@ void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
 {
     (void)inst;
     size_t pc = vm->program_counter;
+    unsigned int fetch = 0;
     unsigned int dest_addr = 0;
-    unsigned int src_addr = 0;
 
     for (unsigned int i = 0; i < 4; i++) {
-        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + i);
-        src_addr |= (unsigned int)vm->fetch_char(vm, pc + 4 + i);
+        fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
+        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + 4 + i);
     }
 
-    if (dest_addr >= vm->memory_size || src_addr >= vm->memory_size ||
-        vm->blocks[dest_addr] == NULL || vm->blocks[src_addr] == NULL) {
-        fprintf(stderr, "Invalid block address in mv_fetch_blcks operation\n");
-        vm->is_running = 0;
-        return;
+    for (int i = 0; vm->blocks[i] != NULL; i++) {
+        if (vm->blocks[i]->address == dest_addr) {
+            vm->blocks[i]->value = fetch == 0 ? vm->fetch_src : vm->fetch_dest;
+            break;
+        }
     }
-
-    block_t *dest_block = vm->blocks[dest_addr];
-    block_t *src_block = vm->blocks[src_addr];
-
-    dest_block->value = src_block->value;
-
-    vm->fetch_dest = dest_block->value;
-    vm->fetch_src = src_block->value;
 
     vm->program_counter += 8;
     printf("Fetched dest: %ld, Fetched src: %ld\n", vm->fetch_dest, vm->fetch_src);

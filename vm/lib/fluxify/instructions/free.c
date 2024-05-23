@@ -16,36 +16,33 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
     size_t pc = vm->program_counter;
 
     for (unsigned int i = 0; i < 4; i++) {
-        address |= (unsigned int)vm->fetch_char(vm, pc + 1 + i);
+        address |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
-    printf("%d\n", vm->blocks[address] == NULL);
-    fflush(stdout);
-
-    if ((size_t)address >= vm->memory_size || vm->blocks[address] == NULL) {
-        fprintf(stderr, "Invalid memory address in free area operation\n");
-        vm->is_running = 0;
-        return;
-    }
-
+    printf("%d\n", address);
     block_t *area_to_free = vm->blocks[address];
-    if (area_to_free == NULL || area_to_free->size == 0) {
+    if (area_to_free == NULL) {
         fprintf(stderr, "Memory area already freed or invalid address\n");
         vm->is_running = 0;
         return;
     }
 
-    size_t size = area_to_free->size;
-    for (size_t i = 0; i < size; ++i) {
-        if ((size_t)(address + i) >= vm->memory_size || vm->blocks[address + i] == NULL) {
-            fprintf(stderr, "Memory corruption or invalid block in free area operation\n");
-            vm->is_running = 0;
-            return;
-        }
-        free(vm->blocks[address + i]);
-        vm->blocks[address + i] = NULL;
+    int count = 0;
+
+    for (; vm->blocks[i] != NULL; count++);
+
+    block_t **array = malloc(sizeof(block_t *) * count);
+
+    for (int i = 0; vm->blocks[i] != NULL; i++) {
+        if (vm->blocks[i]->address == address)
+            continue;
+        array[i] = malloc(sizeof(block_t));
+        array[i] = vm->blocks[i];
+        free(vm->blocks[i]);
     }
 
-    vm->program_counter += 5;
+    vm->blocks = array;
+
+    vm->program_counter += 4;
     printf("Freed area starting at address: %u\n", address);
 }
