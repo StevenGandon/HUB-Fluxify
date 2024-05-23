@@ -17,7 +17,7 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     long int size = sizeof(long int);
 
     for (unsigned int i = 0; i < 4; i++) {
-        address |= (unsigned int)vm->fetch_char(vm, pc + 1 + i);
+        address |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
     if (size <= 0) {
@@ -54,6 +54,6 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
         vm->blocks[address + i] = new_area;
     }
 
-    vm->program_counter += 5;
+    vm->program_counter += 4;
     printf("Reserved area at address: %u, size: %zu\n", address, (size_t)size);
 }

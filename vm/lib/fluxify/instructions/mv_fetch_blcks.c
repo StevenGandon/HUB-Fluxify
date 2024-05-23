@@ -17,8 +17,8 @@ void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
     unsigned int src_addr = 0;
 
     for (unsigned int i = 0; i < 4; i++) {
-        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + 1 + i) << (i * 8);
-        src_addr |= (unsigned int)vm->fetch_char(vm, pc + 5 + i) << (i * 8);
+        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + i);
+        src_addr |= (unsigned int)vm->fetch_char(vm, pc + 4 + i);
     }
 
     if (dest_addr >= vm->memory_size || src_addr >= vm->memory_size ||
@@ -36,5 +36,6 @@ void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
     vm->fetch_dest = dest_block->value;
     vm->fetch_src = src_block->value;
 
+    vm->program_counter += 8;
     printf("Fetched dest: %ld, Fetched src: %ld\n", vm->fetch_dest, vm->fetch_src);
 }

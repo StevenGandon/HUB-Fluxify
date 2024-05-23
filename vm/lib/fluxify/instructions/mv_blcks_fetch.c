@@ -17,8 +17,8 @@ void fun_mv_blcks_fetch(vm_state_t *vm, instruction_t *inst)
     unsigned int src_addr = 0;
 
     for (unsigned int i = 0; i < 4; i++) {
-        mem_addr |= (unsigned int)vm->fetch_char(vm, pc + 1 + i) << (i * 8);
-        src_addr |= (unsigned int)vm->fetch_char(vm, pc + 5 + i) << (i * 8);
+        mem_addr |= (unsigned int)vm->fetch_char(vm, pc + i);
+        src_addr |= (unsigned int)vm->fetch_char(vm, pc + 4 + i);
     }
 
     if (mem_addr >= vm->memory_size || src_addr >= vm->memory_size || vm->blocks[mem_addr] == NULL || vm->blocks[src_addr] == NULL) {
