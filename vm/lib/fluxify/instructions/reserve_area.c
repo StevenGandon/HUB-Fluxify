@@ -41,18 +41,22 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
         vm->memory_size = new_memory_size;
     }
 
-    for (unsigned int i = 0; i < (unsigned int)size; ++i) {
-        block_t *new_area = (block_t *)malloc(sizeof(block_t));
-        if (new_area == NULL) {
-            fprintf(stderr, "Memory allocation failed in reserve area operation\n");
-            vm->is_running = 0;
-            return;
-        }
-        new_area->address = address;
-        new_area->value = 0;
-        new_area->size = (size_t)size;
-        vm->blocks[i] = new_area;
+    block_t *new_area = (block_t *)malloc(sizeof(block_t));
+    if (new_area == NULL) {
+        fprintf(stderr, "Memory allocation failed in reserve area operation\n");
+        vm->is_running = 0;
+        return;
     }
+    new_area->address = address;
+    new_area->value = 0;
+    new_area->size = (size_t)size;
+
+    int count = 0;
+
+    for (; vm->blocks[count] != NULL; count++);
+
+    vm->blocks[count + 1] = new_area;
+    vm->blocks[count + 2] = NULL;
 
     vm->program_counter += 4;
     printf("Reserved area at address: %u, size: %zu\n", address, (size_t)size);
