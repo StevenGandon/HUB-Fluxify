@@ -41,8 +41,8 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
             }
             array[i - dec] = vm->blocks[i];
         }
-        array[i - dec + 1] = NULL;
-        printf("%ld, %ld\n", i - dec + 1, count);
+        array[i - dec] = NULL;
+        printf("%ld, %ld\n", i - dec, count);
         free(vm->blocks);
         vm->blocks = array;
     } else {
