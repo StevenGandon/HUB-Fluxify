@@ -69,6 +69,7 @@
     typedef struct block_s {
         size_t address;
         long int value;
+        size_t size;
     } block_t;
 
     typedef struct vm_state_s {

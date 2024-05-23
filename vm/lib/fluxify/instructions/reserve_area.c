@@ -12,8 +12,8 @@
 void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
 {
     (void)inst;
-    size_t pc = vm->program_counter;
     unsigned int address = 0;
+    size_t pc = vm->program_counter;
     long int size = sizeof(long int);
 
     for (unsigned int i = 0; i < 4; i++) {
@@ -26,8 +26,8 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
         return;
     }
 
-    size_t new_memory_size = (size_t)address + (size_t)1;
-    if (new_memory_size > vm->memory_size) {
+    if ((size_t)address + (size_t)size > vm->memory_size) {
+        size_t new_memory_size = (size_t)address + (size_t)size;
         block_t **new_blocks = realloc(vm->blocks, new_memory_size * sizeof(block_t *));
         if (new_blocks == NULL) {
             fprintf(stderr, "Memory reallocation failed in reserve area operation\n");
@@ -41,19 +41,19 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
         vm->memory_size = new_memory_size;
     }
 
-    block_t *new_area = (block_t *)malloc(sizeof(block_t));
-    if (new_area == NULL) {
-        fprintf(stderr, "Memory allocation failed in reserve area operation\n");
-        vm->is_running = 0;
-        return;
-    }
-
-    for (long int i = 0; i < size; ++i) {
-        new_area[i].address = address + (size_t)i;
-        new_area[i].value = 0;
-        vm->blocks[address + i] = &new_area[i];
+    for (unsigned int i = 0; i < (unsigned int)size; ++i) {
+        block_t *new_area = (block_t *)malloc(sizeof(block_t));
+        if (new_area == NULL) {
+            fprintf(stderr, "Memory allocation failed in reserve area operation\n");
+            vm->is_running = 0;
+            return;
+        }
+        new_area->address = address + i;
+        new_area->value = 0;
+        new_area->size = (size_t)size;
+        vm->blocks[address + i] = new_area;
     }
 
     vm->program_counter += 5;
-    printf("Reserved area at address: %u, size: %ld\n", address, size);
+    printf("Reserved area at address: %u, size: %zu\n", address, (size_t)size);
 }
