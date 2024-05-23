@@ -10,19 +10,20 @@
 
 void fun_mul(vm_state_t *vm, instruction_t *inst)
 {
-    int dest_addr = inst->operands[0];
-    int src_addr1 = inst->operands[1];
-    int src_addr2 = inst->operands[2];
+    (void)inst;
+    size_t pc = vm->program_counter;
+    unsigned int fetch = 0;
 
-    if (vm->blocks[dest_addr] == NULL || vm->blocks[src_addr1] == NULL || vm->blocks[src_addr2] == NULL) {
-        fprintf(stderr, "Invalid block address in mul operation\n");
-        vm->is_running = 0;
-        return;
+    for (unsigned int i = 0; i < 4; i++) {
+        fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
-    block_t *dest_block = vm->blocks[dest_addr];
-    block_t *src_block1 = vm->blocks[src_addr1];
-    block_t *src_block2 = vm->blocks[src_addr2];
+    long int result = vm->fetch_src * vm->fetch_dest;
 
-    dest_block->value = src_block1->value * src_block2->value;
+    if (fetch == 0) {
+        vm->fetch_src = result;
+    } else {
+        vm->fetch_dest = result;
+    }
+    vm->program_counter += 4;
 }

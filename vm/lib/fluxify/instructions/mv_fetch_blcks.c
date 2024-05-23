@@ -21,11 +21,19 @@ void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
         dest_addr |= (unsigned int)vm->fetch_char(vm, pc + 4 + i);
     }
 
+    long int src_block = 0;
+
     for (int i = 0; vm->blocks[i] != NULL; i++) {
         if (vm->blocks[i]->address == dest_addr) {
-            vm->blocks[i]->value = fetch == 0 ? vm->fetch_src : vm->fetch_dest;
+            src_block = vm->blocks[i]->value;
             break;
         }
+    }
+
+    if (fetch == 0) {
+        vm->fetch_src = src_block;
+    } else {
+        vm->fetch_dest = src_block;
     }
 
     vm->program_counter += 8;

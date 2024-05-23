@@ -28,6 +28,8 @@ void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst)
         vm->fetch_dest = dest_block;
     }
 
+    printf("Fetch value %ld, fetch: %d\n", dest_block, fetch);
+
     vm->program_counter += 8;
 
     printf("Fetched dest: %ld, Fetched constant: %ld\n", vm->fetch_dest, vm->fetch_src);

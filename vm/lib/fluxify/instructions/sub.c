@@ -18,7 +18,7 @@ void fun_sub(vm_state_t *vm, instruction_t *inst)
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
-    long int result = vm->fetch_dest - vm->fetch_src;
+    long int result = vm->fetch_src - vm->fetch_dest;
 
     if (fetch == 0) {
         vm->fetch_src = result;
