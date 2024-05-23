@@ -22,6 +22,8 @@ unsigned char fetch_char(vm_state_t *vm, size_t offset)
 void initialize_vm_state(vm_state_t *vm)//, size_t memory_size)
 {
     vm->fetch_char = &fetch_char;
+    vm->fetch_src = 0;
+    vm->fetch_dest = 0;
     vm->blocks = NULL;
     vm->memory_size = 0;
     vm->program_counter = 0;
