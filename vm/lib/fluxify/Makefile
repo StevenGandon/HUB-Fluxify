@@ -20,7 +20,7 @@ SRC	=	./vm_operation.c \
 		./instructions/noop.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
-CFLAGS	=	-O2 -I ../../include -Wall -Wextra -Werror	\
+CFLAGS	=	-g -O2 -I ../../include -Wall -Wextra -Werror	\
 			-Wshadow -pedantic	-Wno-pointer-to-int-cast \
 			-Waggregate-return -Wdouble-promotion	\
 			-Walloc-zero -Wcast-qual -Wconversion -Winit-self	\
