@@ -20,7 +20,7 @@ void fun_add(vm_state_t *vm, instruction_t *inst)
 
     long int result = vm->fetch_src + vm->fetch_dest;
 
-    printf("result: %ld\n", result);
+    printf("ADD 0: %ld, 1: %ld\n", vm->fetch_src, vm->fetch_dest);
 
     if (fetch == 0) {
         vm->fetch_src = result;

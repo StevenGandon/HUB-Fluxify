@@ -29,5 +29,5 @@ void fun_mv_blcks_fetch(vm_state_t *vm, instruction_t *inst)
     }
 
     vm->program_counter += 8;
-    printf("Fetched dest: %ld, Fetched src2: %ld\n", vm->fetch_dest, vm->fetch_src);
+    printf("MV_BLCK_FETCH 0: %ld, 1: %ld, addr: %u, fetch: %u\n", vm->fetch_src, vm->fetch_dest, dest_addr, fetch);
 }

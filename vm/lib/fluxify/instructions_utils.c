@@ -59,6 +59,6 @@ void run_vm(vm_state_t *vm)
         // if (vm->program_counter > vm->program_size)
         //     return;
 
-        //printf("%ld, %ld\n", vm->fetch_dest, vm->fetch_src);
+        // printf("%ld, %ld\n", vm->fetch_dest, vm->fetch_src);
     }
 }

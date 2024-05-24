@@ -51,5 +51,5 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
     }
 
     vm->program_counter += 4;
-    printf("Freed area starting at address: %u\n", address);
+    printf("Free: %u\n", address);
 }

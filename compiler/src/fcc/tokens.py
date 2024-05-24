@@ -257,7 +257,7 @@ class MinusToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x02' + fetch_num.to_bytes(4, "big"))
 
@@ -294,7 +294,7 @@ class PlusToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x01' + fetch_num.to_bytes(4, "big"))
 

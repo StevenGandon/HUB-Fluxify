@@ -65,5 +65,5 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     vm->blocks[count + 1] = NULL;
 
     vm->program_counter += 4;
-    printf("Reserved area at address: %u, size: %zu\n", address, (size_t)size);
+    printf("Reserved area: %u, size: %zu\n", address, (size_t)size);
 }
