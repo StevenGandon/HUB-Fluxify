@@ -8,16 +8,6 @@
 #include "fluxify.h"
 #include <stdio.h>
 
-/*
-** EPITECH PROJECT, 2024
-** Hub project
-** File description:
-** add
-*/
-
-#include "fluxify.h"
-#include <stdio.h>
-
 void fun_equal_equal(vm_state_t *vm, instruction_t *inst)
 {
     (void)inst;
