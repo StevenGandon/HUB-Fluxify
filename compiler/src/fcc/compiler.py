@@ -225,6 +225,9 @@ class Compiler(object):
         if ('++' in line):
             return IncrementToken(Compiler.get_token(line.split('++')[0]))
 
+        if ('--' in line):
+            return DecrementToken(Compiler.get_token(line.split('--')[0]))
+
         if ('*' in line):
             return MulToken(Compiler.get_token(line.split('*')[0]), Compiler.get_token("*".join(line.split('*')[1:])))
 

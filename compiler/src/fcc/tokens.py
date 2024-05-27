@@ -242,6 +242,27 @@ class IncrementToken(TokenOperator):
             1
         )))
 
+def DecrementToken(TokenOperator):
+    def __init__(self, value: Token) -> None:
+        if (value == None):
+            self.value = IntToken('0')
+        else:
+            self.value = value
+        self.value2 = IntToken('1')
+
+    def __repr__(self):
+        return f"{self.value} - 1"
+
+    def __str__(self):
+        return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+        return (bytes((
+            INSTRUCTIONS["SUB"],
+            self.value.compile_instruction(code_stack),
+            1
+        )))
+
 class MinusToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         if (value == None):
