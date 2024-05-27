@@ -20,6 +20,9 @@
     #define OP_AND  6
     #define OP_OR   7
     #define OP_XOR  8
+    #define OP_EQUAL_EQUAL 0x09
+    #define OP_AND_AND 0x0A
+    #define OP_OR_OR 0x0B
     #define OP_RESERVE_AREA 0x43
     #define OP_FREE_AREA 0x44
     #define OP_MV_FETCH_BLCKS 0x45

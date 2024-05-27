@@ -22,7 +22,10 @@ SRC	=	./vm_operation.c \
 		./instructions/mv_blcks_fetch.c \
 		./instructions/mv_constant_fetch.c	\
 		./instructions/halt.c	\
-		./instructions/noop.c
+		./instructions/noop.c \
+		./instructions/equal_equal.c \
+		./instructions/and_and.c \
+		./instructions/or_or.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
 CFLAGS	=	-g -O2 -I ../../include -Wall -Wextra -Werror	\
