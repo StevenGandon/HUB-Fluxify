@@ -343,7 +343,7 @@ class MulToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x03' + fetch_num.to_bytes(4, "big"))
 
@@ -377,7 +377,7 @@ class DivToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x04' + fetch_num.to_bytes(4, "big"))
 
@@ -411,7 +411,7 @@ class ModToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x05' + fetch_num.to_bytes(4, "big"))
 
@@ -445,7 +445,7 @@ class EQOperatorToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x09' + fetch_num.to_bytes(4, "big"))
 
@@ -479,7 +479,7 @@ class AndOperatorToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x0a' + fetch_num.to_bytes(4, "big"))
 
@@ -513,7 +513,7 @@ class OrOperatorToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x0b' + fetch_num.to_bytes(4, "big"))
 
@@ -547,7 +547,7 @@ class AndToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x06' + fetch_num.to_bytes(4, "big"))
 
@@ -581,7 +581,7 @@ class OrToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x07' + fetch_num.to_bytes(4, "big"))
 
@@ -615,7 +615,7 @@ class XorToken(TokenOperator):
         code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
 
         code_stack.add_code(b'\x08' + fetch_num.to_bytes(4, "big"))
 
