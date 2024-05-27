@@ -2,7 +2,7 @@
 
 from src.replaced_input import *
 from subprocess import Popen
-from os import remove
+from os import remove, name
 from sys import argv
 
 """
@@ -13,6 +13,7 @@ from sys import argv
 """
 
 def compile_code(fcc_path='fcc', code=''):
+    fcc_path = fcc_path.replace('/', '\\') if name == "nt" else fcc_path.replace('\\', '/')
     with open('.temp.fly', 'w') as f:
         f.write(code)
         f.flush()
@@ -23,6 +24,8 @@ def compile_code(fcc_path='fcc', code=''):
     return (status == 0)
 
 def run_code(fvm_path='fvm'):
+    fvm_path = fvm_path.replace('/', '\\') if name == "nt" else fvm_path.replace('\\', '/')
+
     proc = Popen(f"{fvm_path} .temp.flo -arch X86_64", shell=True)
     status = proc.wait(100)
 
