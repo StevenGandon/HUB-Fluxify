@@ -3,6 +3,7 @@
 from src.replaced_input import *
 from subprocess import Popen
 from os import remove, name
+from sys import stdin
 from sys import argv
 
 """
@@ -31,10 +32,7 @@ def run_code(fvm_path='fvm'):
 
     return (status == 0)
 
-def main() -> int:
-    fcc_path = 'fcc' if len(argv) < 2 else argv[1]
-    fvm_path = 'fvm' if len(argv) < 3 else argv[2]
-
+def tty_mode(fcc_path, fvm_path):
     while 1:
         inputed = custom_input(">> ")
 
@@ -50,6 +48,30 @@ def main() -> int:
             remove(".temp.flo")
 
         remove(".temp.fly")
+
+def not_tty(fcc_path, fvm_path):
+    while 1:
+        try:
+            inputed = input()
+
+            if (compile_code(fcc_path, inputed)):
+                run_code(fvm_path)
+                remove(".temp.flo")
+
+            remove(".temp.fly")
+        except KeyboardInterrupt:
+            print('\b\b  \b\b\nCTRL-C')
+        except EOFError:
+            break
+
+def main() -> int:
+    fcc_path = 'fcc' if len(argv) < 2 else argv[1]
+    fvm_path = 'fvm' if len(argv) < 3 else argv[2]
+
+    if (stdin.isatty()):
+        tty_mode(fcc_path, fvm_path)
+    else:
+        not_tty(fcc_path, fvm_path)
 
     return (0)
 
