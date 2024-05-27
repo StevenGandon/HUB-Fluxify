@@ -21,6 +21,7 @@ SRC	=	./vm_operation.c \
 		./instructions/mv_fetch_blcks.c \
 		./instructions/mv_blcks_fetch.c \
 		./instructions/mv_constant_fetch.c	\
+		./instructions/halt.c	\
 		./instructions/noop.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify

@@ -44,8 +44,9 @@ def main() -> int:
 
         if (compile_code(fcc_path, inputed)):
             run_code(fvm_path)
+            remove(".temp.flo")
 
-        remove(".temp.flo")
+        remove(".temp.fly")
 
     return (0)
 

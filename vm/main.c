@@ -14,6 +14,5 @@ int main(int argc, char **argv)
 
     if (parse_arguments(argc, argv, &vm) != 0)
         return 84;
-    load_program(&vm);
-    return 0;
+    return load_program(&vm);
 }

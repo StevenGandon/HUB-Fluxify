@@ -25,6 +25,7 @@
     #define OP_MV_FETCH_BLCKS 0x45
     #define OP_MV_BLCKS_FETCH 0x46
     #define OP_MV_CONSTANT_FETCH 0x47
+    #define OP_HALT 0x48
 
     typedef enum {
         FLO_TYPE_INT = 1,
@@ -106,13 +107,13 @@
         void (*callback)(vm_state_t *vm, instruction_t *inst);
     };
 
-    void run_vm(vm_state_t *vm);
+    char run_vm(vm_state_t *vm);
     int parse_arguments(int argc, char **argv, vm_state_t *config);
     void adjust_endianness(int *value);
     void execute_instruction(vm_state_t *vm, instruction_t *inst);
     void initialize_vm_state(vm_state_t *vm);
     void cleanup_vm_state(vm_state_t *vm);
-    void load_program(vm_state_t *vm);
+    char load_program(vm_state_t *vm);
 
     void fun_noop(vm_state_t *vm, instruction_t *inst);
     void fun_add(vm_state_t *vm, instruction_t *inst);
@@ -128,6 +129,7 @@
     void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst);
     void fun_mv_blcks_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst);
+    void fun_halt(vm_state_t *vm, instruction_t *inst);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
@@ -144,6 +146,7 @@
         {OP_MV_FETCH_BLCKS, 2, &fun_mv_fetch_blcks},
         {OP_MV_BLCKS_FETCH, 2, &fun_mv_blcks_fetch},
         {OP_MV_CONSTANT_FETCH, 2, &fun_mv_constant_fetch},
+        {OP_HALT, 1, &fun_halt},
         {0, 0, NULL}
     };
 

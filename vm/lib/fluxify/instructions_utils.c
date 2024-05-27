@@ -38,7 +38,7 @@ void execute_instruction(vm_state_t *vm, instruction_t *inst)
     }
 }
 
-void run_vm(vm_state_t *vm)
+char run_vm(vm_state_t *vm)
 {
     while (vm->is_running) {
         instruction_t instruction;
@@ -61,4 +61,6 @@ void run_vm(vm_state_t *vm)
 
         printf("%ld, %ld\n", vm->fetch_src, vm->fetch_dest);
     }
+
+    return ((char)vm->fetch_src);
 }

@@ -570,3 +570,5 @@ class RootToken(Token):
 
         for item in self.body:
             item.compile_instruction(code_stack)
+
+        code_stack.add_code(b'\x48' + b'\x00')

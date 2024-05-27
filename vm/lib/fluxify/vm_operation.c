@@ -44,11 +44,14 @@ void cleanup_vm_state(vm_state_t *vm)
 }
 
 // todo : rework this
-void execute_program(vm_state_t *vm)//, size_t size)
+char execute_program(vm_state_t *vm)//, size_t size)
 {
+    char status = 0;
+
     initialize_vm_state(vm); //, size);
-    run_vm(vm);
+    status = run_vm(vm);
     cleanup_vm_state(vm);
+    return (status);
 }
 
 void load_constants32(floff32_t *flo_data, vm_state_t *vm)
@@ -234,18 +237,18 @@ void load_instructions32(floff32_t *flo_data, vm_state_t *vm)
     }
 }
 
-void load_program(vm_state_t *vm)
+char load_program(vm_state_t *vm)
 {
     void *result = auto_floff(vm->filename);
 
     if (result == NULL) {
         fprintf(stderr, "Invalid .flo file: %s\n", vm->filename);
-        return;
+        return (1);
     }
 
     if (((floff32_t *)result)->architecture != vm->arch) {
         printf("Incompatible architecture, architecture passed as argument is not the same as the file architecture.\n");
-        return;
+        return (1);
     }
 
     if (vm->arch == ARCH_X86_64) {
@@ -254,13 +257,14 @@ void load_program(vm_state_t *vm)
         load_constants64(flo_data, vm);
         load_instructions64(flo_data, vm);
         printf("Loaded 64-bit .flo file successfully.\n");
-        execute_program(vm);
+        return execute_program(vm);
     } else if (vm->arch == ARCH_X64_32) {
         floff32_t *flo_data = (floff32_t *)result;
 
         load_constants32(flo_data, vm);
         load_instructions32(flo_data, vm);
         printf("Loaded 32-bit .flo file successfully.\n");
-        execute_program(vm);
+        return execute_program(vm);
     }
+    return (1);
 }
