@@ -1,0 +1,53 @@
+#!/usr/bin/python3
+
+from src.replaced_input import *
+from subprocess import Popen
+from os import remove
+from sys import argv
+
+"""
+-- EPITECH PROJECT, 2024
+-- Hub project
+-- File description:
+-- fli
+"""
+
+def compile_code(fcc_path='fcc', code=''):
+    with open('.temp.fly', 'w') as f:
+        f.write(code)
+        f.flush()
+
+    proc = Popen(f"{fcc_path} .temp.fly -Eall -arch=X86_64", shell=True)
+    status = proc.wait(100)
+
+    return (status == 0)
+
+def run_code(fvm_path='fvm'):
+    proc = Popen(f"{fvm_path} .temp.flo -arch X86_64", shell=True)
+    status = proc.wait(100)
+
+    return (status == 0)
+
+def main() -> int:
+    fcc_path = 'fcc' if len(argv) < 2 else argv[1]
+    fvm_path = 'fvm' if len(argv) < 3 else argv[2]
+
+    while 1:
+        inputed = custom_input(">> ")
+
+        if (inputed == '\x04'):
+            break
+
+        if (inputed == '\x03'):
+            print('\nCTRL-C')
+            continue
+
+        if (compile_code(fcc_path, inputed)):
+            run_code(fvm_path)
+
+        remove(".temp.flo")
+
+    return (0)
+
+if __name__ == "__main__":
+    exit(main())
