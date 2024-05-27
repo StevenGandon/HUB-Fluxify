@@ -16,6 +16,10 @@
     #define OP_SUB  2
     #define OP_MUL  3
     #define OP_DIV  4
+    #define OP_MOD  5
+    #define OP_AND  6
+    #define OP_OR   7
+    #define OP_XOR  8
     #define OP_RESERVE_AREA 0x43
     #define OP_FREE_AREA 0x44
     #define OP_MV_FETCH_BLCKS 0x45
@@ -115,6 +119,10 @@
     void fun_sub(vm_state_t *vm, instruction_t *inst);
     void fun_mul(vm_state_t *vm, instruction_t *inst);
     void fun_div(vm_state_t *vm, instruction_t *inst);
+    void fun_mod(vm_state_t *vm, instruction_t *inst);
+    void fun_and(vm_state_t *vm, instruction_t *inst);
+    void fun_or(vm_state_t *vm, instruction_t *inst);
+    void fun_xor(vm_state_t *vm, instruction_t *inst);
     void fun_reserve_area(vm_state_t *vm, instruction_t *inst);
     void fun_free_area(vm_state_t *vm, instruction_t *inst);
     void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst);
@@ -127,6 +135,10 @@
         {OP_SUB, 1, &fun_sub},
         {OP_MUL, 1, &fun_mul},
         {OP_DIV, 1, &fun_div},
+        {OP_MOD, 1, &fun_mod},
+        {OP_AND, 1, &fun_and},
+        {OP_OR, 1, &fun_or},
+        {OP_XOR, 1, &fun_xor},
         {OP_RESERVE_AREA, 1, &fun_reserve_area},
         {OP_FREE_AREA, 1, &fun_free_area},
         {OP_MV_FETCH_BLCKS, 2, &fun_mv_fetch_blcks},

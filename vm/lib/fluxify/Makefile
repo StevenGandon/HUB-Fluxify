@@ -12,6 +12,10 @@ SRC	=	./vm_operation.c \
 		./instructions/sub.c \
 		./instructions/mul.c \
 		./instructions/div.c \
+		./instructions/mod.c \
+		./instructions/and.c \
+		./instructions/or.c \
+		./instructions/xor.c \
 		./instructions/reserve_area.c \
 		./instructions/free.c \
 		./instructions/mv_fetch_blcks.c \
