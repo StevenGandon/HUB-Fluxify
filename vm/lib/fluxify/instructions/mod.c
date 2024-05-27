@@ -18,6 +18,9 @@ void fun_mod(vm_state_t *vm, instruction_t *inst)
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
+    if (vm->fetch_dest == 0)
+            return;
+
     long int result = vm->fetch_src % vm->fetch_dest;
 
     printf("MOD 0: %ld, 1: %ld\n", vm->fetch_src, vm->fetch_dest);
