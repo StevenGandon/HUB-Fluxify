@@ -41,9 +41,9 @@ INSTRUCTIONS: dict = {
     "AND": 0x06,
     "OR": 0x07,
     "XOR": 0x08,
-    "EQUAL": 0x09,
-    "AND_OPERRATION": 0x0A,
-    "OR_OPERRATION": 0x0B,
+    "EQUAL_EQUAL": 0x09,
+    "AND_AND": 0x0A,
+    "OR_OR": 0x0B,
 }
 
 STATIC_ADDR_TABLE: dict = {}
