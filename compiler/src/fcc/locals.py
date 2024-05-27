@@ -38,6 +38,9 @@ INSTRUCTIONS: dict = {
     "MUL": 0x03,
     "DIV": 0x04,
     "MOD": 0x05,
+    "AND": 0x06,
+    "OR": 0x07,
+    "XOR": 0x08,
 }
 
 STATIC_ADDR_TABLE: dict = {}
