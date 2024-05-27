@@ -206,6 +206,21 @@ class ListToken(Token):
         pass
         # return add_constant_primitive()
 
+class VariableToken(Token):
+    def __init__(self, name) -> None:
+        super().__init__()
+
+        self.name = name
+
+    def __repr__(self):
+        return f"__var({self.name})"
+
+    def __str__(self):
+        return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+        pass
+
 class IncrementToken(TokenOperator):
     def __init__(self, value: Token) -> None:
         if (value == None):

@@ -142,7 +142,7 @@ class Compiler(object):
         line = line.strip()
 
         if (line.split(' ')[0] == "var"):
-            return VarToken((split(REGEX_EQUAL, line)[0].split("var")[1].strip()),
+            return VarToken(Compiler.get_token(split(REGEX_EQUAL, line)[0].split("var")[1]),
                             (Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))) if bool(search(REGEX_EQUAL, line)) else None)
 
         if (line.startswith('[')):
@@ -251,3 +251,6 @@ class Compiler(object):
 
         if (bool(match_regex(REGEX_BINARY, line))):
             return IntToken(line.split('0b')[1], 2)
+
+        if (bool(match_regex(REGEX_VARIABLE_NAME, line))):
+            return VariableToken(line.strip())
