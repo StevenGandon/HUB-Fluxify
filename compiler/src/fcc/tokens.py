@@ -429,6 +429,29 @@ class EQOperatorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        blck_0 = PatternAlloc()
+        blck_1 = PatternAlloc()
+
+        code_stack.add_code(blck_0.to_code())
+        code_stack.add_code(blck_1.to_code())
+
+        self.value.compile_instruction(code_stack, fetch_num=0)
+
+        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+
+        self.value2.compile_instruction(code_stack, fetch_num=1)
+
+        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+
+        code_stack.add_code(b'\x09' + fetch_num.to_bytes(4, "big"))
+
+        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+
 class AndOperatorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         self.value = value
@@ -440,6 +463,29 @@ class AndOperatorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        blck_0 = PatternAlloc()
+        blck_1 = PatternAlloc()
+
+        code_stack.add_code(blck_0.to_code())
+        code_stack.add_code(blck_1.to_code())
+
+        self.value.compile_instruction(code_stack, fetch_num=0)
+
+        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+
+        self.value2.compile_instruction(code_stack, fetch_num=1)
+
+        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+
+        code_stack.add_code(b'\x0a' + fetch_num.to_bytes(4, "big"))
+
+        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+
 class OrOperatorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         self.value = value
@@ -450,6 +496,29 @@ class OrOperatorToken(TokenOperator):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        blck_0 = PatternAlloc()
+        blck_1 = PatternAlloc()
+
+        code_stack.add_code(blck_0.to_code())
+        code_stack.add_code(blck_1.to_code())
+
+        self.value.compile_instruction(code_stack, fetch_num=0)
+
+        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+
+        self.value2.compile_instruction(code_stack, fetch_num=1)
+
+        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 1).to_code())
+
+        code_stack.add_code(b'\x0b' + fetch_num.to_bytes(4, "big"))
+
+        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
 
 class AndToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
