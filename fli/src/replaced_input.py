@@ -21,10 +21,16 @@ def custom_input(display: str = '') -> str:
         if (pressed == b'\x03'):
             return '\x03'
 
-        if (_str_to_ascii(pressed) in (8, 127)):
-            text = text[:cursor - 1] + text[cursor:]
+        if (_str_to_ascii(pressed) in (8, 127) and cursor > 0):
+            if (cursor == len(text)):
+                text = text[:-1]
+            else:
+                text = text[:cursor - 1] + text[cursor:]
+
             cursor -= 1
-            print(len(text) * ' ' + '\r' + display + text + '\b' * (len(text) - cursor), end='', flush=True)
+
+            print('\r' + ((len(text) + 1 + len(display)) * ' ') + '\r' + display + text + '\b' * (len(text) - cursor), end='', flush=True)
+
         elif (_str_to_ascii(pressed) in (0xe0, 0x1b)):
             temp = getch()
             if (temp == b'['):
