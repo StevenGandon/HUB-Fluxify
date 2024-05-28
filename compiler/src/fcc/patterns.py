@@ -7,7 +7,7 @@ INSTRUCTIONS = {
     "mv_fetch_blcks": 0x45,
     "mv_blcks_fetch": 0x46,
     "mv_contant_fetch": 0x47,
-    "mv_fetch_pc": 0x48
+    "mv_fetch_pc": 0x49
 }
 
 class CodeStackGeneration(object):
