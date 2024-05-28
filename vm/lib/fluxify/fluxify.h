@@ -80,6 +80,11 @@
         size_t size;
     } block_t;
 
+    typedef struct label_s {
+        char *name;
+        uint64_t position;
+    } label_t;
+
     typedef struct vm_state_s {
 
         int is_running;
@@ -99,6 +104,9 @@
 
         size_t constant_size;
         long int *constants;
+
+        size_t label_size;
+        label_t *labels;
 
         unsigned char (*fetch_char)(struct vm_state_s *vm, size_t offset);
     } vm_state_t;

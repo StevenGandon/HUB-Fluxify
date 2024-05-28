@@ -113,7 +113,6 @@ void load_constants32(floff32_t *flo_data, vm_state_t *vm)
     }
 }
 
-
 void load_constants64(floff64_t *flo_data, vm_state_t *vm)
 {
     size_t constant_number = 0;
@@ -237,6 +236,84 @@ void load_instructions32(floff32_t *flo_data, vm_state_t *vm)
     }
 }
 
+void load_labels32(floff32_t *flo_data, vm_state_t *vm)
+{
+    unsigned int label_number = 0;
+
+    for (unsigned int i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_LABEL) {
+            label_number += flo_data->body[i]->table_size / (sizeof(unsigned char) + sizeof(unsigned int) + 1);
+        }
+    }
+    vm->label_size = label_number;
+    if (label_number == 0) {
+        vm->labels = NULL;
+        return;
+    } else {
+        vm->labels = malloc(sizeof(label_t) * label_number);
+        memset(vm->labels, 0, sizeof(label_t) * label_number);
+    }
+
+    unsigned int index = 0;
+
+    for (unsigned int i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_LABEL) {
+            unsigned int offset = 0;
+            while (offset < flo_data->body[i]->table_size) {
+                unsigned char name_length = flo_data->body[i]->table_bytes[offset];
+                vm->labels[index].name = malloc(name_length + 1);
+                memcpy(vm->labels[index].name, &flo_data->body[i]->table_bytes[offset + 1], name_length);
+                vm->labels[index].name[name_length] = 0;
+                offset += name_length + 1;
+
+                vm->labels[index].position = *((unsigned int *)&flo_data->body[i]->table_bytes[offset]);
+                offset += sizeof(unsigned int);
+
+                index++;
+            }
+        }
+    }
+}
+
+void load_labels64(floff64_t *flo_data, vm_state_t *vm)
+{
+    size_t label_number = 0;
+
+    for (size_t i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_LABEL) {
+            label_number += flo_data->body[i]->table_size / (sizeof(unsigned char) + sizeof(uint64_t) + 1);
+        }
+    }
+    vm->label_size = label_number;
+    if (label_number == 0) {
+        vm->labels = NULL;
+        return;
+    } else {
+        vm->labels = malloc(sizeof(label_t) * label_number);
+        memset(vm->labels, 0, sizeof(label_t) * label_number);
+    }
+
+    size_t index = 0;
+
+    for (size_t i = 0; i < flo_data->table_number; ++i) {
+        if (flo_data->body[i]->table_type == TABLE_LABEL) {
+            size_t offset = 0;
+            while (offset < flo_data->body[i]->table_size) {
+                unsigned char name_length = flo_data->body[i]->table_bytes[offset];
+                vm->labels[index].name = malloc(name_length + 1);
+                memcpy(vm->labels[index].name, &flo_data->body[i]->table_bytes[offset + 1], name_length);
+                vm->labels[index].name[name_length] = 0;
+                offset += name_length + 1;
+
+                vm->labels[index].position = *((uint64_t *)&flo_data->body[i]->table_bytes[offset]);
+                offset += sizeof(uint64_t);
+
+                index++;
+            }
+        }
+    }
+}
+
 char load_program(vm_state_t *vm)
 {
     void *result = auto_floff(vm->filename);
@@ -256,6 +333,7 @@ char load_program(vm_state_t *vm)
 
         load_constants64(flo_data, vm);
         load_instructions64(flo_data, vm);
+        load_labels64(flo_data, vm);
         printf("Loaded 64-bit .flo file successfully.\n");
         return execute_program(vm);
     } else if (vm->arch == ARCH_X64_32) {
@@ -263,6 +341,7 @@ char load_program(vm_state_t *vm)
 
         load_constants32(flo_data, vm);
         load_instructions32(flo_data, vm);
+        load_labels32(flo_data, vm);
         printf("Loaded 32-bit .flo file successfully.\n");
         return execute_program(vm);
     }
