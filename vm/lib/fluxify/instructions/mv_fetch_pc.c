@@ -19,5 +19,5 @@ void fun_mv_fetch_pc(vm_state_t *vm, instruction_t *inst)
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
-    vm->program_counter = fetch == 0 ? vm->fetch_src : vm->fetch_dest;
+    vm->program_counter = fetch == 0 ? (size_t)vm->fetch_src : (size_t)vm->fetch_dest;
 }

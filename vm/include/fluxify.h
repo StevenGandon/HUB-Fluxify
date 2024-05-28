@@ -109,6 +109,10 @@
         size_t label_size;
         label_t *labels;
 
+        uint64_t *call_stack;
+        size_t call_stack_size;
+        size_t call_stack_capacity;
+
         unsigned char (*fetch_char)(struct vm_state_s *vm, size_t offset);
     } vm_state_t;
 
@@ -126,6 +130,8 @@
     void initialize_vm_state(vm_state_t *vm);
     void cleanup_vm_state(vm_state_t *vm);
     char load_program(vm_state_t *vm);
+    void push_call_stack(vm_state_t *vm, uint64_t return_address);
+    uint64_t pop_call_stack(vm_state_t *vm);
 
     void fun_noop(vm_state_t *vm, instruction_t *inst);
     void fun_add(vm_state_t *vm, instruction_t *inst);

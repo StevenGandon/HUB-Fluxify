@@ -314,6 +314,24 @@ void load_labels64(floff64_t *flo_data, vm_state_t *vm)
     }
 }
 
+void push_call_stack(vm_state_t *vm, uint64_t return_address)
+{
+    if (vm->call_stack_size >= vm->call_stack_capacity) {
+        vm->call_stack_capacity *= 2;
+        vm->call_stack = realloc(vm->call_stack, vm->call_stack_capacity * sizeof(uint64_t));
+    }
+    vm->call_stack[vm->call_stack_size++] = return_address;
+}
+
+uint64_t pop_call_stack(vm_state_t *vm)
+{
+    if (vm->call_stack_size == 0) {
+        fprintf(stderr, "Call stack underflow\n");
+        exit(EXIT_FAILURE);
+    }
+    return vm->call_stack[--vm->call_stack_size];
+}
+
 char load_program(vm_state_t *vm)
 {
     void *result = auto_floff(vm->filename);
