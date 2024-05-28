@@ -2,13 +2,12 @@ fun name (arg1, arg2, arg3, arg4)
 [
     =>  Ceci est un commentaire
 
-    ==>
+==>
         Ceci est un commentaire multiligne
         sq
-        sq 
-        q <
-        = 1
-    <==
+        sq
+        1
+<==
 
     var name = value
     list name = {value1, value2, value3}

@@ -6,7 +6,8 @@ INSTRUCTIONS = {
     "free_area": 0x44,
     "mv_fetch_blcks": 0x45,
     "mv_blcks_fetch": 0x46,
-    "mv_contant_fetch": 0x47
+    "mv_contant_fetch": 0x47,
+    "mv_fetch_pc": 0x48
 }
 
 class CodeStackGeneration(object):
@@ -100,3 +101,12 @@ class PatternFetchConst(Pattern):
 
     def to_code(self) -> bytes:
         return b"\x47" + self.fetch_num.to_bytes(4, "big") + self.addr.to_bytes(4, "big")
+
+class PatternPcFetch(Pattern):
+    def __init__(self, fetch_num: int) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return b"\x48" + self.fetch_num.to_bytes(4, "big")
