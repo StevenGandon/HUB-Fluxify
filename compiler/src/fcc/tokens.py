@@ -80,22 +80,23 @@ class FunctionToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        const_temp = ConstantItem64(0)
+
+        addr = code_stack.add_symbol(const_temp)
+        code_stack.add_code(PatternFetchConst(addr, 0).to_code())
+        code_stack.add_code(PatternPcFetch(0).to_code())
+
         label = LabelItem64(self.name, 0)
-        block0 = PatternAlloc()
-
         code_stack.add_label(label)
-
-        code_stack.add_code(block0.to_code())
-
-        code_stack.add_code(PatternFetchPc(0).to_code())
-        code_stack.add_code(PatternStoreFetch(block0.ptr, 0).to_code())
 
         for item in self.body:
             item.compile_instruction(code_stack, fetch_num=fetch_num)
 
-        code_stack.add_code(PatternFetchBlcks(block0.ptr, int(not fetch_num)).to_code())
-        code_stack.add_code(PatternFree(block0.ptr).to_code())
-        code_stack.add_code(PatternPcFetch(int(not fetch_num)).to_code())
+        # code_stack.add_code(PatternFetchBlcks(block0.ptr, int(not fetch_num)).to_code())
+        # code_stack.add_code(PatternFree(block0.ptr).to_code())
+        # code_stack.add_code(PatternPcFetch(int(not fetch_num)).to_code())
+
+        const_temp.item = (sum(map(len, code_stack.code)))
 
 class IfToken(TokenBranch):
     def __init__(self, condition: Token, body: list) -> None:
