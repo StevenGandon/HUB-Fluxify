@@ -19,11 +19,5 @@ void fun_mv_pc_fetch(vm_state_t *vm, instruction_t *inst)
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
-    vm->program_counter += 4;
-
-    if (fetch == 0) {
-        vm->fetch_src = (long int)vm->program_counter;
-    } else {
-        vm->fetch_dest = (long int)vm->program_counter;
-    }
+    vm->program_counter = fetch == 0 ? (size_t)vm->fetch_src : (size_t)vm->fetch_dest;
 }
