@@ -79,11 +79,18 @@ class FunctionToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, function_prefix = '') -> bytes:
-        code_stack.add_label(LabelItem64(self.name, 0))
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+        label = LabelItem64(self.name, 0)
+        block0 = PatternAlloc()
+
+        code_stack.add_label(label)
+
+        code_stack.add_code(block0)
 
         for item in self.body:
             item.compile_instruction(code_stack)
+
+        code_stack.add_code(PatternFree(block0.ptr))
 
 class IfToken(TokenBranch):
     def __init__(self, condition: Token, body: list) -> None:
