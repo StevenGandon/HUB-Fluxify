@@ -4,7 +4,7 @@ from .constant_table import *
 from .label_table import *
 
 class Token(object):
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
         return (bytes(0x00))
 
 class TokenOperator(Token):
@@ -87,10 +87,15 @@ class FunctionToken(Token):
 
         code_stack.add_code(block0)
 
-        for item in self.body:
-            item.compile_instruction(code_stack)
+        code_stack.add_code(PatternFetchPc(0))
+        code_stack.add_code(PatternStoreFetch(block0.ptr, 0))
 
+        for item in self.body:
+            item.compile_instruction(code_stack, fetch_num=fetch_num)
+
+        code_stack.add_code(PatternFetchBlcks(block0.ptr, int(not fetch_num)))
         code_stack.add_code(PatternFree(block0.ptr))
+        code_stack.add_code(PatternPcFetch(int(not fetch_num)))
 
 class IfToken(TokenBranch):
     def __init__(self, condition: Token, body: list) -> None:
@@ -209,7 +214,7 @@ class ListToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
         pass
         # return add_constant_primitive()
 
@@ -225,7 +230,7 @@ class VariableToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
         pass
 
 class IncrementToken(TokenOperator):
@@ -242,7 +247,7 @@ class IncrementToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
         return (bytes((
             INSTRUCTIONS["ADD"],
             self.value.compile_instruction(code_stack),
@@ -263,7 +268,7 @@ class DecrementToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
         return (bytes((
             INSTRUCTIONS["SUB"],
             self.value.compile_instruction(code_stack),
@@ -662,10 +667,10 @@ class RootToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
         code_stack.add_label(LabelItem64("_start", 0))
 
         for item in self.body:
-            item.compile_instruction(code_stack)
+            item.compile_instruction(code_stack, fetch_num)
 
         code_stack.add_code(b'\x48' + b'\x00')
