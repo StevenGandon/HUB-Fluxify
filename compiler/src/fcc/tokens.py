@@ -85,17 +85,17 @@ class FunctionToken(Token):
 
         code_stack.add_label(label)
 
-        code_stack.add_code(block0)
+        code_stack.add_code(block0.to_code())
 
-        code_stack.add_code(PatternFetchPc(0))
-        code_stack.add_code(PatternStoreFetch(block0.ptr, 0))
+        code_stack.add_code(PatternFetchPc(0).to_code())
+        code_stack.add_code(PatternStoreFetch(block0.ptr, 0).to_code())
 
         for item in self.body:
             item.compile_instruction(code_stack, fetch_num=fetch_num)
 
-        code_stack.add_code(PatternFetchBlcks(block0.ptr, int(not fetch_num)))
-        code_stack.add_code(PatternFree(block0.ptr))
-        code_stack.add_code(PatternPcFetch(int(not fetch_num)))
+        code_stack.add_code(PatternFetchBlcks(block0.ptr, int(not fetch_num)).to_code())
+        code_stack.add_code(PatternFree(block0.ptr).to_code())
+        code_stack.add_code(PatternPcFetch(int(not fetch_num)).to_code())
 
 class IfToken(TokenBranch):
     def __init__(self, condition: Token, body: list) -> None:
