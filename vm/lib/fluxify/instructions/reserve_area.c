@@ -16,7 +16,6 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     size_t pc = vm->program_counter;
     long int size = sizeof(long int);
 
-    // Fetch address from instruction
     for (unsigned int i = 0; i < 4; i++) {
         address |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
@@ -27,22 +26,10 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
         return;
     }
 
-    if ((size_t)address + (size_t)size > vm->memory_size) {
-        size_t new_memory_size = (size_t)address + (size_t)size;
-        block_t **new_blocks = realloc(vm->blocks, new_memory_size * sizeof(block_t *));
-        if (new_blocks == NULL) {
-            fprintf(stderr, "Memory reallocation failed in reserve area operation\n");
-            vm->is_running = 0;
-            return;
-        }
-        vm->blocks = new_blocks;
-        for (size_t i = vm->memory_size; i < new_memory_size; ++i) {
-            vm->blocks[i] = NULL;
-        }
-        vm->memory_size = new_memory_size;
-    }
-
     int count = 0;
+
+    if (vm->blocks == NULL)
+        return;
 
     for (; vm->blocks[count] != NULL; ++count);
 
