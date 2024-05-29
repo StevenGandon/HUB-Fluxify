@@ -15,7 +15,6 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     unsigned int address = 0;
     size_t pc = vm->program_counter;
     long int size = sizeof(long int);
-
     for (unsigned int i = 0; i < 4; i++) {
         address |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
@@ -26,10 +25,16 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
         return;
     }
 
-    int count = 0;
-
-    if (vm->blocks == NULL)
+    if (vm->blocks == NULL) {
+        vm->blocks = malloc(sizeof(block_t *) * 2);
+        vm->blocks[0]->address = address;
+        vm->blocks[0]->value = 0;
+        vm->blocks[1] = NULL;
+        vm->program_counter += 4;
         return;
+    }
+
+    int count = 0;
 
     for (; vm->blocks[count] != NULL; ++count);
 
