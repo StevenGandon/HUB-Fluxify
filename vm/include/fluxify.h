@@ -30,6 +30,7 @@
     #define OP_MV_CONSTANT_FETCH 0x47
     #define OP_HALT 0x48
     #define OP_MV_FETCH_PC 0x49
+    #define OP_MV_PC_FETCH 0x50
 
     typedef enum {
         FLO_TYPE_INT = 1,
@@ -149,6 +150,7 @@
     void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_halt(vm_state_t *vm, instruction_t *inst);
     void fun_mv_fetch_pc(vm_state_t *vm, instruction_t *inst);
+    void fun_mv_pc_fetch(vm_state_t *vm, instruction_t *inst);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
@@ -167,6 +169,7 @@
         {OP_MV_CONSTANT_FETCH, 2, &fun_mv_constant_fetch},
         {OP_HALT, 1, &fun_halt},
         {OP_MV_FETCH_PC, 1, &fun_mv_fetch_pc},
+        {OP_MV_PC_FETCH, 1, &fun_mv_pc_fetch},
         {0, 0, NULL}
     };
 
