@@ -1,3 +1,4 @@
+from .patterns import CodeStackGeneration
 from .locals import INSTRUCTIONS, STATIC_ADDR_TABLE
 from  .patterns import *
 from .constant_table import *
@@ -172,6 +173,22 @@ class FunctionCall(Token):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        allocs = [PatternAlloc() for _ in range(len(self.args) + 1)]
+
+        for item in allocs:
+            code_stack.add_code(item.to_code())
+
+        for i, item in enumerate(self.args):
+            item.compile_instruction(code_stack, fetch_num=0)
+            code_stack.add_code(PatternStoreFetch(allocs[1 + i].ptr, 0).to_code())
+
+        code_stack.add_code(PatternFetchPc(0).to_code())
+        code_stack.add_code(PatternStoreFetch(allocs[0].ptr, 0).to_code())
+
+        for item in allocs:
+            code_stack.add_code(PatternFree(item.ptr).to_code())
 
 class IntToken(Token):
     def __init__(self, value: int, base: int = 10) -> None:

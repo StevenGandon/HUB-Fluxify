@@ -2,8 +2,8 @@
     Test program
 <==
 
-fun test() [
-    8 + 5
+fun test(arg0, arg1) [
+    arg0 + arg1
 ]
 
-test()
+test(4, 5)
