@@ -242,7 +242,7 @@ class IncrementToken(TokenOperator):
             1
         )))
 
-def DecrementToken(TokenOperator):
+class DecrementToken(TokenOperator):
     def __init__(self, value: Token) -> None:
         if (value == None):
             self.value = IntToken('0')
