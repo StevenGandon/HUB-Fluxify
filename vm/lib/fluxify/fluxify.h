@@ -29,8 +29,8 @@
     #define OP_MV_BLCKS_FETCH 0x46
     #define OP_MV_CONSTANT_FETCH 0x47
     #define OP_HALT 0x48
-    #define OP_MV_FETCH_PC 0x49
-    #define OP_MV_PC_FETCH 0x50
+    #define OP_MV_FETCH_PC 0x50
+    #define OP_MV_PC_FETCH 0x49
 
     typedef enum {
         FLO_TYPE_INT = 1,
