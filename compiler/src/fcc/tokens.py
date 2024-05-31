@@ -84,8 +84,8 @@ class FunctionToken(Token):
         const_temp = ConstantItem64(0)
 
         addr = code_stack.add_symbol(const_temp)
-        code_stack.add_code(PatternFetchConst(addr, 0).to_code())
-        code_stack.add_code(PatternPcFetch(0).to_code())
+        code_stack.add_code(PatternFetchConst32(addr, 0).to_code())
+        code_stack.add_code(PatternPcFetch32(0).to_code())
 
         label = LabelItem64(self.name, 0)
         code_stack.add_label(label)
@@ -93,9 +93,9 @@ class FunctionToken(Token):
         for item in self.body:
             item.compile_instruction(code_stack, fetch_num=fetch_num)
 
-        # code_stack.add_code(PatternFetchBlcks(block0.ptr, int(not fetch_num)).to_code())
-        # code_stack.add_code(PatternFree(block0.ptr).to_code())
-        # code_stack.add_code(PatternPcFetch(int(not fetch_num)).to_code())
+        # code_stack.add_code(PatternFetchBlcks32(block0.ptr, int(not fetch_num)).to_code())
+        # code_stack.add_code(PatternFree32(block0.ptr).to_code())
+        # code_stack.add_code(PatternPcFetch32(int(not fetch_num)).to_code())
 
         const_temp.item = (sum(map(len, code_stack.code)))
 
@@ -175,20 +175,20 @@ class FunctionCall(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
-        allocs = [PatternAlloc() for _ in range(len(self.args) + 1)]
+        allocs = [PatternAlloc32() for _ in range(len(self.args) + 1)]
 
         for item in allocs:
             code_stack.add_code(item.to_code())
 
         for i, item in enumerate(self.args):
             item.compile_instruction(code_stack, fetch_num=0)
-            code_stack.add_code(PatternStoreFetch(allocs[1 + i].ptr, 0).to_code())
+            code_stack.add_code(PatternStoreFetch32(allocs[1 + i].ptr, 0).to_code())
 
-        code_stack.add_code(PatternFetchPc(0).to_code())
-        code_stack.add_code(PatternStoreFetch(allocs[0].ptr, 0).to_code())
+        code_stack.add_code(PatternFetchPc32(0).to_code())
+        code_stack.add_code(PatternStoreFetch32(allocs[0].ptr, 0).to_code())
 
         for item in allocs:
-            code_stack.add_code(PatternFree(item.ptr).to_code())
+            code_stack.add_code(PatternFree32(item.ptr).to_code())
 
 class IntToken(Token):
     def __init__(self, value: int, base: int = 10) -> None:
@@ -203,7 +203,7 @@ class IntToken(Token):
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
         addr = code_stack.add_symbol(ConstantItem64(self.value))
 
-        code_stack.add_code(PatternFetchConst(addr, fetch_num).to_code())
+        code_stack.add_code(PatternFetchConst32(addr, fetch_num).to_code())
 
 class StringToken(Token):
     def __init__(self, value: str) -> None:
@@ -218,7 +218,7 @@ class StringToken(Token):
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
         addr = code_stack.add_symbol(ConstantItem64(self.value))
 
-        code_stack.add_code(PatternFetchConst(addr, fetch_num).to_code())
+        code_stack.add_code(PatternFetchConst32(addr, fetch_num).to_code())
 
 class ListToken(Token):
     def __init__(self, value: list) -> None:
@@ -308,27 +308,27 @@ class MinusToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x02' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternSubstract32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class PlusToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -345,27 +345,27 @@ class PlusToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x01' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternAdd32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class MulToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -379,27 +379,27 @@ class MulToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x03' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternMul32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class DivToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -413,27 +413,27 @@ class DivToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x04' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternDiv32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class ModToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -447,27 +447,27 @@ class ModToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x05' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternMod32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class EQOperatorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -481,27 +481,27 @@ class EQOperatorToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x09' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternEqual32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class AndOperatorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -515,27 +515,27 @@ class AndOperatorToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x0a' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternAnd32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class OrOperatorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -549,27 +549,27 @@ class OrOperatorToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x0b' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternOr32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class AndToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -583,27 +583,27 @@ class AndToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x06' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternBinAnd32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class OrToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -617,27 +617,27 @@ class OrToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x07' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternBinOr32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class XorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -651,27 +651,27 @@ class XorToken(TokenOperator):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        blck_0 = PatternAlloc()
-        blck_1 = PatternAlloc()
+        blck_0 = PatternAlloc32()
+        blck_1 = PatternAlloc32()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
         self.value.compile_instruction(code_stack, fetch_num=0)
 
-        code_stack.add_code(PatternStoreFetch(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_0.ptr, 0).to_code())
 
         self.value2.compile_instruction(code_stack, fetch_num=1)
 
-        code_stack.add_code(PatternStoreFetch(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternStoreFetch32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(PatternFetchBlcks(blck_0.ptr, 0).to_code())
-        code_stack.add_code(PatternFetchBlcks(blck_1.ptr, 1).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_0.ptr, 0).to_code())
+        code_stack.add_code(PatternFetchBlcks32(blck_1.ptr, 1).to_code())
 
-        code_stack.add_code(b'\x08' + fetch_num.to_bytes(4, "big"))
+        code_stack.add_code(PatternBinXor32(fetch_num).to_code())
 
-        code_stack.add_code(PatternFree(blck_0.ptr).to_code())
-        code_stack.add_code(PatternFree(blck_1.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_0.ptr).to_code())
+        code_stack.add_code(PatternFree32(blck_1.ptr).to_code())
 
 class RootToken(Token):
     def __init__(self, body: list) -> None:

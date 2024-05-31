@@ -38,10 +38,112 @@ class CodeStackGeneration(object):
     def add_code(self, arg):
         self.code.append(arg)
 
-class Pattern(object):
-    pass
+class Pattern64(object):
+    _size = 8
 
-class PatternAlloc(Pattern):
+class Pattern32(Pattern64):
+    _size = 4
+
+class PatternAdd32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x01" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternSubstract32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x02" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternMul32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x03" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternDiv32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x04" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternMod32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x05" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternEqual32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x09" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternAnd32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x0a" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternOr32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x0b" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternBinAnd32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x06" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternBinOr32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x07" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternBinXor32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x08" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternAlloc32(Pattern32):
     _area_stack_start = 0x0A
     _area_stack_res = []
 
@@ -60,20 +162,20 @@ class PatternAlloc(Pattern):
         return (i)
 
     def to_code(self) -> bytes:
-        return (b"\x43" + self.ptr.to_bytes(4, "big"))
+        return (b"\x43" + self.ptr.to_bytes(self.__class__._size, "big"))
 
-class PatternFree(Pattern):
+class PatternFree32(Pattern32):
     def __init__(self, addr) -> None:
         super().__init__()
 
         self.addr = addr
 
-        PatternAlloc._area_stack_res.pop(PatternAlloc._area_stack_res.index(addr - PatternAlloc._area_stack_start))
+        PatternAlloc32._area_stack_res.pop(PatternAlloc32._area_stack_res.index(addr - PatternAlloc32._area_stack_start))
 
     def to_code(self) -> bytes:
-        return (b"\x44" + self.addr.to_bytes(4, "big"))
+        return (b"\x44" + self.addr.to_bytes(self.__class__._size, "big"))
 
-class PatternFetchBlcks(Pattern):
+class PatternFetchBlcks32(Pattern32):
     def __init__(self, addr: int, fetch_num: int) -> None:
         super().__init__()
 
@@ -81,9 +183,9 @@ class PatternFetchBlcks(Pattern):
         self.fetch_num = fetch_num
 
     def to_code(self) -> bytes:
-        return (b"\x45" + self.fetch_num.to_bytes(4, "big") + self.addr.to_bytes(4, "big"))
+        return (b"\x45" + self.fetch_num.to_bytes(self.__class__._size, "big") + self.addr.to_bytes(self.__class__._size, "big"))
 
-class PatternStoreFetch(Pattern):
+class PatternStoreFetch32(Pattern32):
     def __init__(self, addr: int, fetch_num: int) -> None:
         super().__init__()
 
@@ -91,9 +193,9 @@ class PatternStoreFetch(Pattern):
         self.fetch_num = fetch_num
 
     def to_code(self) -> bytes:
-        return b"\x46" + self.fetch_num.to_bytes(4, "big") + self.addr.to_bytes(4, "big")
+        return b"\x46" + self.fetch_num.to_bytes(self.__class__._size, "big") + self.addr.to_bytes(self.__class__._size, "big")
 
-class PatternFetchConst(Pattern):
+class PatternFetchConst32(Pattern32):
     def __init__(self, addr: int, fetch_num: int) -> None:
         super().__init__()
 
@@ -101,22 +203,22 @@ class PatternFetchConst(Pattern):
         self.fetch_num = fetch_num
 
     def to_code(self) -> bytes:
-        return b"\x47" + self.fetch_num.to_bytes(4, "big") + self.addr.to_bytes(4, "big")
+        return b"\x47" + self.fetch_num.to_bytes(self.__class__._size, "big") + self.addr.to_bytes(self.__class__._size, "big")
 
-class PatternPcFetch(Pattern):
+class PatternPcFetch32(Pattern32):
     def __init__(self, fetch_num: int) -> None:
         super().__init__()
 
         self.fetch_num = fetch_num
 
     def to_code(self) -> bytes:
-        return b"\x49" + self.fetch_num.to_bytes(4, "big")
+        return b"\x49" + self.fetch_num.to_bytes(self.__class__._size, "big")
 
-class PatternFetchPc(Pattern):
+class PatternFetchPc32(Pattern32):
     def __init__(self, fetch_num: int) -> None:
         super().__init__()
 
         self.fetch_num = fetch_num
 
     def to_code(self) -> bytes:
-        return b"\x50" + self.fetch_num.to_bytes(4, "big")
+        return b"\x50" + self.fetch_num.to_bytes(self.__class__._size, "big")
