@@ -97,7 +97,7 @@ class Compiler(object):
         if (any(map(lambda x: isinstance(x, FCCError), self.debug))):
             return
 
-        pattern_stack = CodeStackGeneration()
+        pattern_stack = CodeStackGeneration("64" if object_file_class == Floff64 else "32")
 
         object_file: FloffAuto = object_file_class()
         self.tokens.compile_instruction(pattern_stack)

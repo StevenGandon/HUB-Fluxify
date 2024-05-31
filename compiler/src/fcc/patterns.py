@@ -1,3 +1,5 @@
+from .label_table import *
+from .constant_table import *
 
 INSTRUCTIONS = {
     "add": 0x01,
@@ -12,12 +14,19 @@ INSTRUCTIONS = {
 }
 
 class CodeStackGeneration(object):
-    def __init__(self) -> None:
+    def __init__(self, builder_arch = "64") -> None:
         self.code = []
         self.labels = []
         self.symbols = []
 
         self.symbols_keys = {}
+
+        self.builder_arch = builder_arch
+
+    def builder(self, name, __globals = None):
+        if (not __globals):
+            __globals = globals()
+        return __globals.get(name + self.builder_arch, Pattern)
 
     def add_label(self, arg):
         pos = len(self.labels)
@@ -38,7 +47,11 @@ class CodeStackGeneration(object):
     def add_code(self, arg):
         self.code.append(arg)
 
-class Pattern64(object):
+class Pattern(object):
+    def to_code(self, *args, **kwargs):
+        return ('\x00')
+
+class Pattern64(Pattern):
     _size = 8
 
 class PatternAdd64(Pattern64):
@@ -167,7 +180,7 @@ class PatternFree64(Pattern64):
 
         self.addr = addr
 
-        PatternAlloc32._area_stack_res.pop(PatternAlloc32._area_stack_res.index(addr - PatternAlloc32._area_stack_start))
+        PatternAlloc64._area_stack_res.pop(PatternAlloc64._area_stack_res.index(addr - PatternAlloc64._area_stack_start))
 
     def to_code(self) -> bytes:
         return (b"\x44" + self.addr.to_bytes(self.__class__._size, "big"))
