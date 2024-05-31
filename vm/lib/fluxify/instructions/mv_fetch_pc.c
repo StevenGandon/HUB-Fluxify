@@ -5,6 +5,7 @@
 ** mv_fetc_pc
 */
 
+#include "floff.h"
 #include "fluxify.h"
 #include <stdio.h>
 #include <string.h>
@@ -15,11 +16,11 @@ void fun_mv_fetch_pc(vm_state_t *vm, instruction_t *inst)
     size_t pc = vm->program_counter;
     unsigned int fetch = 0;
 
-    for (unsigned int i = 0; i < 4; i++) {
+    for (unsigned int i = 0; i < (vm->arch == ARCH_X86_64 ? 8 : 4); i++) {
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
-    vm->program_counter += 4;
+    vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
 
     if (fetch == 0) {
         vm->fetch_src = (long int)vm->program_counter;

@@ -5,6 +5,7 @@
 ** mv_fetch_blcks
 */
 
+#include "floff.h"
 #include "fluxify.h"
 #include <stdio.h>
 #include <string.h>
@@ -16,9 +17,9 @@ void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
     unsigned int fetch = 0;
     unsigned int dest_addr = 0;
 
-    for (unsigned int i = 0; i < 4; i++) {
+    for (unsigned int i = 0; i < (vm->arch == ARCH_X86_64 ? 8 : 4); i++) {
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
-        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + 4 + i);
+        dest_addr |= (unsigned int)vm->fetch_char(vm, pc + (vm->arch == ARCH_X86_64 ? 8 : 4) + i);
     }
 
     long int src_block = 0;
@@ -36,6 +37,6 @@ void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst)
         vm->fetch_dest = src_block;
     }
 
-    vm->program_counter += 8;
+    vm->program_counter += vm->arch == ARCH_X86_64 ? 16 : 8;
     printf("MV_FETCH_BLCK 0: %ld, 1: %ld, addr: %u, fetch: %u\n", vm->fetch_src, vm->fetch_dest, dest_addr, fetch);
 }

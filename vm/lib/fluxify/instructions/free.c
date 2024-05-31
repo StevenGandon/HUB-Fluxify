@@ -5,6 +5,7 @@
 ** free_area
 */
 
+#include "floff.h"
 #include "fluxify.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,7 +16,7 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
     unsigned int address = 0;
     size_t pc = vm->program_counter;
 
-    for (unsigned int i = 0; i < 4; i++) {
+    for (unsigned int i = 0; i < (vm->arch == ARCH_X86_64 ? 8 : 4); i++) {
         address |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
@@ -50,6 +51,6 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
         vm->blocks = NULL;
     }
 
-    vm->program_counter += 4;
+    vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
     printf("Free: %u\n", address);
 }

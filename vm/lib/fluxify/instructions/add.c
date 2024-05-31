@@ -6,6 +6,7 @@
 */
 
 #include "fluxify.h"
+#include "floff.h"
 #include <stdio.h>
 
 void fun_add(vm_state_t *vm, instruction_t *inst)
@@ -14,7 +15,7 @@ void fun_add(vm_state_t *vm, instruction_t *inst)
     size_t pc = vm->program_counter;
     unsigned int fetch = 0;
 
-    for (unsigned int i = 0; i < 4; i++) {
+    for (unsigned int i = 0; i < (vm->arch == ARCH_X86_64 ? 8 : 4); i++) {
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
@@ -27,5 +28,5 @@ void fun_add(vm_state_t *vm, instruction_t *inst)
     } else {
         vm->fetch_dest = result;
     }
-    vm->program_counter += 4;
+    vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
 }
