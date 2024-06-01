@@ -150,6 +150,9 @@
     void fun_and(vm_state_t *vm, instruction_t *inst);
     void fun_or(vm_state_t *vm, instruction_t *inst);
     void fun_xor(vm_state_t *vm, instruction_t *inst);
+    void fun_equal_equal(vm_state_t *vm, instruction_t *inst);
+    void fun_and_and(vm_state_t *vm, instruction_t *inst);
+    void fun_or_or(vm_state_t *vm, instruction_t *inst);
     void fun_reserve_area(vm_state_t *vm, instruction_t *inst);
     void fun_free_area(vm_state_t *vm, instruction_t *inst);
     void fun_mv_fetch_blcks(vm_state_t *vm, instruction_t *inst);
@@ -176,6 +179,9 @@
         {OP_AND, 1, &fun_and},
         {OP_OR, 1, &fun_or},
         {OP_XOR, 1, &fun_xor},
+        {OP_EQUAL_EQUAL, 1, &fun_equal_equal},
+        {OP_AND_AND, 1, &fun_and_and},
+        {OP_OR_OR, 1, &fun_or_or},
         {OP_RESERVE_AREA, 1, &fun_reserve_area},
         {OP_FREE_AREA, 1, &fun_free_area},
         {OP_MV_FETCH_BLCKS, 2, &fun_mv_fetch_blcks},
