@@ -175,6 +175,7 @@ class FunctionCall(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
         allocs = [code_stack.builder("PatternAlloc")() for _ in range(len(self.args) + 1)]
 
         for item in allocs:
@@ -186,6 +187,11 @@ class FunctionCall(Token):
 
         code_stack.add_code(code_stack.builder("PatternFetchPc")(0).to_code())
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(allocs[0].ptr, 0).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
+        code_stack.add_code(code_stack.builder("PatternGetLabel")(0).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(fetch_num).to_code())
 
         for item in allocs:
             code_stack.add_code(code_stack.builder("PatternFree")(item.ptr).to_code())

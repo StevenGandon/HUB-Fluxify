@@ -233,6 +233,15 @@ class PatternFetchPc64(Pattern64):
     def to_code(self) -> bytes:
         return b"\x50" + self.fetch_num.to_bytes(self.__class__._size, "big")
 
+class PatternGetLabel64(Pattern64):
+    def __init__(self, fetch_num: int) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return  b"\x51" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
 class Pattern32(Pattern64):
     _size = 4
 
@@ -414,3 +423,12 @@ class PatternFetchPc32(Pattern32):
 
     def to_code(self) -> bytes:
         return b"\x50" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternGetLabel32(Pattern32):
+    def __init__(self, fetch_num: int) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return  b"\x51" + self.fetch_num.to_bytes(self.__class__._size, "big")
