@@ -178,6 +178,7 @@
         {OP_MV_PC_FETCH, 1, &fun_mv_pc_fetch},
         {OP_GET_LABEL_ADDRESS, 1, &fun_get_label_address},
         {OP_SWAP_FETCH, 0, &fun_swap_fetch},
+        {OP_MOVE_FETCH_INTO_BLOCKS, 0, &fun_move_fetch_into_blocks},
         {0, 0, NULL}
     };
 
