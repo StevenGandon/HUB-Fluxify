@@ -6,4 +6,12 @@ fun test(arg0, arg1) [
     return arg0 + arg1
 ]
 
-test(4, 5)
+test(0, 0)
+test(0, 0)
+
+fun n() [
+    => test(0, 0)
+    8 - 7
+]
+
+n()
