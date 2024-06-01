@@ -86,7 +86,7 @@ class FunctionToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        const_temp = code_stack.builder("ConstantItem")(0)
+        const_temp = code_stack.builder("ConstantItem")(sum(map(ord, self.name + "func")) + 0xfffffffffff)
 
         addr = code_stack.add_symbol(const_temp)
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
@@ -110,7 +110,9 @@ class FunctionToken(Token):
                 code_stack.add_code(code_stack.builder("PatternReadBlckInFetch0")((not fetch_num if fetch_num else fetch_num)).to_code())
                 if (not fetch_num):
                     code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
+                #code_stack.add_code(b'\x48\x01')
                 code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
+                continue
 
             item.compile_instruction(code_stack, fetch_num=fetch_num)
 
@@ -124,6 +126,8 @@ class FunctionToken(Token):
         code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
 
         const_temp.item = (sum(map(len, code_stack.code)))
+
+        print(const_temp.item, addr)
 
 class IfToken(TokenBranch):
     def __init__(self, condition: Token, body: list) -> None:
@@ -201,12 +205,11 @@ class FunctionCall(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
-        next_inst_const = code_stack.builder("ConstantItem")(0)
+        next_inst_const = code_stack.builder("ConstantItem")(sum(map(ord, self.name + 'call')) + 0xfffffffffff)
+        next_inst_addr = code_stack.add_symbol(next_inst_const)
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
         allocs = [code_stack.builder("PatternAlloc")() for _ in range(len(self.args) + 1)]
         start = code_stack.add_symbol(code_stack.builder("ConstantItem")(allocs[0].ptr))
-
-        next_inst_addr = code_stack.add_symbol(next_inst_const)
 
         for item in allocs:
             code_stack.add_code(item.to_code())
@@ -227,8 +230,10 @@ class FunctionCall(Token):
 
         next_inst_const.item = (sum(map(len, code_stack.code)))
 
+        print(next_inst_const.item, next_inst_addr)
+
         for item in allocs:
-            code_stack.add_code(code_stack.builder("PatternFree")(item.ptr).to_code())
+            code_stack.add_code(code_stack.builder("PatternWeakFree")(item.ptr).to_code())
 
 class IntToken(Token):
     def __init__(self, value: int, base: int = 10) -> None:
