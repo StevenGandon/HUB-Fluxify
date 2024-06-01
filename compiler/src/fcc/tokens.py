@@ -86,7 +86,7 @@ class FunctionToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        const_temp = code_stack.builder("ConstantItem")(sum(map(ord, self.name + "func")) + 0xfffffffffff)
+        const_temp = code_stack.builder("ConstantItem")(sum(map(ord, self.name + "func")) + len(code_stack.code) + 0xfffffffffff)
 
         addr = code_stack.add_symbol(const_temp)
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
@@ -205,7 +205,7 @@ class FunctionCall(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
-        next_inst_const = code_stack.builder("ConstantItem")(sum(map(ord, self.name + 'call')) + 0xfffffffffff)
+        next_inst_const = code_stack.builder("ConstantItem")(sum(map(ord, self.name + 'call')) + len(code_stack.code) + 0xfffffffffff)
         next_inst_addr = code_stack.add_symbol(next_inst_const)
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
         allocs = [code_stack.builder("PatternAlloc")() for _ in range(len(self.args) + 1)]
