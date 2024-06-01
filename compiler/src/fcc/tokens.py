@@ -56,6 +56,11 @@ class ReturnToken(Token):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        if (self.value):
+            self.value.compile_instruction(code_stack, fetch_num)
+            return
+
 class AssignToken(Token):
     def __init__(self, name: str, value) -> None:
         self.name = name

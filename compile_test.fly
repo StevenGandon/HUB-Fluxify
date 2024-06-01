@@ -3,7 +3,7 @@
 <==
 
 fun test(arg0, arg1) [
-    arg0 + arg1
+    return arg0 + arg1
 ]
 
 test(4, 5)
