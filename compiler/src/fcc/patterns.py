@@ -252,6 +252,22 @@ class PatternGetLabel64(Pattern64):
     def to_code(self):
         return  b"\x51" + self.fetch_num.to_bytes(self.__class__._size, "big")
 
+class PatternReadBlckInFetch064(Pattern64):
+    def __init__(self, fetch_num=0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b"\x54" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternSwapFetch64(Pattern64):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x52"
+
 class Pattern32(Pattern64):
     _size = 4
 
@@ -452,3 +468,19 @@ class PatternGetLabel32(Pattern32):
 
     def to_code(self):
         return  b"\x51" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternReadBlckInFetch032(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b"\x54" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternSwapFetch32(Pattern64):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x52"

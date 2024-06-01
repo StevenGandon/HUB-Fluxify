@@ -34,7 +34,7 @@
     #define OP_GET_LABEL_ADDRESS 0x51
     #define OP_SWAP_FETCH 0x52
     #define OP_MOVE_FETCH_INTO_BLOCKS 0x53
-    #define OP_MOVE_FETCH_INTO_BLOCKS_BIS 0x54
+    #define OP_MOVE_BLOCKS_INTO_FETCH 0x54
     #define OP_CREATE_VAR 0x55
     #define OP_ASSIGN_VAR 0x56
     #define OP_RESET_FETCH 0x57
@@ -168,6 +168,7 @@
     void fun_reset_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_create_var(vm_state_t *vm, instruction_t *inst);
     void fun_assign_var(vm_state_t *vm, instruction_t *inst);
+    void fun_move_blocks_into_fetch(vm_state_t *vm, instruction_t *inst);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
@@ -193,7 +194,7 @@
         {OP_GET_LABEL_ADDRESS, 1, &fun_get_label_address},
         {OP_SWAP_FETCH, 0, &fun_swap_fetch},
         {OP_MOVE_FETCH_INTO_BLOCKS, 0, &fun_move_fetch_into_blocks},
-        {OP_MOVE_FETCH_INTO_BLOCKS_BIS, 0, &fun_move_fetch_into_blocks_bis},
+        {OP_MOVE_BLOCKS_INTO_FETCH, 0, &fun_move_blocks_into_fetch},
         {OP_RESET_FETCH, 1, &fun_reset_fetch},
         {OP_CREATE_VAR, 0, &fun_create_var},
         {OP_ASSIGN_VAR, 0, &fun_assign_var},

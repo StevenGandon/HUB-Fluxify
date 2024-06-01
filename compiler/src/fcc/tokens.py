@@ -105,13 +105,23 @@ class FunctionToken(Token):
                 item.compile_instruction(code_stack, fetch_num=fetch_num)
                 code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_alloc.ptr, not fetch_num).to_code())
                 code_stack.add_code(code_stack.builder("PatternWeakFree")(temp_alloc.ptr).to_code())
-                code_stack.add_code(code_stack.builder("PatternPcFetch")(1).to_code())
+                if (not fetch_num):
+                    code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
+                code_stack.add_code(code_stack.builder("PatternReadBlckInFetch0")((not fetch_num if fetch_num else fetch_num)).to_code())
+                if (not fetch_num):
+                    code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
+                code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
 
             item.compile_instruction(code_stack, fetch_num=fetch_num)
 
         code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_alloc.ptr, not fetch_num).to_code())
-        code_stack.add_code(code_stack.builder("PatternFree")(temp_alloc.ptr).to_code())
-        code_stack.add_code(code_stack.builder("PatternPcFetch")(1).to_code())
+        code_stack.add_code(code_stack.builder("PatternWeakFree")(temp_alloc.ptr).to_code())
+        if (not fetch_num):
+            code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
+        code_stack.add_code(code_stack.builder("PatternReadBlckInFetch0")((not fetch_num if fetch_num else fetch_num)).to_code())
+        if (not fetch_num):
+            code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
 
         const_temp.item = (sum(map(len, code_stack.code)))
 

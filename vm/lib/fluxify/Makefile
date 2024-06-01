@@ -31,7 +31,7 @@ SRC	=	./vm_operation.c \
 		./instructions/get_label_address.c \
 		./instructions/swap_fetch.c \
 		./instructions/move_fetch_into_blocks.c \
-		./instructions/move_fetch_into_blocks_bis.c \
+		./instructions/move_fetch_blocks_into_fetch.c \
 		./instructions/reset_fetch.c \
 		./instructions/create_var.c \
 		./instructions/assign_var.c
