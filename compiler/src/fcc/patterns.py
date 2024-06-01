@@ -180,7 +180,17 @@ class PatternFree64(Pattern64):
 
         self.addr = addr
 
-        PatternAlloc64._area_stack_res.pop(PatternAlloc64._area_stack_res.index(addr - PatternAlloc64._area_stack_start))
+        if (addr - PatternAlloc64._area_stack_start in PatternAlloc64._area_stack_res):
+            PatternAlloc64._area_stack_res.pop(PatternAlloc64._area_stack_res.index(addr - PatternAlloc64._area_stack_start))
+
+    def to_code(self) -> bytes:
+        return (b"\x44" + self.addr.to_bytes(self.__class__._size, "big"))
+
+class PatternWeakFree64(Pattern64):
+    def __init__(self, addr) -> None:
+        super().__init__()
+
+        self.addr = addr
 
     def to_code(self) -> bytes:
         return (b"\x44" + self.addr.to_bytes(self.__class__._size, "big"))
@@ -371,7 +381,17 @@ class PatternFree32(Pattern32):
 
         self.addr = addr
 
-        PatternAlloc32._area_stack_res.pop(PatternAlloc32._area_stack_res.index(addr - PatternAlloc32._area_stack_start))
+        if (addr - PatternAlloc32._area_stack_start in PatternAlloc32._area_stack_res):
+            PatternAlloc32._area_stack_res.pop(PatternAlloc32._area_stack_res.index(addr - PatternAlloc32._area_stack_start))
+
+    def to_code(self) -> bytes:
+        return (b"\x44" + self.addr.to_bytes(self.__class__._size, "big"))
+
+class PatternWeakFree32(Pattern32):
+    def __init__(self, addr) -> None:
+        super().__init__()
+
+        self.addr = addr
 
     def to_code(self) -> bytes:
         return (b"\x44" + self.addr.to_bytes(self.__class__._size, "big"))

@@ -95,12 +95,23 @@ class FunctionToken(Token):
         label = code_stack.builder("LabelItem")(self.name, 0)
         code_stack.add_label(label)
 
+        temp_alloc = code_stack.builder("PatternAlloc")()
+
+        code_stack.add_code(temp_alloc.to_code())
+        code_stack.add_code(code_stack.builder("PatternStoreFetch")(temp_alloc.ptr, 1).to_code())
+
         for item in self.body:
+            if (isinstance(item, ReturnToken)):
+                item.compile_instruction(code_stack, fetch_num=fetch_num)
+                code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_alloc.ptr, not fetch_num).to_code())
+                code_stack.add_code(code_stack.builder("PatternWeakFree")(temp_alloc.ptr).to_code())
+                code_stack.add_code(code_stack.builder("PatternPcFetch")(1).to_code())
+
             item.compile_instruction(code_stack, fetch_num=fetch_num)
 
-        # code_stack.add_code(code_stack.builder("PatternFetchBlcks")(block0.ptr, int(not fetch_num)).to_code())
-        # code_stack.add_code(code_stack.builder("PatternFree")(block0.ptr).to_code())
-        # code_stack.add_code(code_stack.builder("PatternPcFetch")(int(not fetch_num)).to_code())
+        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_alloc.ptr, not fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternFree")(temp_alloc.ptr).to_code())
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(1).to_code())
 
         const_temp.item = (sum(map(len, code_stack.code)))
 
@@ -180,8 +191,12 @@ class FunctionCall(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        next_inst_const = code_stack.builder("ConstantItem")(0)
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
         allocs = [code_stack.builder("PatternAlloc")() for _ in range(len(self.args) + 1)]
+        start = code_stack.add_symbol(code_stack.builder("ConstantItem")(allocs[0].ptr))
+
+        next_inst_addr = code_stack.add_symbol(next_inst_const)
 
         for item in allocs:
             code_stack.add_code(item.to_code())
@@ -190,13 +205,17 @@ class FunctionCall(Token):
             item.compile_instruction(code_stack, fetch_num=0)
             code_stack.add_code(code_stack.builder("PatternStoreFetch")(allocs[1 + i].ptr, 0).to_code())
 
-        code_stack.add_code(code_stack.builder("PatternFetchPc")(0).to_code())
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(next_inst_addr, 0).to_code())
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(allocs[0].ptr, 0).to_code())
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
+
         code_stack.add_code(code_stack.builder("PatternGetLabel")(0).to_code())
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(start, 1).to_code())
 
         code_stack.add_code(code_stack.builder("PatternPcFetch")(fetch_num).to_code())
+
+        next_inst_const.item = (sum(map(len, code_stack.code)))
 
         for item in allocs:
             code_stack.add_code(code_stack.builder("PatternFree")(item.ptr).to_code())

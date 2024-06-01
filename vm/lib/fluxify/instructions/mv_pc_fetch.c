@@ -21,4 +21,6 @@ void fun_mv_pc_fetch(vm_state_t *vm, instruction_t *inst)
     }
 
     vm->program_counter = fetch == 0 ? (size_t)vm->fetch_src : (size_t)vm->fetch_dest;
+
+    printf("MV_PC_FETCH 0: %ld, 1: %ld, fetch: %u\n", vm->fetch_src, vm->fetch_dest, fetch);
 }

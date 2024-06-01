@@ -266,7 +266,10 @@ void load_labels32(floff32_t *flo_data, vm_state_t *vm)
                 vm->labels[index].name[name_length] = 0;
                 offset += name_length + 1;
 
-                vm->labels[index].position = *((unsigned int *)&flo_data->body[i]->table_bytes[offset]);
+                *((unsigned char *)(&vm->labels[index].position) + 3) = flo_data->body[i]->table_bytes[offset];
+                *((unsigned char *)(&vm->labels[index].position) + 2) = flo_data->body[i]->table_bytes[offset + 1];
+                *((unsigned char *)(&vm->labels[index].position) + 1) = flo_data->body[i]->table_bytes[offset + 2];
+                *((unsigned char *)(&vm->labels[index].position)) = flo_data->body[i]->table_bytes[offset + 3];
                 offset += sizeof(unsigned int);
 
                 index++;
@@ -305,7 +308,14 @@ void load_labels64(floff64_t *flo_data, vm_state_t *vm)
                 vm->labels[index].name[name_length] = 0;
                 offset += name_length + 1;
 
-                vm->labels[index].position = *((uint64_t *)&flo_data->body[i]->table_bytes[offset]);
+                *((unsigned char *)(&vm->labels[index].position) + 7) = flo_data->body[i]->table_bytes[offset];
+                *((unsigned char *)(&vm->labels[index].position) + 6) = flo_data->body[i]->table_bytes[offset + 1];
+                *((unsigned char *)(&vm->labels[index].position) + 5) = flo_data->body[i]->table_bytes[offset + 2];
+                *((unsigned char *)(&vm->labels[index].position) + 4) = flo_data->body[i]->table_bytes[offset + 3];
+                *((unsigned char *)(&vm->labels[index].position) + 3) = flo_data->body[i]->table_bytes[offset + 4];
+                *((unsigned char *)(&vm->labels[index].position) + 2) = flo_data->body[i]->table_bytes[offset + 5];
+                *((unsigned char *)(&vm->labels[index].position) + 1) = flo_data->body[i]->table_bytes[offset + 6];
+                *((unsigned char *)(&vm->labels[index].position)) = flo_data->body[i]->table_bytes[offset + 7];
                 offset += sizeof(uint64_t);
 
                 index++;
