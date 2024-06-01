@@ -33,6 +33,7 @@
     #define OP_MV_PC_FETCH 0x49
     #define OP_GET_LABEL_ADDRESS 0x51
     #define OP_SWAP_FETCH 0x52
+    #define OP_MOVE_FETCH_INTO_BLOCKS 0x53
 
     typedef enum {
         FLO_TYPE_INT = 1,
@@ -155,6 +156,7 @@
     void fun_mv_pc_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_get_label_address(vm_state_t *vm, instruction_t *inst);
     void fun_swap_fetch(vm_state_t *vm, instruction_t *inst);
+    void fun_move_fetch_into_blocks(vm_state_t *vm, instruction_t *inst);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
@@ -175,7 +177,7 @@
         {OP_MV_FETCH_PC, 1, &fun_mv_fetch_pc},
         {OP_MV_PC_FETCH, 1, &fun_mv_pc_fetch},
         {OP_GET_LABEL_ADDRESS, 1, &fun_get_label_address},
-        {OP_SWAP_FETCH, 1, &fun_swap_fetch},
+        {OP_SWAP_FETCH, 0, &fun_swap_fetch},
         {0, 0, NULL}
     };
 
