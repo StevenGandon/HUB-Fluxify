@@ -30,7 +30,8 @@ SRC	=	./vm_operation.c \
 		./instructions/mv_pc_fetch.c \
 		./instructions/get_label_address.c \
 		./instructions/swap_fetch.c \
-		./instructions/move_fetch_into_blocks.c
+		./instructions/move_fetch_into_blocks.c \
+		./instructions/move_fetch_into_blocks_bis.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
 CFLAGS	=	-g -O2 -I ../../include -Wall -Wextra -Werror	\
