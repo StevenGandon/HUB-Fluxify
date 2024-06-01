@@ -31,6 +31,7 @@
     #define OP_HALT 0x48
     #define OP_MV_FETCH_PC 0x50
     #define OP_MV_PC_FETCH 0x49
+    #define OP_GET_LABEL_ADDRESS 0x51
 
     typedef enum {
         FLO_TYPE_INT = 1,
@@ -151,6 +152,7 @@
     void fun_halt(vm_state_t *vm, instruction_t *inst);
     void fun_mv_fetch_pc(vm_state_t *vm, instruction_t *inst);
     void fun_mv_pc_fetch(vm_state_t *vm, instruction_t *inst);
+    void fun_get_label_address(vm_state_t *vm, instruction_t *inst);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
@@ -170,6 +172,7 @@
         {OP_HALT, 1, &fun_halt},
         {OP_MV_FETCH_PC, 1, &fun_mv_fetch_pc},
         {OP_MV_PC_FETCH, 1, &fun_mv_pc_fetch},
+        {OP_GET_LABEL_ADDRESS, 1, &fun_get_label_address},
         {0, 0, NULL}
     };
 
