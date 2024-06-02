@@ -72,6 +72,7 @@ class ReturnToken(Token):
         if (self.value):
             self.value.compile_instruction(code_stack, fetch_num)
             return
+        code_stack.add_code(code_stack.builder("PatternResetFetch")(fetch_num))
 
 class AssignToken(Token):
     def __init__(self, name: str, value) -> None:
