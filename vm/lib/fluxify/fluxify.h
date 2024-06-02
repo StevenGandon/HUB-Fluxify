@@ -38,6 +38,7 @@
     #define OP_CREATE_VAR 0x55
     #define OP_ASSIGN_VAR 0x56
     #define OP_RESET_FETCH 0x57
+    #define OP_MOVE_PC_CMP 0x58
 
     typedef enum {
         FLO_TYPE_INT = 1,
@@ -169,6 +170,7 @@
     void fun_create_var(vm_state_t *vm, instruction_t *inst);
     void fun_assign_var(vm_state_t *vm, instruction_t *inst);
     void fun_move_blocks_into_fetch(vm_state_t *vm, instruction_t *inst);
+    void fun_move_pc_cmp(vm_state_t *vm, instruction_t *inst);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
@@ -198,6 +200,7 @@
         {OP_RESET_FETCH, 1, &fun_reset_fetch},
         {OP_CREATE_VAR, 0, &fun_create_var},
         {OP_ASSIGN_VAR, 0, &fun_assign_var},
+        {OP_MOVE_PC_CMP, 0, &fun_move_pc_cmp},
         {0, 0, NULL}
     };
 
