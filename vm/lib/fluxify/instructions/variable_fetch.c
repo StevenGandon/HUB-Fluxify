@@ -35,4 +35,5 @@ void fun_variable_fetch(vm_state_t *vm, instruction_t *inst)
         current_var = current_var->next;
     }
     fprintf(stderr, "Error: Variable '%s' not found.\n", variable_name);
+    vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
 }
