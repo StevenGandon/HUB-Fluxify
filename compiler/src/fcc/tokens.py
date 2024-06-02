@@ -335,7 +335,11 @@ class VariableToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        pass
+        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternFetchVariable")(fetch_num).to_code())
 
 class IncrementToken(TokenOperator):
     def __init__(self, value: Token) -> None:
