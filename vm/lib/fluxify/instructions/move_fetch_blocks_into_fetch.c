@@ -29,5 +29,7 @@ void fun_move_blocks_into_fetch(vm_state_t *vm, instruction_t *inst)
             }
         }
     }
+
     printf("MV_BLCK_FETCH 0: %ld, 1: %ld, fetch: %u\n", vm->fetch_src, vm->fetch_dest, fetch);
+    vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
 }

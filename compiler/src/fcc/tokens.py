@@ -46,6 +46,18 @@ class VarToken(Token):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
+
+        if (self.value):
+            self.value.compile_instruction(code_stack, 1)
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
+        code_stack.add_code(code_stack.builder("PatternDeclareVar")().to_code())
+
+        if (self.value):
+            code_stack.add_code(code_stack.builder("PatternAssignVar")().to_code())
+
 class ReturnToken(Token):
     def __init__(self, value) -> None:
         self.value = value
@@ -71,6 +83,17 @@ class AssignToken(Token):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
+
+        if (self.value):
+            self.value.compile_instruction(code_stack, 1)
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
+
+        if (self.value):
+            code_stack.add_code(code_stack.builder("PatternAssignVar")().to_code())
 
 class FunctionToken(Token):
     def __init__(self, name: str, args: list, body: list) -> None:
@@ -99,6 +122,23 @@ class FunctionToken(Token):
 
         code_stack.add_code(temp_alloc.to_code())
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(temp_alloc.ptr, 1).to_code())
+
+        for item in self.args:
+            VarToken(item, None).compile_instruction(code_stack, 0)
+
+        for i, item in enumerate(self.args):
+            tmp = code_stack.add_symbol(code_stack.builder("ConstantItem")(item))
+            tmp2 = code_stack.add_symbol(code_stack.builder("ConstantItem")(i + 1))
+
+            code_stack.add_code(code_stack.builder("PatternResetFetch")(0).to_code())
+            code_stack.add_code(code_stack.builder("PatternResetFetch")(1).to_code())
+            code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_alloc.ptr, 0).to_code())
+            code_stack.add_code(code_stack.builder("PatternFetchConst")(tmp2, 1).to_code())
+            code_stack.add_code(code_stack.builder("PatternAdd")(0).to_code())
+
+            code_stack.add_code(code_stack.builder("PatternReadBlckInFetch0")(1).to_code())
+            code_stack.add_code(code_stack.builder("PatternFetchConst")(tmp, 0).to_code())
+            code_stack.add_code(code_stack.builder("PatternAssignVar")().to_code())
 
         for item in self.body:
             if (isinstance(item, ReturnToken)):

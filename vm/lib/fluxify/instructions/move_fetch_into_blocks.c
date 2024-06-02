@@ -5,8 +5,10 @@
 ** move_fetch_into_blocks
 */
 
+#include "floff.h"
 #include "fluxify.h"
 #include <stdio.h>
+#include <string.h>
 
 void fun_move_fetch_into_blocks(vm_state_t *vm, instruction_t *inst)
 {
@@ -19,5 +21,6 @@ void fun_move_fetch_into_blocks(vm_state_t *vm, instruction_t *inst)
             vm->blocks[i]->value = value;
         }
     }
+
     printf("MV_FETCH_BLCK 0: %ld, 1: %ld", vm->fetch_src, vm->fetch_dest);
 }

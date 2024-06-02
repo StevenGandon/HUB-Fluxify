@@ -268,6 +268,30 @@ class PatternSwapFetch64(Pattern64):
     def to_code(self):
         return b"\x52"
 
+class PatternDeclareVar64(Pattern64):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x55"
+
+class PatternAssignVar64(Pattern64):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x56"
+
+class PatternResetFetch64(Pattern64):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b"\x57"  + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+
 class Pattern32(Pattern64):
     _size = 4
 
@@ -478,9 +502,32 @@ class PatternReadBlckInFetch032(Pattern32):
     def to_code(self):
         return b"\x54" + self.fetch_num.to_bytes(self.__class__._size, "big")
 
-class PatternSwapFetch32(Pattern64):
+class PatternSwapFetch32(Pattern32):
     def __init__(self) -> None:
         super().__init__()
 
     def to_code(self):
         return b"\x52"
+
+class PatternDeclareVar32(Pattern32):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x55"
+
+class PatternAssignVar32(Pattern32):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x56"
+
+class PatternResetFetch32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b"\x57"  + self.fetch_num.to_bytes(self.__class__._size, "big")
