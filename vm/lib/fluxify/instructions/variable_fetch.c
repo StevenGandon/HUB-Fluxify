@@ -26,7 +26,11 @@ void fun_variable_fetch(vm_state_t *vm, instruction_t *inst)
     while (current_var != NULL) {
         if (strcmp(current_var->var_name, variable_name) == 0) {
             if (current_var->var_value->value != NULL) {
-                vm->fetch_dest = *(long int *)current_var->var_value->value;
+                if (fetch == 0) {
+                    vm->fetch_src = *(long int *)current_var->var_value->value;
+                } else {
+                    vm->fetch_dest = *(long int *)current_var->var_value->value;
+                }
             } else {
                 fprintf(stderr, "Error: Variable '%s' has no value.\n", variable_name);
             }
