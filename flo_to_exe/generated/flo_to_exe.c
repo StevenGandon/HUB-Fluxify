@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 
     if (fseek(mem, 0, SEEK_SET))
         return (1);
-    printf("%d\n", vm.arch);
+
     ret = launch_vm(&vm, mem, vm.arch);
 
     fclose(mem);

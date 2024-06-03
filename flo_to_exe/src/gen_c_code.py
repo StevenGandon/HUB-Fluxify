@@ -5,7 +5,7 @@ def gen_code(binary, fp):
         __l = len(f.read())
 
     fp.write('#include "flo_to_exe.h"\n')
-    fp.write("char FILE_COMPILED[] = {\n  ")
+    fp.write("unsigned char FILE_COMPILED[] = {\n  ")
 
     with open(binary, "rb") as f:
         for i in range(__l):
@@ -18,5 +18,5 @@ def gen_code(binary, fp):
                 fp.write('\n  ')
 
     fp.write("\n};\n")
-    fp.write("int SIZE[] = {" + str(__l) + "};\n")
+    fp.write("unsigned long int SIZE[] = {" + str(__l) + "};\n")
     return (0)
