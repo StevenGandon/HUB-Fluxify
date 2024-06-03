@@ -223,6 +223,12 @@ class Compiler(object):
         if (line.split(' ')[0] == "for"):
             return ForToken(Compiler.get_token(' '.join(line.split('for '))[1:].split(',')[0]), Compiler.get_token(','.join(line.split(',')[1:])), [])
 
+        if ('>=' in line):
+            return SuperiorOrEqualToken(Compiler.get_token(line.split('>=')[0]), Compiler.get_token(">=".join(line.split('>=')[1:])))
+
+        if ('<=' in line):
+            return InferiorOrEqualToken(Compiler.get_token(line.split('<=')[0]), Compiler.get_token("<=".join(line.split('<=')[1:])))
+
         if (bool(search(REGEX_EQUAL, line))):
             return (AssignToken(split(REGEX_EQUAL, line)[0].strip(), Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))))
 
@@ -240,12 +246,6 @@ class Compiler(object):
 
         if ('<' in line):
             return InferiorToken(Compiler.get_token(line.split('<')[0]), Compiler.get_token("<".join(line.split('<')[1:])))
-
-        if ('>=' in line):
-            return SuperiorOrEqualToken(Compiler.get_token(line.split('>=')[0]), Compiler.get_token(">=".join(line.split('>=')[1:])))
-
-        if ('<=' in line):
-            return InferiorOrEqualToken(Compiler.get_token(line.split('<=')[0]), Compiler.get_token("<=".join(line.split('<=')[1:])))
 
         if (bool(search(REGEX_EQUAL_EQUAL, line))):
             return (EQOperatorToken(Compiler.get_token(split(REGEX_EQUAL_EQUAL, line)[0].strip()), Compiler.get_token("==".join(split(REGEX_EQUAL_EQUAL, line)[1:]))))
