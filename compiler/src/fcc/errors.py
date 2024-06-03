@@ -44,7 +44,7 @@ def invalid_token_error(code: object, debug_constructor: object, color: str, pre
             if (not '<=='.join(item.split('<==')[1:]).strip() or Compiler.get_token('<=='.join(item.split('<==')[1:]))):
                 continue
 
-        if (item.strip().startswith('=>') or in_comment or Compiler.get_token(item)):
+        if (item.strip().startswith('=>') or in_comment or Compiler.get_token(item.split('[')[0].split(']')[-1])):
             if (bool(search(REGEX_MULTILINE_COMMENT_PREFIX, item))):
                 in_comment: bool = True
             if ("<==" in item):

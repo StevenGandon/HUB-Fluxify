@@ -300,6 +300,19 @@ class PatternFetchVariable64(Pattern64):
     def to_code(self):
         return b"\x59"  + self.fetch_num.to_bytes(self.__class__._size, "big")
 
+class PatternMvPcCMP64(Pattern64):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x58"
+
+class PatternMvPcCMPN64(Pattern64):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x00"
 
 class Pattern32(Pattern64):
     _size = 4
@@ -558,3 +571,17 @@ class PatternFetchVariable32(Pattern32):
 
     def to_code(self):
         return b"\x59"  + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternMvPcCMP32(Pattern32):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x58"
+
+class PatternMvPcCMPN32(Pattern32):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def to_code(self):
+        return b"\x00"

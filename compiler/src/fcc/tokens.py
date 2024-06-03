@@ -221,6 +221,25 @@ class WhileToken(Token):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        end = code_stack.builder("ConstantItem")(sum(map(ord, 'while')) + len(code_stack.code) + 0xfffffffffff)
+
+        end_addr = code_stack.add_symbol(end)
+        start_addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(sum(map(len, code_stack.code))))
+
+        self.condition.compile_instruction(code_stack, 0)
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(end_addr, 1).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternMvPcCMPN")().to_code())
+
+        for item in self.body:
+            item.compile_instruction(code_stack, fetch_num)
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(start_addr, not fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
+
+        end.item = sum(map(len, code_stack.code))
+
 class ForToken(Token):
     def __init__(self, prefix_var: Token, iterator_list: str, body: list) -> None:
         self.prefix_var = prefix_var

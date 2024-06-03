@@ -142,7 +142,7 @@ class Compiler(object):
         line = line.strip()
 
         if (line.split(' ')[0] == "var"):
-            return VarToken(Compiler.get_token(split(REGEX_EQUAL, line)[0].split("var")[1]),
+            return VarToken(split(REGEX_EQUAL, line)[0].split("var")[1].strip(),
                             (Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))) if bool(search(REGEX_EQUAL, line)) else None)
 
         if (line.startswith('[')):
@@ -192,7 +192,7 @@ class Compiler(object):
             return ForToken(Compiler.get_token(' '.join(line.split('for '))[1:].split(',')[0]), Compiler.get_token(','.join(line.split(',')[1:])), [])
 
         if (bool(search(REGEX_EQUAL, line))):
-            return (AssignToken(Compiler.get_token(split(REGEX_EQUAL, line)[0].strip()), Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))))
+            return (AssignToken(split(REGEX_EQUAL, line)[0].strip(), Compiler.get_token("=".join(split(REGEX_EQUAL, line)[1:]))))
 
         if (line.startswith('{') and line.endswith('}')):
             return (ListToken([Compiler.get_token(item) for item in line[1:][:-1].split(',')]))
