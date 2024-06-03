@@ -44,6 +44,10 @@ INSTRUCTIONS: dict = {
     "EQUAL_EQUAL": 0x09,
     "AND_AND": 0x0A,
     "OR_OR": 0x0B,
+    "SUPERIOR": 0x0C,
+    "INFERIOR": 0x0D,
+    "SUPERIOR_EQUAL": 0x0E,
+    "INFERIOR_EQUAL": 0x0F,
 }
 
 STATIC_ADDR_TABLE: dict = {}

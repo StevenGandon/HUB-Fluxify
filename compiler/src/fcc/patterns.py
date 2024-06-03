@@ -126,6 +126,42 @@ class PatternOr64(Pattern64):
     def to_code(self) -> bytes:
         return (b"\x0b" + self.fetch_num.to_bytes(self.__class__._size, "big"))
 
+class PatternSuperior64(Pattern64):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x0c" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternInferior64(Pattern64):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return b"\x0d" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternSuperiorOrEqual64(Pattern64):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b"\x0e" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternInferiorOrEqual64(Pattern64):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b"\x0f" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
 class PatternBinAnd64(Pattern64):
     def __init__(self, fetch_num = 0) -> None:
         super().__init__()
@@ -388,6 +424,42 @@ class PatternOr32(Pattern32):
 
     def to_code(self) -> bytes:
         return (b"\x0b" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternSuperior32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return (b"\x0c" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternInferior32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self) -> bytes:
+        return b"\x0d" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternSuperiorOrEqual32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b"\x0e" + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternInferiorOrEqual32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b"\x0f" + self.fetch_num.to_bytes(self.__class__._size, "big")
 
 class PatternBinAnd32(Pattern32):
     def __init__(self, fetch_num = 0) -> None:
