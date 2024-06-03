@@ -42,7 +42,8 @@ SRC	=	./vm_operation.c \
 		./instructions/inferior.c		\
 		./instructions/superior_equal.c	\
 		./instructions/inferior_equal.c	\
-		./instructions/dl_open_fetch.c
+		./instructions/dl_open_fetch.c \
+		./instructions/dlsym_fetch.c
 
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
