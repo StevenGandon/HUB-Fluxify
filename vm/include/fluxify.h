@@ -45,6 +45,7 @@
     #define OP_MOVE_PC_CMP 0x58
     #define OP_VARIABLE_FETCH 0x59
     #define OP_MOVE_PC_CMPN 0x60
+    #define OP_DLOPEN_FETCH 0x61
 
     typedef enum {
         FLO_TYPE_INT = 1,
@@ -183,6 +184,7 @@
     void fun_inferior(vm_state_t *vm, instruction_t *inst);
     void fun_inferior_equal(vm_state_t *vm, instruction_t *inst);
     void fun_superior_equal(vm_state_t *vm, instruction_t *inst);
+    void fun_dl_open_fetch(vm_state_t *vm, instruction_t *inst);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
@@ -218,7 +220,8 @@
         {OP_ASSIGN_VAR, 0, &fun_assign_var},
         {OP_MOVE_PC_CMP, 0, &fun_move_pc_cmp},
         {OP_VARIABLE_FETCH, 1, &fun_variable_fetch},
-        {OP_MOVE_PC_CMPN, 1, &fun_move_pc_cmpn},
+        {OP_MOVE_PC_CMPN, 0, &fun_move_pc_cmpn},
+        {OP_DLOPEN_FETCH, 1, fun_dl_open_fetch},
         {0, 0, NULL}
     };
 
