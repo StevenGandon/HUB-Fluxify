@@ -52,7 +52,7 @@ RUN cp ./fli/fli /var/lib/fli/
 RUN cp -r ./fli/src /var/lib/fli/
 RUN ln -s /var/lib/fli/fli /bin/fli
 
-RUN cp ./flo_to_exe/flo_to_exe /var/flo_to_exe/flo_to_exe/
+RUN cp ./flo_to_exe/flo_to_exe /var/lib/flo_to_exe/
 RUN cp -r ./flo_to_exe/src /var/lib/flo_to_exe/
 RUN cp -r ./flo_to_exe/assets /var/lib/flo_to_exe/
 RUN ln -s /var/lib/flo_to_exe/flo_to_exe /bin/flo_to_exe

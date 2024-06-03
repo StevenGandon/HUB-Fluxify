@@ -32,7 +32,7 @@ tests_run:
 install-docker-image:
 	docker build --no-cache --tag fluxify .
 
-run-docker: install-docker-image
+run-docker:
 	docker run -it fluxify
 
 re:
