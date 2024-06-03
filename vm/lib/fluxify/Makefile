@@ -51,7 +51,7 @@ CFLAGS	=	-g -O2 -I ../../include -Wall -Wextra -Werror	\
 			-Wshadow -pedantic	-Wno-pointer-to-int-cast \
 			-Waggregate-return -Wdouble-promotion	\
 			-Walloc-zero -Wcast-qual -Wconversion -Winit-self	\
-			-Wlogical-op -L ./lib -lfluxify
+			-Wlogical-op -L ./lib -lfluxify -ldl
 
 all: $(NAME)
 	cp fluxify.h ../../include

@@ -14,7 +14,7 @@ CFLAGS	=	-O2 -I ./include -Wall -Wextra -Werror	\
 			-Wshadow -pedantic	\
 			-Waggregate-return -Wdouble-promotion	\
 			-Walloc-zero -Wcast-qual -Wconversion -Winit-self	\
-			-Wlogical-op -L ./lib -lfluxify -lfloff
+			-Wlogical-op -L ./lib -lfluxify -lfloff -ldl
 
 all:
 	@make -C ./lib/floff all

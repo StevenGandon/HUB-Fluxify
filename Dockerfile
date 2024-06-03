@@ -34,6 +34,10 @@ RUN cp ./compiler/fcc /var/lib/fcc/
 RUN cp -r ./compiler/src /var/lib/fcc/
 RUN ln -s /var/lib/fcc/fcc /bin/fcc
 RUN cp ./docs/man/* /usr/share/man/ -r
+RUN cp ./vm/lib/libfloff.a /lib/
+RUN cp ./vm/lib/libfluxify.a /lib/
+RUN cp ./vm/lib/floff/floff.h /include/
+RUN cp ./vm/lib/fluxify/fluxify.h /include/
 
 #        * Create user *
 RUN useradd fluxify

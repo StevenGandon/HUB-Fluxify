@@ -159,6 +159,44 @@ read_floff64(object, file_path)
     return (read_program_datas(fd, object));
 }
 
+int
+read_floff64_fd(object, fd)
+    floff64_t *object;
+    int fd;
+{
+    if (fd < 0)
+        return (-1);
+    if (read_file_informations(fd, object) == -1)
+        return (-1);
+    if (strcmp((const char *)object->magic, DEFAULT_MAGIC) != 0)
+        return (-1);
+    if (object->architecture != ARCH_X86_64)
+        return (-1);
+    if (read_program_informations(fd, object) == -1)
+        return (-1);
+    return (read_program_datas(fd, object));
+}
+
+int
+read_floff64_fp(object, fp)
+    floff64_t *object;
+    FILE *fp;
+{
+    int fd = fileno(fp);
+
+    if (fd < 0)
+        return (-1);
+    if (read_file_informations(fd, object) == -1)
+        return (-1);
+    if (strcmp((const char *)object->magic, DEFAULT_MAGIC) != 0)
+        return (-1);
+    if (object->architecture != ARCH_X86_64)
+        return (-1);
+    if (read_program_informations(fd, object) == -1)
+        return (-1);
+    return (read_program_datas(fd, object));
+}
+
 void
 destroy_floff64(object)
     floff64_t *object;

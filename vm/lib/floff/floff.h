@@ -8,6 +8,8 @@
 #ifndef FLOFF_H_
     #define FLOFF_H_
 
+    #include <stdio.h>
+
     #define TABLE_LABEL 0x01
     #define TABLE_PROGRAM 0x02
     #define TABLE_CONSTANT 0x03
@@ -71,10 +73,14 @@
     typedef struct floff32_body_s floff32_body_t;
 
     int read_floff64(floff64_t *, const char *);
+    int read_floff64_fp(floff64_t *, FILE *);
+    int read_floff64_fd(floff64_t *, int);
     floff64_t *create_floff64(void);
     void destroy_floff64(floff64_t *);
 
     int read_floff32(floff32_t *, const char *);
+    int read_floff32_fp(floff32_t *, FILE *);
+    int read_floff32_fd(floff32_t *, int);
     floff32_t *create_floff32(void);
     void destroy_floff32(floff32_t *);
 

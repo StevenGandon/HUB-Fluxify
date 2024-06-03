@@ -1,0 +1,60 @@
+#!/usr/bin/python3
+
+from genericpath import isdir, isfile
+from os import mkdir
+from shutil import copy2
+from sys import argv, stderr, exit
+
+"""
+-- EPITECH PROJECT, 2024
+-- Hub project
+-- File description:
+-- flo_to_exe
+"""
+
+def gen_code(binary, fp):
+    __l = 0
+
+    with open(binary, "rb") as f:
+        __l = len(f.read())
+
+    fp.write('#include "flo_to_exe.h"\n')
+    fp.write("char FILE_COMPILED[] = {\n  ")
+
+    with open(binary, "rb") as f:
+        for i in range(__l):
+            fp.write(hex(int.from_bytes(f.read(1), "big")))
+
+            if i != __l - 1:
+                fp.write(', ' if i % 11 != 10 else ',')
+
+            if (i % 11 == 10):
+                fp.write('\n  ')
+
+    fp.write("\n};\n")
+    fp.write("int SIZE[] = {" + str(__l) + "};\n")
+    return (0)
+
+def main() -> int:
+    if (len(argv) != 2):
+        stderr.write(f"{argv[0]}: invalid number of arguments.")
+        return (1)
+
+    if (not isfile(argv[1])):
+        stderr.write(f"{argv[0]}: file {argv[1]} not found.")
+
+    if (not isdir("generated")):
+        mkdir("generated")
+
+    wd ='/'.join(__file__.replace('\\', '/').split('/')[:-1])
+
+    copy2(f"{wd}/assets/flo_to_exe.c", "./generated/")
+    copy2(f"{wd}/assets/flo_to_exe.h", "./generated/")
+
+    with open("./generated/binary.c", "w+") as fp:
+        gen_code(argv[1], fp)
+
+    return (0)
+
+if (__name__ == "__main__"):
+    exit(main())
