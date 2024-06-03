@@ -348,7 +348,7 @@ class PatternMvPcCMPN64(Pattern64):
         super().__init__()
 
     def to_code(self):
-        return b"\x00"
+        return b"\x60"
 
 class Pattern32(Pattern64):
     _size = 4
@@ -656,4 +656,4 @@ class PatternMvPcCMPN32(Pattern32):
         super().__init__()
 
     def to_code(self):
-        return b"\x00"
+        return b"\x60"
