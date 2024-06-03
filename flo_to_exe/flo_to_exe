@@ -5,6 +5,8 @@ from os import mkdir
 from shutil import copy2
 from sys import argv, stderr, exit
 
+from subprocess import Popen
+
 """
 -- EPITECH PROJECT, 2024
 -- Hub project
@@ -12,15 +14,24 @@ from sys import argv, stderr, exit
 -- flo_to_exe
 """
 
-from src import gen_c_code
+from src.gen_c_code import gen_code
 
 def main() -> int:
-    if (len(argv) != 2):
-        stderr.write(f"{argv[0]}: invalid number of arguments.")
+    if (len(argv) != 4):
+        stderr.write(f"{argv[0]}: invalid number of arguments ({argv[0]} [file] [os] [arch]).")
         return (1)
 
     if (not isfile(argv[1])):
         stderr.write(f"{argv[0]}: file {argv[1]} not found.")
+        return (1)
+
+    if (argv[2] not in ("nt", "posix")):
+        stderr.write(f"{argv[0]}: OS should be nt or posix.")
+        return (1)
+
+    if (argv[3] not in ("X86_64", "X64_32")):
+        stderr.write(f"{argv[0]}: arch should be X86_64 or X64_32.")
+        return (1)
 
     if (not isdir("generated")):
         mkdir("generated")
@@ -31,7 +42,34 @@ def main() -> int:
     copy2(f"{wd}/assets/flo_to_exe.h", "./generated/")
 
     with open("./generated/binary.c", "w+") as fp:
-        gen_c_code(argv[1], fp)
+        gen_code(argv[1], fp)
+
+    if (argv[2] == "nt"):
+        process = Popen("gcc -c -I./generated ./generated/binary.c -o ./generated/binary.o", shell=True)
+        if (process.wait(1)):
+            return 1
+
+        process = Popen("gcc -c -I./generated ./generated/flo_to_exe.c -o ./generated/flo_to_exe.o", shell=True)
+        if (process.wait(1)):
+            return 1
+
+        process = Popen("gcc -I./generated ./generated/binary.o ./generated/flo_to_exe.o -o result", shell=True)
+        if (process.wait(1)):
+            return 1
+
+    else:
+        compiler = "x86_64-w64-mingw32-gcc" if argv[3] == "X86_64" else "i686-w64-mingw32-gcc"
+        process = Popen(f"{compiler} -c -I./generated ./generated/binary.c -o ./generated/binary.o", shell=True)
+        if (process.wait(1)):
+            return 1
+
+        process = Popen(f"{compiler} -c -I./generated ./generated/flo_to_exe.c -o ./generated/flo_to_exe.o", shell=True)
+        if (process.wait(1)):
+            return 1
+
+        process = Popen(f"{compiler} -I./generated ./generated/binary.o ./generated/flo_to_exe.o -o result", shell=True)
+        if (process.wait(1)):
+            return 1
 
     return (0)
 
