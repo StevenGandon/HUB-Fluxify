@@ -36,6 +36,9 @@ ERRORS = {
     "invalid_if_condition": invalid_if_condition,
     "invalid_else_if_condition": invalid_else_if_condition,
     "invalid_function_name": invalid_function_name,
+    "invalid_dllopen": invalid_dllopen,
+    "invalid_getsym": invalid_getsym,
+    "invalid_ccall": invalid_ccall
 }
 ERRORS["all"] = tuple(ERRORS.values())
 

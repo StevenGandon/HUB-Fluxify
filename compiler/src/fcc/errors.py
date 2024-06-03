@@ -308,3 +308,102 @@ def invalid_function_name(code: object, debug_constructor: object, color: str, p
                         ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
                     ]
                 ))
+
+def invalid_getsym(code: object, debug_constructor: object, color: str, prefix: str = 'E') -> None:
+    in_comment: bool = False
+
+    for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
+        if (bool(search(REGEX_MULTILINE_COMMENT_PREFIX, item))):
+            in_comment: bool = True
+        if ("<==" in item):
+            in_comment: bool = False
+        item = item.split('=>')[0]
+        token = Compiler.get_token(item)
+
+        if (in_comment or not isinstance(token, GetSymbolToken)):
+            continue
+
+        if (not token.dll):
+            code.debug.append(
+                debug_constructor(
+                    code.filename,
+                    (len(item) - len(item.lstrip())) + 1,
+                    i + 1,
+                    f"{prefix}invalid_getsym",
+                    f"Invalid getsym (missing 1st arg dll name).",
+                    display=[
+                        color + item + RESET_COLOR,
+                        ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
+                    ]
+                ))
+
+        if (not token.name):
+            code.debug.append(
+                debug_constructor(
+                    code.filename,
+                    (len(item) - len(item.lstrip())) + 1,
+                    i + 1,
+                    f"{prefix}invalid_getsym",
+                    f"Invalid getsym (missing 2nd arg name).",
+                    display=[
+                        color + item + RESET_COLOR,
+                        ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
+                    ]
+                ))
+
+def invalid_ccall(code: object, debug_constructor: object, color: str, prefix: str = 'E') -> None:
+    in_comment: bool = False
+
+    for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
+        if (bool(search(REGEX_MULTILINE_COMMENT_PREFIX, item))):
+            in_comment: bool = True
+        if ("<==" in item):
+            in_comment: bool = False
+        item = item.split('=>')[0]
+        token = Compiler.get_token(item)
+
+        if (in_comment or not isinstance(token, CCallToken)):
+            continue
+
+        if (not token.name):
+            code.debug.append(
+                debug_constructor(
+                    code.filename,
+                    (len(item) - len(item.lstrip())) + 1,
+                    i + 1,
+                    f"{prefix}invalid_ccall",
+                    f"Invalid ccall (missing 1st arg name).",
+                    display=[
+                        color + item + RESET_COLOR,
+                        ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
+                    ]
+                ))
+
+def invalid_dllopen(code: object, debug_constructor: object, color: str, prefix: str = 'E') -> None:
+    pass
+    in_comment: bool = False
+
+    for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
+        if (bool(search(REGEX_MULTILINE_COMMENT_PREFIX, item))):
+            in_comment: bool = True
+        if ("<==" in item):
+            in_comment: bool = False
+        item = item.split('=>')[0]
+        token = Compiler.get_token(item)
+
+        if (in_comment or not isinstance(token, DllOpenToken)):
+            continue
+
+        if (not token.name):
+            code.debug.append(
+                debug_constructor(
+                    code.filename,
+                    (len(item) - len(item.lstrip())) + 1,
+                    i + 1,
+                    f"{prefix}invalid_dllopen",
+                    f"Invalid dllopen (missing 1st arg name).",
+                    display=[
+                        color + item + RESET_COLOR,
+                        ' ' * (len(item) - len(item.lstrip())) + color + '^' + '~' * (len(item.lstrip().rstrip()) - 1) + RESET_COLOR
+                    ]
+                ))

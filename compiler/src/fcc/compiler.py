@@ -159,6 +159,8 @@ class Compiler(object):
             return (StringToken("'".join("'".join(line.split("'")[1:]).split("'")[:-1])))
 
         if (line.startswith("dllopen")):
+            if ('dllopen ' not in line):
+                return DllOpenToken(None)
             return DllOpenToken(Compiler.get_token(line.split('dllopen ')[1]))
 
         if (line.split(' ')[0] == "getsym"):
