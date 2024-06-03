@@ -44,16 +44,16 @@ def main() -> int:
     with open("./generated/binary.c", "w+") as fp:
         gen_code(argv[1], fp)
 
-    if (argv[2] == "nt"):
-        process = Popen("gcc -c -I./generated ./generated/binary.c -o ./generated/binary.o", shell=True)
+    if (argv[2] != "nt"):
+        process = Popen("gcc ./generated/binary.c -o ./generated/binary.o -c -I./generated -L./generated -lfluxify -lfloff", shell=True)
         if (process.wait(1)):
             return 1
 
-        process = Popen("gcc -c -I./generated ./generated/flo_to_exe.c -o ./generated/flo_to_exe.o", shell=True)
+        process = Popen("gcc ./generated/flo_to_exe.c -o ./generated/flo_to_exe.o -c -I./generated -L./generated -lfluxify -lfloff", shell=True)
         if (process.wait(1)):
             return 1
 
-        process = Popen("gcc -I./generated ./generated/binary.o ./generated/flo_to_exe.o -o result", shell=True)
+        process = Popen("gcc ./generated/binary.o ./generated/flo_to_exe.o -o result -I./generated -L./generated -lfluxify -lfloff", shell=True)
         if (process.wait(1)):
             return 1
 
