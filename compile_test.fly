@@ -1,16 +1,3 @@
-==>
-    Test program
-<==
-
-fun test(arg0, arg1) [
-    var temp = 0
-
-    while 1 == 0
-    [
-        temp = temp + 1
-    ]
-
-    return arg0 + arg1
-]
-
-test(5, 2)
+ccall "printf" "Hello %s: %d", "world", 19
+getsym "test" "ok"
+dllopen "ok"

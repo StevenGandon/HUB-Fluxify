@@ -6,6 +6,7 @@
 """
 
 from re import match as match_regex, split, search, sub
+from re import findall
 from hashlib import sha1
 
 from .patterns import *
@@ -156,6 +157,35 @@ class Compiler(object):
 
         if (line.startswith("'") and line.endswith("'")):
             return (StringToken("'".join("'".join(line.split("'")[1:]).split("'")[:-1])))
+
+        if (line.startswith("dllopen")):
+            return DllOpenToken(Compiler.get_token(line.split('dllopen ')[1]))
+
+        if (line.split(' ')[0] == "getsym"):
+            if (line.split(' ').__len__() == 3):
+                return GetSymbolToken(
+                    Compiler.get_token(line.split('getsym ')[1].split(' ')[0]),
+                    Compiler.get_token(line.split('getsym ')[1].split(' ')[1])
+                )
+            if (line.split(' ').__len__() == 2):
+                return GetSymbolToken(
+                    Compiler.get_token(line.split('getsym ')[1]),
+                    None
+                )
+            return GetSymbolToken(None, None)
+
+        if (line.split(' ')[0] == "ccall"):
+            if (line.split(' ').__len__() == 2):
+                return CCallToken(
+                    Compiler.get_token(line.split('ccall ')[1]),
+                    None
+                )
+            if (line.split(' ').__len__() >= 3):
+                return CCallToken(
+                    Compiler.get_token(line.split('ccall ')[1].split(' ')[0]),
+                    [Compiler.get_token(arg) for arg in (' '.join(line.split('ccall ')[1].split(' ')[1:])).strip().split(',')]
+                )
+            return CCallToken(None, None)
 
         if (line.split(' ')[0] == "fun"):
             if ('fun ' not in line):

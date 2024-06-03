@@ -58,6 +58,47 @@ class VarToken(Token):
         if (self.value):
             code_stack.add_code(code_stack.builder("PatternAssignVar")().to_code())
 
+class DllOpenToken(Token):
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def __repr__(self):
+        return f"dllopen {self.name}"
+
+    def __str__(self):
+        return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        pass
+
+class GetSymbolToken(Token):
+    def __init__(self, dll: str, name: str) -> None:
+        self.dll = dll
+        self.name = name
+
+    def __repr__(self):
+        return f"getsym {self.dll} {self.name}"
+
+    def __str__(self):
+        return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        pass
+
+class CCallToken(Token):
+    def __init__(self, name: str, args: list) -> None:
+        self.name = name
+        self.args = args
+
+    def __repr__(self):
+        return f"ccall {self.name} {self.args}"
+
+    def __str__(self):
+        return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+        pass
+
 class ReturnToken(Token):
     def __init__(self, value) -> None:
         self.value = value
