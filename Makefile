@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-all: vm compiler
+all: vm compiler flo_to_exe
 
 vm:
 	@make -C vm
@@ -13,9 +13,13 @@ vm:
 compiler:
 	@make -C compiler
 
+flo_to_exe:
+	@make -C flo_to_exe
+
 clean:
 	@make -C vm clean
 	@make -C compiler clean
+	@make -C flo_to_exe clean
 
 fclean:
 	@make -C vm fclean
@@ -34,5 +38,6 @@ run-docker: install-docker-image
 re:
 	@make -C vm re
 	@make -C compiler re
+	@make -C flo_to_exe re
 
-.PHONY: all vm compiler
+.PHONY: all vm compiler flo_to_exe

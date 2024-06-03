@@ -27,17 +27,40 @@ RUN mkdir /tmp/fluxify
 WORKDIR /tmp/fluxify
 RUN git clone https://github.com/StevenGandon/HUB-Fluxify.git
 WORKDIR /tmp/fluxify/HUB-Fluxify
+
 RUN make
+
 RUN mkdir /var/lib/fcc
+RUN mkdir /var/lib/fli
+RUN mkdir /var/lib/flo_to_exe
+
 RUN cp ./vm/fvm /bin
+
 RUN cp ./compiler/fcc /var/lib/fcc/
 RUN cp -r ./compiler/src /var/lib/fcc/
 RUN ln -s /var/lib/fcc/fcc /bin/fcc
+
 RUN cp ./docs/man/* /usr/share/man/ -r
+
 RUN cp ./vm/lib/libfloff.a /lib/
 RUN cp ./vm/lib/libfluxify.a /lib/
-RUN cp ./vm/lib/floff/floff.h /include/
-RUN cp ./vm/lib/fluxify/fluxify.h /include/
+
+RUN cp ./vm/lib/floff/floff.h /usr/include/
+RUN cp ./vm/lib/fluxify/fluxify.h /usr/include/
+
+RUN cp ./fli/fli /var/lib/fli/
+RUN cp -r ./fli/src /var/lib/fli/
+RUN ln -s /var/lib/fli/fli /bin/fli
+
+RUN cp ./flo_to_exe/flo_to_exe /var/flo_to_exe/flo_to_exe/
+RUN cp -r ./flo_to_exe/src /var/lib/flo_to_exe/
+RUN cp -r ./flo_to_exe/assets /var/lib/flo_to_exe/
+RUN ln -s /var/lib/flo_to_exe/flo_to_exe /bin/flo_to_exe
+
+RUN chmod +x /bin/fvm
+RUN chmod +x /var/lib/fcc/fcc
+RUN chmod +x /var/lib/fli/fli
+RUN chmod +x /var/lib/flo_to_exe/flo_to_exe
 
 #        * Create user *
 RUN useradd fluxify
