@@ -32,7 +32,7 @@ def invalid_token_error(code: object, debug_constructor: object, color: str, pre
     Compiler.get_token = wrapper
 
     for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
-        if (not item.strip().replace('=>', '')):
+        if (not item.strip().replace('=>', '') or not item.split('[')[0].split(']')[-1].strip()):
             continue
 
         if (item.strip().startswith("==>")):
