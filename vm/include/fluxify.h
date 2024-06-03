@@ -23,6 +23,10 @@
     #define OP_EQUAL_EQUAL 0x09
     #define OP_AND_AND 0x0A
     #define OP_OR_OR 0x0B
+    #define SUPERIOR 0x0C
+    #define INFERIOR 0x0D
+    #define SUPERIOR_EQUAL 0x0E
+    #define INFERIOR_EQUAL 0x0F
     #define OP_RESERVE_AREA 0x43
     #define OP_FREE_AREA 0x44
     #define OP_MV_FETCH_BLCKS 0x45
@@ -175,6 +179,10 @@
     void fun_move_pc_cmp(vm_state_t *vm, instruction_t *inst);
     void fun_variable_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_move_pc_cmpn(vm_state_t *vm, instruction_t *inst);
+    void fun_superior(vm_state_t *vm, instruction_t *inst);
+    void fun_inferior(vm_state_t *vm, instruction_t *inst);
+    void fun_inferior_equal(vm_state_t *vm, instruction_t *inst);
+    void fun_superior_equal(vm_state_t *vm, instruction_t *inst);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
@@ -189,6 +197,10 @@
         {OP_EQUAL_EQUAL, 1, &fun_equal_equal},
         {OP_AND_AND, 1, &fun_and_and},
         {OP_OR_OR, 1, &fun_or_or},
+        {SUPERIOR, 1, &fun_superior},
+        {INFERIOR, 1, &fun_inferior},
+        {INFERIOR_EQUAL, 1, &fun_inferior_equal},
+        {SUPERIOR_EQUAL, 1, &fun_superior_equal},
         {OP_RESERVE_AREA, 1, &fun_reserve_area},
         {OP_FREE_AREA, 1, &fun_free_area},
         {OP_MV_FETCH_BLCKS, 2, &fun_mv_fetch_blcks},

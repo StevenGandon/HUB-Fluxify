@@ -37,7 +37,12 @@ SRC	=	./vm_operation.c \
 		./instructions/assign_var.c \
 		./instructions/move_pc_cmp.c \
 		./instructions/variable_fetch.c \
-		./instructions/move_pc_cmpn.c
+		./instructions/move_pc_cmpn.c	\
+		./instructions/superior.c 		\
+		./instructions/inferior.c		\
+		./instructions/superior_equal.c	\
+		./instructions/inferior_equal.c	\
+
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
 CFLAGS	=	-g -O2 -I ../../include -Wall -Wextra -Werror	\
