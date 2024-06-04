@@ -105,7 +105,7 @@ void load_constants32(floff32_t *flo_data, vm_state_t *vm)
                     *((unsigned char *)(vm->constants + number)) = flo_data->body[i]->table_bytes[j + 3];
                 }
                 if (type == FLO_TYPE_STRING)
-                    vm->constants[number] = (int)strndup((char *)(flo_data->body[i]->table_bytes + j), size);
+                    vm->constants[number] = (long int)strndup((char *)(flo_data->body[i]->table_bytes + j), size);
                 j += size - 1;
                 number += 1;
             }
