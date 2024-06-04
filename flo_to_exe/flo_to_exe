@@ -38,6 +38,13 @@ def main() -> int:
 
     wd ='/'.join(__file__.replace('\\', '/').split('/')[:-1])
 
+    if (not isdir(f"{wd}/assets")):
+        wd = "/var/lib/flo_to_exe/"
+
+    if (not isdir(f"{wd}/assets")):
+        stderr.write(f"{argv[0]}: can't find required assets in /var/lib/flo_to_exe and {'/'.join(__file__.replace('\\', '/').split('/')[:-1])} aborting.")
+        return (1)
+
     copy2(f"{wd}/assets/flo_to_exe.c", "./generated/")
     copy2(f"{wd}/assets/flo_to_exe.h", "./generated/")
 
