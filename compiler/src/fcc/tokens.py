@@ -69,7 +69,9 @@ class DllOpenToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
-        pass
+        self.name.compile_instruction(code_stack, 0, function_stack)
+
+        code_stack.add_code(code_stack.builder("PatternDllOpen")(fetch_num).to_code())
 
 class GetSymbolToken(Token):
     def __init__(self, dll: str, name: str) -> None:
