@@ -1,4 +1,1 @@
-fun test (arg0, arg1) [
-    return arg0 >= arg1 ]
-
-var result = test(5, 1)
+"\"5" + "test"

@@ -152,11 +152,11 @@ class Compiler(object):
         if (line.startswith(']')):
             return FieldEnd()
 
-        if (line.startswith('"') and line.endswith('"')):
-            return (StringToken('"'.join('"'.join(line.split('"')[1:]).split('"')[:-1])))
+        if (line.startswith('"') and line.endswith('"') and line.count('"') - line.count('\\"') == 2):
+            return (StringToken(line[1:-1]))
 
-        if (line.startswith("'") and line.endswith("'")):
-            return (StringToken("'".join("'".join(line.split("'")[1:]).split("'")[:-1])))
+        if (line.startswith("'") and line.endswith("'") and line.count("'") - line.count("\\'") == 2):
+            return (StringToken(line[1:-1]))
 
         if (line.startswith("dllopen")):
             if ('dllopen ' not in line):
