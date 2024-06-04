@@ -19,7 +19,7 @@ REGEX_HEX: Pattern = compile_regex(r'^0x([0-9]|[A-F]|[a-f])*$')
 REGEX_OCTAL: Pattern = compile_regex(r'^0o([0-8])*$')
 REGEX_BINARY: Pattern = compile_regex(r'^0b([0-1])*$')
 
-REGEX_VARIABLE_NAME: Pattern = compile_regex(r'^([A-z]|_|\.|\d)*$')
+REGEX_VARIABLE_NAME: Pattern = compile_regex(r'(^(?!^$)([A-z]|_|\.|\d)*$)')
 
 REGEX_FUNCTION: Pattern = compile_regex(r"^[_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*$")
 

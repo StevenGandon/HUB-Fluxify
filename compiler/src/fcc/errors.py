@@ -32,7 +32,7 @@ def invalid_token_error(code: object, debug_constructor: object, color: str, pre
     Compiler.get_token = wrapper
 
     for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
-        if (not item.strip().replace('=>', '') or not item.split('[')[0].split(']')[-1].strip()):
+        if (not item.strip().replace('=>', '').replace('[', '').replace(']', '').strip()):
             continue
 
         if (item.strip().startswith("==>")):
@@ -44,7 +44,7 @@ def invalid_token_error(code: object, debug_constructor: object, color: str, pre
             if (not '<=='.join(item.split('<==')[1:]).strip() or Compiler.get_token('<=='.join(item.split('<==')[1:]))):
                 continue
 
-        if (item.strip().startswith('=>') or in_comment or Compiler.get_token(item.split('[')[0].split(']')[-1])):
+        if (item.strip().startswith('=>') or in_comment or Compiler.get_token(item.replace('[', '').replace(']', ''))):
             if (bool(search(REGEX_MULTILINE_COMMENT_PREFIX, item))):
                 in_comment: bool = True
             if ("<==" in item):
@@ -58,7 +58,7 @@ def missing_operand_error(code: object, debug_constructor: object, color: str, p
     in_comment: bool = False
 
     for i, item in enumerate(code.code.replace('\\\n', '').split("\n")):
-        if (not item.strip().replace('=>', '')):
+        if (not item.strip().replace('=>', '').replace('[', '').replace(']', '').strip()):
             continue
 
         if (item.strip().startswith("==>")):
@@ -79,7 +79,7 @@ def missing_operand_error(code: object, debug_constructor: object, color: str, p
             continue
 
         stack = []
-        token = Compiler.get_token(item)
+        token = Compiler.get_token(item.replace('[', '').replace(']', '').strip())
         stack.append(token)
 
         null_token = False
