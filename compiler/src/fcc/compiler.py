@@ -203,7 +203,7 @@ class Compiler(object):
             if (line.split(' ').__len__() >= 3):
                 return CCallToken(
                     Compiler.get_token(line.split('ccall ')[1].split(' ')[0]),
-                    [Compiler.get_token(arg) for arg in (' '.join(line.split('ccall ')[1].split(' ')[1:])).strip().split(',')]
+                    [Compiler.get_token(arg) for arg in (' '.join(line.split('ccall ')[1].split(' ')[1:])).strip().split(' ') if arg.strip()]
                 )
             return CCallToken(None, None)
 

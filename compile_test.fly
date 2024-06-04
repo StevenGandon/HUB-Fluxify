@@ -15,4 +15,8 @@ fun test(arg0, arg1) [
     ]
 ]
 
+var dll = dllopen "C"
+var write = getsym dll "write"
+ccall write 1 "hello" 5
+
 test(5, 2)
