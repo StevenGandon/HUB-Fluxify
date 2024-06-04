@@ -11,6 +11,8 @@
     #include <stdint.h>
     #include <stdlib.h>
 
+    #include "floff.h"
+
     #define OP_NOOP 0
     #define OP_ADD  1
     #define OP_SUB  2
@@ -187,6 +189,20 @@
     void fun_superior_equal(vm_state_t *vm, instruction_t *inst);
     void fun_dl_open_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_dlsym_fetch(vm_state_t *vm, instruction_t *inst);
+
+    void load_constants32(floff32_t *flo_data, vm_state_t *vm);
+    void load_constants64(floff64_t *flo_data, vm_state_t *vm);
+    void load_instructions32(floff32_t *flo_data, vm_state_t *vm);
+    void load_instructions64(floff64_t *flo_data, vm_state_t *vm);
+    void load_labels32(floff32_t *flo_data, vm_state_t *vm);
+    void load_labels64(floff64_t *flo_data, vm_state_t *vm);
+
+    void cleanup_vm_state(vm_state_t *vm);
+    unsigned char fetch_char(vm_state_t *vm, size_t offset);
+    void initialize_vm_state(vm_state_t *vm);
+
+    void execute_instruction(vm_state_t *vm, instruction_t *inst);
+    char execute_program(vm_state_t *vm);
 
     static const struct opcode_s OPCODES[] = {
         {OP_NOOP, 0, &fun_noop},
