@@ -43,6 +43,7 @@ ERRORS = {
 ERRORS["all"] = tuple(ERRORS.values())
 
 WARNINGS = {
+    "invalid_comparaison_warning": invalid_comparaison_warning
 }
 WARNINGS["all"] = tuple(WARNINGS.values())
 
