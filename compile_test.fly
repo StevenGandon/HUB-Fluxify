@@ -1,10 +1,18 @@
-5 + "test"
-"test" / 5
-"test" * 10
-15 - "ok"
-15 > "test"
-42 < "noob"
-50 >= "nop"
-50 <= "yes"
-50 == "null"
-50 == 50
+==>
+    Test program
+<==
+
+fun test(arg0, arg1) [
+    var temp = 1
+
+    if temp == 0
+    [
+        return arg0 - arg1
+    ]
+    else
+    [
+        return arg0 + arg1
+    ]
+]
+
+test(5, 2)

@@ -69,16 +69,29 @@ class Compiler(object):
                 continue
 
             if (isinstance(token, TokenBranchGrowth)):
-                if (not tokenized or not hasattr(tokenized[-1], "next_branch")):
+                if (not tokenized):
                     continue
-                tokenized[-1].next_branch = token
-                tokenized.append(token)
+                temp = tokenized[-1]
+
+                while (hasattr(temp.body[-1], "body") and not hasattr(temp.body[-1], "next_branch")):
+                    temp = temp.body[-1]
+
+                if (hasattr(temp.body[-1], "next_branch")):
+                    temp.body[-1].next_branch = token
                 continue
 
             if (token.__class__ is FieldStart):
-                if (not tokenized or not hasattr(tokenized[-1], "body")):
+                if (not tokenized):
                     continue
-                fields.append(tokenized[-1].body if len(fields) == 0 else fields[-1][-1].body)
+
+                temp = tokenized[-1]
+
+                # while (hasattr(temp.body[-1], "body")):
+                #     temp = temp.body[-1]
+
+                # if (hasattr(temp.body[-1], "body")):
+
+                fields.append(temp if len(fields) == 0 else fields[-1].body[-1])
                 continue
             if (token.__class__ is FieldEnd):
                 if (not tokenized or not fields):
@@ -89,7 +102,12 @@ class Compiler(object):
             if (len(fields) == 0):
                 tokenized.append(token)
             else:
-                fields[-1].append(token)
+                temp = fields[-1]
+
+                while (hasattr(temp, "next_branch") and temp.next_branch):
+                    temp = temp.next_branch
+
+                temp.body.append(token)
 
         self.tokens.body = [item for item in self.tokens.body if not isinstance(item, TokenBranchGrowth)]
         print(self.tokens)

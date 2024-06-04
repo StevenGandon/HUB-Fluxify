@@ -5,7 +5,7 @@ from .constant_table import *
 from .label_table import *
 
 class Token(object):
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         return (bytes(0x00))
 
 class TokenOperator(Token):
@@ -46,11 +46,11 @@ class VarToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
 
         if (self.value):
-            self.value.compile_instruction(code_stack, 1)
+            self.value.compile_instruction(code_stack, 1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
         code_stack.add_code(code_stack.builder("PatternDeclareVar")().to_code())
@@ -68,7 +68,7 @@ class DllOpenToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
         pass
 
 class GetSymbolToken(Token):
@@ -82,7 +82,7 @@ class GetSymbolToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
         pass
 
 class CCallToken(Token):
@@ -96,7 +96,7 @@ class CCallToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
         pass
 
 class ReturnToken(Token):
@@ -109,11 +109,24 @@ class ReturnToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
-        if (self.value):
-            self.value.compile_instruction(code_stack, fetch_num)
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack = None) -> bytes:
+        if (not function_stack):
             return
-        code_stack.add_code(code_stack.builder("PatternResetFetch")(fetch_num))
+
+        if (self.value):
+            self.value.compile_instruction(code_stack, fetch_num, function_stack=function_stack)
+        else:
+            code_stack.add_code(code_stack.builder("PatternResetFetch")(fetch_num).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(function_stack.ptr, not fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternWeakFree")(function_stack.ptr).to_code())
+        if (not fetch_num):
+            code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
+        code_stack.add_code(code_stack.builder("PatternReadBlckInFetch0")((not fetch_num if fetch_num else fetch_num)).to_code())
+        if (not fetch_num):
+            code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
+        #code_stack.add_code(b'\x48\x01')
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
 
 class AssignToken(Token):
     def __init__(self, name: str, value) -> None:
@@ -126,11 +139,11 @@ class AssignToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
 
         if (self.value):
-            self.value.compile_instruction(code_stack, 1)
+            self.value.compile_instruction(code_stack, 1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
 
@@ -150,7 +163,7 @@ class FunctionToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         const_temp = code_stack.builder("ConstantItem")(sum(map(ord, self.name + "func")) + len(code_stack.code) + 0xfffffffffff)
 
         addr = code_stack.add_symbol(const_temp)
@@ -166,7 +179,7 @@ class FunctionToken(Token):
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(temp_alloc.ptr, 1).to_code())
 
         for item in self.args:
-            VarToken(item, None).compile_instruction(code_stack, 0)
+            VarToken(item, None).compile_instruction(code_stack, 0, function_stack=function_stack)
 
         for i, item in enumerate(self.args):
             tmp = code_stack.add_symbol(code_stack.builder("ConstantItem")(item))
@@ -183,29 +196,9 @@ class FunctionToken(Token):
             code_stack.add_code(code_stack.builder("PatternAssignVar")().to_code())
 
         for item in self.body:
-            if (isinstance(item, ReturnToken)):
-                item.compile_instruction(code_stack, fetch_num=fetch_num)
-                code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_alloc.ptr, not fetch_num).to_code())
-                code_stack.add_code(code_stack.builder("PatternWeakFree")(temp_alloc.ptr).to_code())
-                if (not fetch_num):
-                    code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
-                code_stack.add_code(code_stack.builder("PatternReadBlckInFetch0")((not fetch_num if fetch_num else fetch_num)).to_code())
-                if (not fetch_num):
-                    code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
-                #code_stack.add_code(b'\x48\x01')
-                code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
-                continue
+            item.compile_instruction(code_stack, fetch_num=fetch_num, function_stack=temp_alloc)
 
-            item.compile_instruction(code_stack, fetch_num=fetch_num)
-
-        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_alloc.ptr, not fetch_num).to_code())
-        code_stack.add_code(code_stack.builder("PatternWeakFree")(temp_alloc.ptr).to_code())
-        if (not fetch_num):
-            code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
-        code_stack.add_code(code_stack.builder("PatternReadBlckInFetch0")((not fetch_num if fetch_num else fetch_num)).to_code())
-        if (not fetch_num):
-            code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
-        code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
+        ReturnToken(0).compile_instruction(code_stack, fetch_num, temp_alloc)
 
         const_temp.item = (sum(map(len, code_stack.code)))
 
@@ -225,6 +218,33 @@ class IfToken(TokenBranch):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
+        end = code_stack.builder("ConstantItem")(sum(map(ord, 'if')) + len(code_stack.code) + 0xfffffffffff)
+
+        end_addr = code_stack.add_symbol(end)
+        real_end = code_stack.builder("ConstantItem")(sum(map(ord, 'end_if')) + len(code_stack.code) + 0xfffffffffff)
+
+        real_end_addr = code_stack.add_symbol(real_end)
+
+        self.condition.compile_instruction(code_stack, 0, function_stack=function_stack)
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(end_addr, 1).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternMvPcCMPN")().to_code())
+
+        for item in self.body:
+            item.compile_instruction(code_stack, fetch_num, function_stack=function_stack)
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(real_end_addr, not fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
+
+        end.item = sum(map(len, code_stack.code))
+
+        if (self.next_branch):
+            print("okkkk")
+            self.next_branch.compile_instruction(code_stack, fetch_num, function_stack)
+
+        real_end.item = sum(map(len, code_stack.code))
+
 class ElseIfToken(TokenBranchGrowth, TokenBranch):
     def __init__(self, condition: Token, body: list) -> None:
         self.condition = condition
@@ -239,6 +259,32 @@ class ElseIfToken(TokenBranchGrowth, TokenBranch):
     def __str__(self):
         return self.__repr__()
 
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
+        end = code_stack.builder("ConstantItem")(sum(map(ord, 'elseif')) + len(code_stack.code) + 0xfffffffffff)
+
+        end_addr = code_stack.add_symbol(end)
+        real_end = code_stack.builder("ConstantItem")(sum(map(ord, 'end_elseif')) + len(code_stack.code) + 0xfffffffffff)
+
+        real_end_addr = code_stack.add_symbol(real_end)
+
+        self.condition.compile_instruction(code_stack, 0, function_stack=function_stack)
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(end_addr, 1).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternMvPcCMPN")().to_code())
+
+        for item in self.body:
+            item.compile_instruction(code_stack, fetch_num, function_stack=function_stack)
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(real_end_addr, not fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
+
+        end.item = sum(map(len, code_stack.code))
+
+        if (self.next_branch):
+            self.next_branch.compile_instruction(code_stack, fetch_num, function_stack)
+
+        real_end.item = sum(map(len, code_stack.code))
+
 class ElseToken(TokenBranchGrowth):
     def __init__(self, body: list) -> None:
         self.body = body
@@ -249,6 +295,29 @@ class ElseToken(TokenBranchGrowth):
 
     def __str__(self):
         return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
+        end = code_stack.builder("ConstantItem")(sum(map(ord, 'else')) + len(code_stack.code) + 0xfffffffffff)
+
+        end_addr = code_stack.add_symbol(end)
+        real_end = code_stack.builder("ConstantItem")(sum(map(ord, 'end_else')) + len(code_stack.code) + 0xfffffffffff)
+
+        real_end_addr = code_stack.add_symbol(real_end)
+
+        IntToken("1").compile_instruction(code_stack, 0, function_stack=function_stack)
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(end_addr, 1).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternMvPcCMPN")().to_code())
+
+        for item in self.body:
+            item.compile_instruction(code_stack, fetch_num, function_stack=function_stack)
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(real_end_addr, not fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
+
+        end.item = sum(map(len, code_stack.code))
+
+        real_end.item = sum(map(len, code_stack.code))
 
 class WhileToken(Token):
     def __init__(self, condition: Token, body: list) -> None:
@@ -262,19 +331,19 @@ class WhileToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
         end = code_stack.builder("ConstantItem")(sum(map(ord, 'while')) + len(code_stack.code) + 0xfffffffffff)
 
         end_addr = code_stack.add_symbol(end)
         start_addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(sum(map(len, code_stack.code))))
 
-        self.condition.compile_instruction(code_stack, 0)
+        self.condition.compile_instruction(code_stack, 0, function_stack=function_stack)
         code_stack.add_code(code_stack.builder("PatternFetchConst")(end_addr, 1).to_code())
 
         code_stack.add_code(code_stack.builder("PatternMvPcCMPN")().to_code())
 
         for item in self.body:
-            item.compile_instruction(code_stack, fetch_num)
+            item.compile_instruction(code_stack, fetch_num, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(start_addr, not fetch_num).to_code())
         code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
@@ -305,7 +374,7 @@ class FunctionCall(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
         next_inst_const = code_stack.builder("ConstantItem")(sum(map(ord, self.name + 'call')) + len(code_stack.code) + 0xfffffffffff)
         next_inst_addr = code_stack.add_symbol(next_inst_const)
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
@@ -316,7 +385,7 @@ class FunctionCall(Token):
             code_stack.add_code(item.to_code())
 
         for i, item in enumerate(self.args):
-            item.compile_instruction(code_stack, fetch_num=0)
+            item.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
             code_stack.add_code(code_stack.builder("PatternStoreFetch")(allocs[1 + i].ptr, 0).to_code())
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(next_inst_addr, 0).to_code())
@@ -346,7 +415,7 @@ class IntToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.value))
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, fetch_num).to_code())
@@ -361,7 +430,7 @@ class StringToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.value))
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, fetch_num).to_code())
@@ -378,7 +447,7 @@ class ListToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         pass
         # return add_constant_primitive()
 
@@ -394,7 +463,7 @@ class VariableToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
@@ -415,12 +484,8 @@ class IncrementToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        return (bytes((
-            INSTRUCTIONS["ADD"],
-            self.value.compile_instruction(code_stack),
-            1
-        )))
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
+        pass
 
 class DecrementToken(TokenOperator):
     def __init__(self, value: Token) -> None:
@@ -436,12 +501,8 @@ class DecrementToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
-        return (bytes((
-            INSTRUCTIONS["SUB"],
-            self.value.compile_instruction(code_stack),
-            1
-        )))
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
+        pass
 
 class MinusToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
@@ -457,18 +518,18 @@ class MinusToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -494,18 +555,18 @@ class PlusToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -528,18 +589,18 @@ class MulToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -562,18 +623,18 @@ class DivToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -596,18 +657,18 @@ class ModToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -630,18 +691,18 @@ class EQOperatorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -664,18 +725,18 @@ class SuperiorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -698,18 +759,18 @@ class InferiorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -732,18 +793,18 @@ class SuperiorOrEqualToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -766,18 +827,18 @@ class InferiorOrEqualToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -800,18 +861,18 @@ class AndOperatorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -834,18 +895,18 @@ class OrOperatorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -868,18 +929,18 @@ class AndToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -902,18 +963,18 @@ class OrToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -936,18 +997,18 @@ class XorToken(TokenOperator):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         blck_0 = code_stack.builder("PatternAlloc")()
         blck_1 = code_stack.builder("PatternAlloc")()
 
         code_stack.add_code(blck_0.to_code())
         code_stack.add_code(blck_1.to_code())
 
-        self.value.compile_instruction(code_stack, fetch_num=0)
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
 
-        self.value2.compile_instruction(code_stack, fetch_num=1)
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
 
         code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
 
@@ -971,10 +1032,10 @@ class RootToken(Token):
     def __str__(self):
         return self.__repr__()
 
-    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0) -> bytes:
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
         code_stack.add_label(code_stack.builder("LabelItem")("_start", 0))
 
         for item in self.body:
-            item.compile_instruction(code_stack, fetch_num)
+            item.compile_instruction(code_stack, fetch_num, function_stack=function_stack)
 
         code_stack.add_code(b'\x48' + b'\x00')
