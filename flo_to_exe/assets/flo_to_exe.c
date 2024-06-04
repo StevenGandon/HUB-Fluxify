@@ -54,7 +54,10 @@ int main(int argc, char **argv)
 {
     vm_state_t vm;
     int ret = 0;
-    FILE *mem = fmemopen(FILE_COMPILED, *SIZE, "r");
+
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+    FILE *mem = fmemopen(buffer, sizeof(buffer), "r+");
 
     vm.filename = "unknown_compiled_program";
 
