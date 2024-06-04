@@ -53,29 +53,29 @@ def main() -> int:
         gen_code(argv[1], fp)
 
     if (argv[2] != "nt"):
-        process = Popen("gcc ./generated/binary.c -o ./generated/binary.o -c -I./generated -L./generated -lfluxify -lfloff", shell=True)
+        process = Popen("gcc ./generated/binary.c -o ./generated/binary.o -c -I./generated -L./generated -lfluxify -lfloff -ldl", shell=True)
         if (process.wait(1)):
             return 1
 
-        process = Popen("gcc ./generated/flo_to_exe.c -o ./generated/flo_to_exe.o -c -I./generated -L./generated -lfluxify -lfloff", shell=True)
+        process = Popen("gcc ./generated/flo_to_exe.c -o ./generated/flo_to_exe.o -c -I./generated -L./generated -lfluxify -lfloff -ldl", shell=True)
         if (process.wait(1)):
             return 1
 
-        process = Popen("gcc ./generated/binary.o ./generated/flo_to_exe.o -o result -I./generated -L./generated -lfluxify -lfloff", shell=True)
+        process = Popen("gcc ./generated/binary.o ./generated/flo_to_exe.o -o result -I./generated -L./generated -lfluxify -lfloff -ldl", shell=True)
         if (process.wait(1)):
             return 1
 
     else:
         compiler = "x86_64-w64-mingw32-gcc" if argv[3] == "X86_64" else "i686-w64-mingw32-gcc"
-        process = Popen(f"{compiler} -c -I./generated ./generated/binary.c -o ./generated/binary.o", shell=True)
+        process = Popen(f"{compiler} ./generated/binary.c -o ./generated/binary.o -c -I./generated -L./generated -lfluxify -lfloff -ldl", shell=True)
         if (process.wait(1)):
             return 1
 
-        process = Popen(f"{compiler} -c -I./generated ./generated/flo_to_exe.c -o ./generated/flo_to_exe.o", shell=True)
+        process = Popen(f"{compiler} ./generated/flo_to_exe.c -o ./generated/flo_to_exe.o -c -I./generated -L./generated -lfluxify -lfloff -ldl", shell=True)
         if (process.wait(1)):
             return 1
 
-        process = Popen(f"{compiler} -I./generated ./generated/binary.o ./generated/flo_to_exe.o -o result", shell=True)
+        process = Popen(f"{compiler} ./generated/binary.o ./generated/flo_to_exe.o -o result -I./generated -L./generated -lfluxify -lfloff -ldl", shell=True)
         if (process.wait(1)):
             return 1
 
