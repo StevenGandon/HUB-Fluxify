@@ -73,3 +73,5 @@ __pycache__
 # Object file
 *.flo
 # *.fly
+
+flo_to_exe/generated
