@@ -429,7 +429,7 @@ class FunctionCall(Token):
         code_stack.add_code(code_stack.builder("PatternGetLabel")(0).to_code())
         code_stack.add_code(code_stack.builder("PatternFetchConst")(start, 1).to_code())
 
-        code_stack.add_code(code_stack.builder("PatternPcFetch")(fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternPcFetch")(0).to_code())
 
         next_inst_const.item = (sum(map(len, code_stack.code)))
 
