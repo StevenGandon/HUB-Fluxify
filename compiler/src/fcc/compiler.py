@@ -198,7 +198,7 @@ class Compiler(object):
             if (line.split(' ').__len__() == 2):
                 return CCallToken(
                     Compiler.get_token(line.split('ccall ')[1]),
-                    None
+                    []
                 )
             if (line.split(' ').__len__() >= 3):
                 return CCallToken(
