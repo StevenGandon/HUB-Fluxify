@@ -24,9 +24,6 @@ void fun_destroy_variable(vm_state_t *vm, instruction_t *inst)
             } else {
                 prev->next = current->next;
             }
-            
-            free(current->var_name);
-            free(current->var_value);
             free(current);
             return;
         }

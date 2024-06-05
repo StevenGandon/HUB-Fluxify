@@ -150,19 +150,33 @@ class ReturnToken(Token):
         if (not function_stack):
             return
 
+        temp = code_stack.builder("PatternAlloc")()
+
+        code_stack.add_code(temp.to_code())
+
         if (self.value):
             self.value.compile_instruction(code_stack, fetch_num, function_stack=function_stack)
         else:
             code_stack.add_code(code_stack.builder("PatternResetFetch")(fetch_num).to_code())
 
-        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(function_stack.ptr, not fetch_num).to_code())
-        code_stack.add_code(code_stack.builder("PatternWeakFree")(function_stack.ptr).to_code())
+        code_stack.add_code(code_stack.builder("PatternStoreFetch")(temp.addr, fetch_num).to_code())
+        for item in function_stack[1]:
+            tmp = code_stack.add_symbol(code_stack.builder("ConstantItem")(item))
+
+            code_stack.add_code(code_stack.builder("PatternFetchConst")(tmp, 0).to_code())
+            code_stack.add_code(code_stack.builder("PatternDestroyVar")().to_code())
+
+        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp.addr, fetch_num))
+
+        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(function_stack[0].ptr, not fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternWeakFree")(function_stack[0].ptr).to_code())
         if (not fetch_num):
             code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
         code_stack.add_code(code_stack.builder("PatternReadBlckInFetch0")((not fetch_num if fetch_num else fetch_num)).to_code())
         if (not fetch_num):
             code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
         #code_stack.add_code(b'\x48\x01')
+        code_stack.add_code(code_stack.builder("PatternFree")(temp.ptr).to_code())
         code_stack.add_code(code_stack.builder("PatternPcFetch")(not fetch_num).to_code())
 
 class AssignToken(Token):
@@ -231,9 +245,9 @@ class FunctionToken(Token):
             code_stack.add_code(code_stack.builder("PatternAssignVar")().to_code())
 
         for item in self.body:
-            item.compile_instruction(code_stack, fetch_num=fetch_num, function_stack=temp_alloc)
+            item.compile_instruction(code_stack, fetch_num=fetch_num, function_stack=(temp_alloc, [item for item in self.args]))
 
-        ReturnToken(0).compile_instruction(code_stack, fetch_num, temp_alloc)
+        ReturnToken(0).compile_instruction(code_stack, fetch_num, (temp_alloc, [item for item in self.args]))
 
         const_temp.item = (sum(map(len, code_stack.code)))
 
