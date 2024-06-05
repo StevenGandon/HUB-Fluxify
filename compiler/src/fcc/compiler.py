@@ -307,6 +307,12 @@ class Compiler(object):
         if (line.isnumeric()):
             return IntToken(line)
 
+        if (bool(match_regex(REGEX_TRUE, line))):
+            return IntToken(1, 10)
+
+        if (bool(match_regex(REGEX_FALSE, line))):
+            return IntToken(0, 10)
+
         if (bool(match_regex(REGEX_OCTAL, line))):
             return IntToken(line.split('0o')[1], 8)
 
