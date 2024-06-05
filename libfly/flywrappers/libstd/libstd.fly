@@ -3,6 +3,7 @@ var libstd = dllopen libname
 
 var wout_sym = getsym libstd "wout"
 var werr_sym = getsym libstd "werr"
+var strlen_sym = getsym libstd "strlen"
 
 fun wout(text, flush) [
     ccall wout_sym text flush
@@ -10,6 +11,10 @@ fun wout(text, flush) [
 
 fun werr(text, flush) [
     ccall werr_sym text flush
+]
+
+fun strlen(text) [
+    return ccall strlen_sym text
 ]
 
 wout("loaded standard library.\n", 1)

@@ -15,3 +15,8 @@ void werr(char *text, char flush)
     if (flush)
         fflush(stdout);
 }
+
+int strlen(char *text)
+{
+    return strlen(text);
+}
