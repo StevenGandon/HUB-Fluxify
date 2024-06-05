@@ -51,6 +51,7 @@
     #define OP_DLOPEN_FETCH 0x61
     #define OP_DLSYM_FETCH 0x62
     #define OP_CCALL 0x63
+    #define OP_DESTROY_VARIABLE 0x64
 
     typedef enum {
         FLO_TYPE_INT = 1,
@@ -182,6 +183,7 @@
     void fun_reset_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_create_var(vm_state_t *vm, instruction_t *inst);
     void fun_assign_var(vm_state_t *vm, instruction_t *inst);
+    void fun_destroy_variable(vm_state_t *vm, instruction_t *inst);
     void fun_move_blocks_into_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_move_pc_cmp(vm_state_t *vm, instruction_t *inst);
     void fun_variable_fetch(vm_state_t *vm, instruction_t *inst);
@@ -247,6 +249,7 @@
         {OP_DLOPEN_FETCH, 1, &fun_dl_open_fetch},
         {OP_DLSYM_FETCH, 1, &fun_dlsym_fetch},
         {OP_CCALL, 1, &fun_ccall},
+        {OP_DESTROY_VARIABLE, 0, &fun_destroy_variable},
         {0, 0, NULL}
     };
 
