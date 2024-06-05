@@ -1,0 +1,21 @@
+.TH libfly 1 "06 Juillet 2024" "1.0" "LibFly man page"
+.SH NAME
+    Image Functions - Functions for image management
+
+.SH SYNOPSIS
+    fun create_image(path, x, y)
+    fun draw_image(window, image)
+    fun destroy_image(image)
+    fun move_image(image, x, y)
+
+.SH DESCRIPTION
+    create_image - Creates an image from the specified file path and positions it at the specified coordinates.
+    draw_image - Draws the specified image in the specified window.
+    destroy_image - Destroys the specified image.
+    move_image - Moves the specified image to the new position.
+
+.SH EXAMPLES
+    image = create_image("/path/to/image.png", 100, 100)
+    draw_image(window, image)
+    destroy_image(image)
+    move_image(image, 300, 300)

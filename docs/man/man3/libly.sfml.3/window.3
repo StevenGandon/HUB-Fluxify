@@ -1,0 +1,35 @@
+.TH libfly 1 "06 Juillet 2024" "1.0" "LibFly man page"
+.SH NAME
+    Window Functions - Functions for window management
+
+.SH SYNOPSIS
+    fun init_window(width, height, title)
+    fun destroy_window(window)
+    fun clear_window(window)
+    fun display_window(window)
+    fun quit_event(window)
+    fun get_window_width(window)
+    fun get_window_height(window)
+    fun set_window_framerate(window, framerate)
+
+.SH DESCRIPTION
+    init_window - Initializes a window with the given width, height, and title.
+    destroy_window - Destroys the specified window.
+    clear_window - Clears the contents of the specified window.
+    display_window - Displays the contents of the specified window.
+    quit_event - Checks if a quit event has been triggered for the specified window.
+    get_window_width - Returns the width of the specified window.
+    get_window_height - Returns the height of the specified window.
+    set_window_framerate - Sets the framerate of the specified window.
+
+.SH EXAMPLES
+    window = init_window(800, 600, "My Window")
+    destroy_window(window)
+    clear_window(window)
+    display_window(window)
+    if quit_event(window) [
+        // Handle quit event
+    ]
+    width = get_window_width(window)
+    height = get_window_height(window)
+    set_window_framerate(window, 60)

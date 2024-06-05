@@ -22,6 +22,19 @@ var draw_circle_sym = getsym libsfml "draw_circle"
 var destroy_circle_sym = getsym libsfml "destroy_circle"
 var move_circle_sym = getsym libsfml "move_circle"
 
+=> Text
+var create_text_sym = getsym libsfml "create_text"
+var draw_text_sym = getsym libsfml "draw_text"
+var destroy_text_sym = getsym libsfml "destroy_text"
+var move_text_sym = getsym libsfml "move_text"
+var set_text_fond_sym = getsym libsfml "set_text_fond"
+
+=> Image
+var create_image_sym = getsym libsfml "create_image"
+var draw_image_sym = getsym libsfml "draw_image"
+var destroy_image_sym = getsym libsfml "destroy_image"
+var move_image_sym = getsym libsfml "move_image"
+
 fun init_window(width, height, title) [
     return ccall init_window_sym width height title
 ]
@@ -90,11 +103,51 @@ fun move_circle(circle, x, y) [
     ccall move_circle_sym circle x y
 ]
 
+=> Text
+
+fun draw_text(window, text) [
+    ccall draw_text_sym window text
+]
+
+fun create_text(text, x, y, size, r, g, b, a) [
+    return ccall create_text_sym text x y size r g b a
+]
+
+fun destroy_text(text) [
+    ccall destroy_text_sym text
+]
+
+fun move_text(text, x, y) [
+    ccall move_text_sym text x y
+]
+
+fun set_text_fond(text, font_path) [
+    ccall set_text_fond_sym text font_path
+]
+
+=> Image
+
+fun create_image(path, x, y) [
+    return ccall create_image_sym path x y
+]
+
+fun draw_image(window, image) [
+    ccall draw_image_sym window image
+]
+
+fun destroy_image(image) [
+    ccall destroy_image_sym image
+]
+
+fun move_image(image, x, y) [
+    ccall move_image_sym image x y
+]
+
 fun main [
     var window_name = init_window(800, 600, "Test")
 
     var rectangle = create_rectangle(100, 100, 50, 50, 255, 0, 0, 255)
-    => set_window_framerate(window_name, 30)
+    set_window_framerate(window_name, 100)
     var rect_x = 100
     var rect_y = 100
     var rect_dx = 1

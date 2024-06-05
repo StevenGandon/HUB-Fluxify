@@ -1,0 +1,21 @@
+.TH libfly 1 "06 Juillet 2024" "1.0" "LibFly man page"
+.SH NAME
+    Circle Functions - Functions for circle management
+
+.SH SYNOPSIS
+    fun create_circle(x, y, radius, r, g, b, a)
+    fun draw_circle(window, circle)
+    fun destroy_circle(circle)
+    fun move_circle(circle, x, y)
+
+.SH DESCRIPTION
+    create_circle - Creates a circle with the specified position, radius, and color.
+    draw_circle - Draws the specified circle in the specified window.
+    destroy_circle - Destroys the specified circle.
+    move_circle - Moves the specified circle to the new position.
+
+.SH EXAMPLES
+    circle = create_circle(20, 20, 50, 0, 0, 255, 255)
+    draw_circle(window, circle)
+    destroy_circle(circle)
+    move_circle(circle, 100, 100)

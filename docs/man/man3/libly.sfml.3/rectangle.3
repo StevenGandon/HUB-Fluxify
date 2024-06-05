@@ -1,0 +1,21 @@
+.TH libfly 1 "06 Juillet 2024" "1.0" "LibFly man page"
+.SH NAME
+    Rectangle Functions - Functions for rectangle management
+
+.SH SYNOPSIS
+    fun create_rectangle(x, y, size_x, size_y, r, g, b, a)
+    fun draw_rectangle(window, rectangle)
+    fun destroy_rectangle(rectangle)
+    fun move_rectangle(rectangle, x, y)
+
+.SH DESCRIPTION
+    create_rectangle - Creates a rectangle with the specified position, size, and color.
+    draw_rectangle - Draws the specified rectangle in the specified window.
+    destroy_rectangle - Destroys the specified rectangle.
+    move_rectangle - Moves the specified rectangle to the new position.
+
+.SH EXAMPLES
+    rectangle = create_rectangle(10, 10, 100, 50, 255, 0, 0, 255)
+    draw_rectangle(window, rectangle)
+    destroy_rectangle(rectangle)
+    move_rectangle(rectangle, 50, 50)

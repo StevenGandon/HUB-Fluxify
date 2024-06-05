@@ -1,0 +1,24 @@
+.TH libfly 1 "06 Juillet 2024" "1.0" "LibFly man page"
+.SH NAME
+    Text Functions - Functions for text management
+
+.SH SYNOPSIS
+    fun create_text(text, x, y, size, r, g, b, a)
+    fun draw_text(window, text)
+    fun destroy_text(text)
+    fun move_text(text, x, y)
+    fun set_text_fond(text, font_path)
+
+.SH DESCRIPTION
+    create_text - Creates a text element with the specified content, position, size, and color.
+    draw_text - Draws the specified text element in the specified window.
+    destroy_text - Destroys the specified text element.
+    move_text - Moves the specified text element to the new position.
+    set_text_fond - Sets the font of the specified text element using the font file at the specified path.
+
+.SH EXAMPLES
+    text = create_text("Hello, World!", 50, 50, 24, 255, 255, 255, 255)
+    draw_text(window, text)
+    destroy_text(text)
+    move_text(text, 200, 200)
+    set_text_fond(text, "/path/to/font.ttf")
