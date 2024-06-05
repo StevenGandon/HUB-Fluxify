@@ -16,21 +16,14 @@ void fun_assign_var(vm_state_t *vm, instruction_t *inst)
     long int value = vm->fetch_dest;
 
     variable_map_t *var_map = vm->var_map;
-    variable_map_t *to_assign = NULL;
-
     while (var_map) {
         if (strcmp(var_map->var_name, var_name) == 0) {
-            to_assign = var_map;
+            if (var_map->var_value->value == NULL) {
+                var_map->var_value->value = malloc(sizeof(long int));
+            }
+            *(long int *)(var_map->var_value->value) = value;
+            break;
         }
         var_map = var_map->next;
-    }
-
-    if (to_assign == NULL) {
-        fprintf(stderr, "Variable not found (assign_var)\n");
-    } else {
-        if (to_assign->var_value->value == NULL) {
-            to_assign->var_value->value = malloc(sizeof(long int));
-        }
-        *(long int *)(to_assign->var_value->value) = value;
     }
 }
