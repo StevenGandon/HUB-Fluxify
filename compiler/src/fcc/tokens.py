@@ -113,7 +113,22 @@ class CCallToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
-        pass
+        allocs = [code_stack.builder("PatternAlloc")() for _ in range(len(self.args) + 1)]
+
+        for item in allocs:
+            code_stack.add_code(item.to_code())
+
+        self.name.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
+        code_stack.add_code(code_stack.builder("PatternStoreFetch")(allocs[0].ptr, 0).to_code())
+
+        for i, item in enumerate(self.args):
+            item.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
+            code_stack.add_code(code_stack.builder("PatternStoreFetch")(allocs[1 + i].ptr, 0).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternCCall")(fetch_num).to_code())
+
+        for item in allocs:
+            code_stack.add_code(code_stack.builder("PatternFree")(item.ptr).to_code())
 
 class ReturnToken(Token):
     def __init__(self, value) -> None:
@@ -415,8 +430,6 @@ class FunctionCall(Token):
         code_stack.add_code(code_stack.builder("PatternPcFetch")(fetch_num).to_code())
 
         next_inst_const.item = (sum(map(len, code_stack.code)))
-
-        print(next_inst_const.item, next_inst_addr)
 
         for item in allocs:
             code_stack.add_code(code_stack.builder("PatternWeakFree")(item.ptr).to_code())
