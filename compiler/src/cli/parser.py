@@ -10,7 +10,7 @@ class Parser:
             "-?": False
         }
         self.entry: str = "_start"
-        self.outputName: str = "a.out"
+        self.outputName: str = "fly.out"
         self.errors: list = []
         self.warns: list = []
         self.files: list = []

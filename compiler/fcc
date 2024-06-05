@@ -125,8 +125,13 @@ def main() -> int:
 
         if (not return_status):
             print(FloffAuto.from_file(f"{file.replace('.fly', '.flo')}"))
-    linker = Linker(list(item.replace('.fly', '.flo') for item in parser.files), parser.arch)
-    linker.link()
+
+    if (not return_status):
+        linker = Linker(list(item for item in parser.files), parser.arch)
+        compiler: Compiler = Compiler(linker.link(), [], [], parser.outputName)
+        compiler.parse()
+        compiler.tokenize()
+        compiler.compile(floffClass)
 
     return (return_status)
 
