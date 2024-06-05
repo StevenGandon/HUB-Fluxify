@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 
     vm.filename = "unknown_compiled_program";
 
-    fwrite(buffer, 1, *SIZE, mem);
+    fwrite(buffer, (vm.arch == ARCH_X86_64 ? 8 : 4), *SIZE, mem);
     fflush(mem);
     rewind(mem);
 
