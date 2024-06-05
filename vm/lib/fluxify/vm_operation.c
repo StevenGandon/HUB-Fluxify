@@ -372,10 +372,7 @@ char load_program(vm_state_t *vm)
         return (1);
     }
 
-    if (((floff32_t *)result)->architecture != vm->arch) {
-        printf("Incompatible architecture, architecture passed as argument is not the same as the file architecture.\n");
-        return (1);
-    }
+    vm->arch = ((floff64_t *)result)->architecture;
 
     if (vm->arch == ARCH_X86_64) {
         floff64_t *flo_data = (floff64_t *)result;
