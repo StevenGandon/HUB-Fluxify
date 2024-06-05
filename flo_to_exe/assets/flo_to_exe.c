@@ -25,7 +25,7 @@ int launch_vm(vm_state_t *vm, FILE *program, short arch)
         return (1);
     }
 
-    printf("Architecture: %hu\n", (unsigned short)vm.arch);
+    printf("Architecture: %hu\n", (unsigned short)vm->arch);
     printf("Architecture file: %hu\n", (unsigned short)((floff32_t *)result)->architecture);
 
     if (((floff32_t *)result)->architecture != vm->arch) {
