@@ -33,7 +33,24 @@ char *to_str(int num)
 
 void wout(char *text, char flush)
 {
+    if (!text)
+        return;
     printf(text);
+
+    if (flush)
+        fflush(stdout);
+}
+
+void print(char *text, int stdway, char flush)
+{
+    if (!text)
+        return;
+    if (stdway == 1)
+        fprintf(stdout, "%s\n", text);
+    else if (stdway == 2)
+        fprintf(stderr, "%s\n", text);
+    else
+        fprintf(stdout, "%s\n", text);
 
     if (flush)
         fflush(stdout);
