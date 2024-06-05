@@ -433,6 +433,9 @@ class FunctionCall(Token):
 
         next_inst_const.item = (sum(map(len, code_stack.code)))
 
+        if (fetch_num):
+            code_stack.add_code(code_stack.builder("PatternSwapFetch")().to_code())
+
         for item in allocs:
             code_stack.add_code(code_stack.builder("PatternWeakFree")(item.ptr).to_code())
 
