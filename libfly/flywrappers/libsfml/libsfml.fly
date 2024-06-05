@@ -1,7 +1,7 @@
-var libname = "libstd.so"
+var libname = "libfly/libfly.so"
 var libsfml = dllopen libname
 
-var init_window_sym = dlsym libsfml "init_window"
+var init_window_sym = getsym libsfml "init_window"
 
 fun init_window(title, width, height) [
     ccall init_window_sym title width height
