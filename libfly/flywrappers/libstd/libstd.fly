@@ -10,6 +10,7 @@ var exit_sym = getsym libstd "quit"
 var dupli_sym = getsym libstd "duplicate_process"
 var getpid_sym = getsym libstd "get_pid"
 var print_sym = getsym libstd "print"
+var read_file_sym = getsym libstd "read_file"
 
 fun get_pid() [
     return ccall getpid_sym
@@ -21,6 +22,10 @@ fun duplicate_process() [
 
 fun print(text, stdway, flush) [
     return ccall print_sym text stdway flush
+]
+
+fun read_file(file) [
+    return ccall read_file_sym file
 ]
 
 fun quit(code) [

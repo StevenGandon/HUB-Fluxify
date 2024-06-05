@@ -16,6 +16,32 @@ int get_pid(void)
     return getpid();
 }
 
+char *read_file(char *filename)
+{
+    FILE *file = fopen(filename, "r");
+    char *buffer = NULL;
+    size_t size = 0;
+
+    if (file == NULL) {
+        printf("Error: Unable to open file %s\n", filename);
+        return NULL;
+    }
+    fseek(file, 0, SEEK_END);
+    size = ftell(file);
+    rewind(file);
+
+    buffer = (char *)malloc((size + 1) * sizeof(*buffer));
+    if (buffer == NULL) {
+        printf("Error: Unable to allocate memory\n");
+        fclose(file);
+        return NULL;
+    }
+    fread(buffer, size, 1, file);
+    buffer[size] = '\0';
+    fclose(file);
+    return buffer;
+}
+
 void quit(int code)
 {
     exit(code);
