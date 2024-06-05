@@ -13,7 +13,7 @@ SRC = libstd/libstd.c	\
 OBJ = $(SRC:.c=.o)
 
 CC = gcc
-CFLAGS += -Wall -Wextra -Werror -fpic -g -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
+CFLAGS += -Wall -Wextra -Werror -fpic -g -lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -lcsfml-network
 
 all: $(NAME)
 
