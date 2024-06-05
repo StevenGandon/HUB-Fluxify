@@ -1,20 +1,24 @@
-var libname = "libstd.so"
+var libname = "libfly/libfly.so"
 var libstd = dllopen libname
 
 var wout_sym = getsym libstd "wout"
 var werr_sym = getsym libstd "werr"
-var strlen_sym = getsym libstd "strlen"
+var strlen_sym = getsym libstd "ft_len"
+var to_str_sym = getsym libstd "to_str"
 
-fun wout(text, flush) [
-    ccall wout_sym text flush
-]
-
-fun werr(text, flush) [
-    ccall werr_sym text flush
-]
 
 fun strlen(text) [
     return ccall strlen_sym text
 ]
 
-wout("loaded standard library.\n", 1)
+fun wout(text, flush) [
+    return ccall wout_sym text flush
+]
+
+fun werr(text, flush) [
+    return ccall werr_sym text flush
+]
+
+fun to_str(num) [
+    return ccall to_str_sym num
+]

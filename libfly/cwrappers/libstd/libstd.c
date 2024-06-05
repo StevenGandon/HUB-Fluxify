@@ -1,4 +1,17 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+
+char *to_str(int num)
+{
+
+    if (num == 0)
+        return "0";
+    static char str[12];
+    snprintf(str, 13, "%d", num);
+    return str;
+}
 
 void wout(char *text, char flush)
 {
@@ -10,13 +23,13 @@ void wout(char *text, char flush)
 
 void werr(char *text, char flush)
 {
-    fprintf(text, stderr);
+    fprintf(stderr, text);
 
     if (flush)
         fflush(stdout);
 }
 
-int strlen(char *text)
+size_t ft_len(char *text)
 {
     return strlen(text);
 }
