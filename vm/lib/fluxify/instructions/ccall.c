@@ -32,6 +32,11 @@ void fun_ccall(vm_state_t *vm, instruction_t *inst)
         }
     }
 
+    if (!function) {
+        vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
+        fprintf(stderr, "[ERROR] Function not found\n");
+        return;
+    }
     for (size_t i = 1; i < size; i++) {
         for (size_t j = 0; vm->blocks[j] != NULL; j++) {
             if (vm->blocks[j]->address == block_address_start + i) {
