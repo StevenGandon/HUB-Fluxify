@@ -30,7 +30,7 @@ void fun_create_var(vm_state_t *vm, instruction_t *inst)
     printf("Creating variable '%p'\n", var_name);
     fflush(stdout);
 
-    new_var_map->var_name = strdup(var_name);
+    new_var_map->var_name = var_name;
     new_var_map->var_value = new_var;
     new_var_map->next = vm->var_map;
     vm->var_map = new_var_map;
