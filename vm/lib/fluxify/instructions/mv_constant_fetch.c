@@ -29,5 +29,7 @@ void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst)
         vm->fetch_dest = dest_block;
     }
 
+    printf("constant move (%d) (f0: %ld, f1: %ld)\n", fetch, vm->fetch_src, vm->fetch_dest);
+
     vm->program_counter += vm->arch == ARCH_X86_64 ? 16 : 8;
 }

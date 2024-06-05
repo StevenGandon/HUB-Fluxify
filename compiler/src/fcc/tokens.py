@@ -47,10 +47,10 @@ class VarToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
-        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
-
         if (self.value):
             self.value.compile_instruction(code_stack, 1, function_stack=function_stack)
+
+        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
         code_stack.add_code(code_stack.builder("PatternDeclareVar")().to_code())
@@ -177,10 +177,10 @@ class AssignToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
-        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
-
         if (self.value):
             self.value.compile_instruction(code_stack, 1, function_stack=function_stack)
+
+        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(self.name))
 
         code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
 
