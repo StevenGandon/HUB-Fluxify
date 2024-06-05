@@ -57,28 +57,31 @@ int main(int argc, char **argv)
 {
     vm_state_t vm;
     int ret = 0;
-    FILE *mem = fmemopen(FILE_COMPILED, *SIZE, "r");
-    FILE *mem_dup = fmemopen(FILE_COMPILED, *SIZE, "r");
+    unsigned char *buffer = malloc(SIZE);
 
-    if (!mem || !mem_dup) {
-        fprintf(stderr, "Error opening memory streams.\n");
-        return 1;
+    if (!buffer)
+        return 84;
+    memcpy(buffer, FILE_COMPILED, SIZE);
+
+    FILE *mem = fopen(FILE_COMPILED, "wb+");
+    if (!mem) {
+        fprintf(stderr, "Error opening file.\n");
+        free(buffer);
+        return 84;
     }
 
     vm.filename = "unknown_compiled_program";
 
-    (void)getc(mem_dup);
-    (void)getc(mem_dup);
-    (void)getc(mem_dup);
-    (void)getc(mem_dup);
-    (void)getc(mem_dup);
-    (void)getc(mem_dup);
+    fwrite(buffer, 1, SIZE, mem);
+    fflush(mem);
+    rewind(mem);
 
-    *(((unsigned char *)&vm.arch) + 1) = (unsigned char)getc(mem_dup);
-    *(((unsigned char *)&vm.arch)) = (unsigned char)getc(mem_dup);
+    fseek(mem, 6, SEEK_SET);
 
-    if (fseek(mem, 0, SEEK_SET))
-        return (1);
+    *(((unsigned char *)&vm.arch) + 1) = (unsigned char)getc(mem);
+    *(((unsigned char *)&vm.arch)) = (unsigned char)getc(mem);
+
+    rewind(mem);
 
     ret = launch_vm(&vm, mem, vm.arch);
 
