@@ -13,7 +13,7 @@ RUN apt dist-upgrade -y
 
 #        * Install Bins & Deps *
 RUN apt install git -y
-RUN apt install valgrind -y
+# RUN apt install valgrind -y
 RUN apt install libc6 -y
 RUN apt install python3 -y
 RUN apt install pip -y
@@ -21,6 +21,9 @@ RUN apt install gcc -y
 RUN apt install make -y
 RUN apt install man -y
 RUN apt install nano -y
+
+RUN mkdir /usr/lib64
+RUN cp /lib/x86_64-linux-gnu/libc.so.6 /usr/lib64/
 
 #        * Install fluxify *
 RUN mkdir /tmp/fluxify
