@@ -287,7 +287,6 @@ class IfToken(TokenBranch):
         end.item = sum(map(len, code_stack.code))
 
         if (self.next_branch):
-            print("okkkk")
             self.next_branch.compile_instruction(code_stack, fetch_num, function_stack)
 
         real_end.item = sum(map(len, code_stack.code))

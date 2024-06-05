@@ -123,9 +123,6 @@ def main() -> int:
         if (return_status and isfile(f"{file.replace('.fly', '.flo')}")):
             remove(f"{file.replace('.fly', '.flo')}")
 
-        if (not return_status):
-            print(FloffAuto.from_file(f"{file.replace('.fly', '.flo')}"))
-
     if (not return_status):
         linker = Linker(list(item for item in parser.files), parser.arch)
         compiler: Compiler = Compiler(linker.link(), [], [], parser.outputName)
