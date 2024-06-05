@@ -17,7 +17,7 @@ class Linker(object):
 
         code_size = 0
         constant_size = 0
-        alloc_size = 0
+        alloc_size = 0x0A
         constants = {}
 
         for i, file in enumerate(self.files):
@@ -29,6 +29,12 @@ class Linker(object):
                 for item in floff_file.tables:
                     code.add_table(item)
                     if (item.type == TABLE_PROGRAM):
+                        index = 0
+                        while ((index := item.bytes.find(b"\x43", index + 1)) != -1):
+                            alloc_size += 1
+
+                        print(alloc_size)
+
                         code_size += len(item.bytes)
                     if (item.type == TABLE_CONSTANT):
                         temp = 0
@@ -51,7 +57,21 @@ class Linker(object):
 
             for item in floff_file.tables:
                 if (item.type == TABLE_PROGRAM):
+                    new_bytes = bytearray()
+
+                    new_bytes.extend(item.bytes)
+
+                    index = 0
+                    while ((index := new_bytes.find(b"\x43", index + 1)) != -1):
+                        new_bytes = new_bytes[:index + 1] + alloc_size.to_bytes(self.size_t, "big") + new_bytes[index + 1 + self.size_t:]
+                        alloc_size += 1
+
+                    print(alloc_size)
+
                     code_size += len(item.bytes)
+
+                    item.bytes = bytes(new_bytes)
+
                 if (item.type == TABLE_CONSTANT):
                     temp = 0
                     new_bytes = bytearray()
