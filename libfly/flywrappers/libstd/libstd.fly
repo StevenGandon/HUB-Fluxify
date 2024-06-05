@@ -1,0 +1,15 @@
+var libname = "libstd.so"
+var libstd = dllopen libname
+
+var wout_sym = getsym libstd "wout"
+var werr_sym = getsym libstd "werr"
+
+fun wout(text, flush) [
+    ccall wout_sym text flush
+]
+
+fun werr(text, flush) [
+    ccall werr_sym text flush
+]
+
+wout("loaded standard library.\n", 1)
