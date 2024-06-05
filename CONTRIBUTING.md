@@ -21,11 +21,15 @@ Where `[ACTION]` is the type of change and `<message>` is a short description of
 #### Branch naming:
 Branches must be named in the following format:  
 `<type>/<short-description>`
+
 Where `<type>` is the type of change and `<short-description>` is a short description of the change.
+
 The '/' character is only used to know this is a branch name.
 
 #### Pull request:
 Pull requests must be named in the following format:  
 `<type>: <short-description>`
+
 Where `<type>` is the type of change and `<short-description>` is a short description of the change.
+
 The ':' character is only used to know this is a pull request name.
