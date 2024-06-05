@@ -53,6 +53,11 @@ int write_file(char *filename, char *content)
     return 0;
 }
 
+void run_command(char *command)
+{
+    system(command);
+}
+
 void quit(int code)
 {
     exit(code);
