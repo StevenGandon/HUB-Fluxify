@@ -12,6 +12,7 @@ from os import remove
 from typing import Iterable
 from genericpath import isfile
 from src.floff import *
+from src.fcc.linker import Linker
 from src.fcc.compiler import Compiler, FCCError
 from src.fcc.errors import *
 from src.fcc.warnings import *
@@ -124,6 +125,9 @@ def main() -> int:
 
         if (not return_status):
             print(FloffAuto.from_file(f"{file.replace('.fly', '.flo')}"))
+    linker = Linker(list(item.replace('.fly', '.flo') for item in parser.files), parser.arch)
+    linker.link()
+
     return (return_status)
 
 
