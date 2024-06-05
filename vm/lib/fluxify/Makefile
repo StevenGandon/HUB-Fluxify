@@ -45,7 +45,8 @@ SRC	=	./vm_operation.c \
 		./instructions/inferior_equal.c	\
 		./instructions/dl_open_fetch.c \
 		./instructions/dlsym_fetch.c	\
-		./instructions/ccall.c
+		./instructions/ccall.c \
+		./instructions/destroy_variable.c
 
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify

@@ -12,7 +12,7 @@
 void fun_destroy_variable(vm_state_t *vm, instruction_t *inst)
 {
     (void)inst;
-    char *variable_name = (char *)vm->fetch_src;
+    char *var_name = (char *)vm->fetch_src;
 
     variable_map_t *prev = NULL;
     variable_map_t *current = vm->var_map;
