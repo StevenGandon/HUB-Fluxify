@@ -11,6 +11,11 @@ int duplicate_process(void)
     return fork();
 }
 
+int get_pid(void)
+{
+    return getpid();
+}
+
 void quit(int code)
 {
     exit(code);

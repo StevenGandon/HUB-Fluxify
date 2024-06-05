@@ -8,6 +8,11 @@ var to_str_sym = getsym libstd "to_str"
 var exit_sym = getsym libstd "quit"
 
 var dupli_sym = getsym libstd "duplicate_process"
+var getpid_sym = getsym libstd "get_pid"
+
+fun get_pid() [
+    return ccall getpid_sym
+]
 
 fun duplicate_process() [
     return ccall dupli_sym
