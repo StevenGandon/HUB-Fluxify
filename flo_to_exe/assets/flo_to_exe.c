@@ -58,23 +58,24 @@ int main(int argc, char **argv)
     vm_state_t vm;
     int ret = 0;
     FILE *mem = fmemopen(FILE_COMPILED, *SIZE, "r");
+    FILE *mem_dup = fmemopen(FILE_COMPILED, *SIZE, "r");
+
+    if (!mem || !mem_dup) {
+        fprintf(stderr, "Error opening memory streams.\n");
+        return 1;
+    }
 
     vm.filename = "unknown_compiled_program";
 
-    fpos_t pos;
-    fgetpos(mem, &pos);
+    (void)getc(mem_dup);
+    (void)getc(mem_dup);
+    (void)getc(mem_dup);
+    (void)getc(mem_dup);
+    (void)getc(mem_dup);
+    (void)getc(mem_dup);
 
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
-
-    *(((unsigned char *)&vm.arch) + 1) = (unsigned char)getc(mem);
-    *(((unsigned char *)&vm.arch)) = (unsigned char)getc(mem);
-
-    fsetpos(mem, &pos);
+    *(((unsigned char *)&vm.arch) + 1) = (unsigned char)getc(mem_dup);
+    *(((unsigned char *)&vm.arch)) = (unsigned char)getc(mem_dup);
 
     if (fseek(mem, 0, SEEK_SET))
         return (1);
