@@ -19,8 +19,10 @@ void fun_mod(vm_state_t *vm, instruction_t *inst)
         fetch |= (unsigned int)vm->fetch_char(vm, pc + i);
     }
 
-    if (vm->fetch_dest == 0)
-            return;
+    if (vm->fetch_dest == 0) {
+        vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
+        return;
+    }
 
     long int result = vm->fetch_src % vm->fetch_dest;
 

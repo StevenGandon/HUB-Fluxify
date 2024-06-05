@@ -32,6 +32,7 @@ void fun_variable_fetch(vm_state_t *vm, instruction_t *inst)
                     vm->fetch_dest = *(long int *)current_var->var_value->value;
                 }
             }
+            vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
             return;
         }
         current_var = current_var->next;

@@ -222,8 +222,6 @@ class FunctionToken(Token):
             tmp = code_stack.add_symbol(code_stack.builder("ConstantItem")(item))
             tmp2 = code_stack.add_symbol(code_stack.builder("ConstantItem")(i + 1))
 
-            code_stack.add_code(code_stack.builder("PatternResetFetch")(0).to_code())
-            code_stack.add_code(code_stack.builder("PatternResetFetch")(1).to_code())
             code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_alloc.ptr, 0).to_code())
             code_stack.add_code(code_stack.builder("PatternFetchConst")(tmp2, 1).to_code())
             code_stack.add_code(code_stack.builder("PatternAdd")(0).to_code())

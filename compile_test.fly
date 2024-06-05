@@ -2,11 +2,15 @@
     Test program
 <==
 
+var dll = dllopen "/usr/lib64/libc.so.6"
+var printf = getsym dll "printf"
+
 fun test(arg0, arg1) [
     var temp = 1
 
-    if temp == 1
+    if 1 == 1
     [
+        ccall printf "%d" arg0==arg1
         return arg0 - arg1
     ]
     else
@@ -15,8 +19,6 @@ fun test(arg0, arg1) [
     ]
 ]
 
-var dll = dllopen "/usr/lib64/libc.so.6"
-var write = getsym dll "write"
-ccall write 1 "hello" 5
 
-test(5, 2)
+
+ccall printf "result=(%d)" test(2,5)

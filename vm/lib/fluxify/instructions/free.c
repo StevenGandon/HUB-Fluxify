@@ -21,7 +21,7 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
     }
 
     if (!vm->blocks) {
-        vm->program_counter += 4;
+        vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
         return;
     }
 

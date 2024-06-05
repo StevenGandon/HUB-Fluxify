@@ -22,6 +22,7 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
 
     if (size <= 0) {
         vm->is_running = 0;
+        vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
         return;
     }
 
@@ -42,6 +43,7 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     block_t **new_blocks = realloc(vm->blocks, (long unsigned int)(count + 2) * sizeof(block_t *));
     if (new_blocks == NULL) {
         vm->is_running = 0;
+        vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
         return;
     }
     vm->blocks = new_blocks;
@@ -49,6 +51,7 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     vm->blocks[count] = malloc(sizeof(block_t));
     if (vm->blocks[count] == NULL) {
         vm->is_running = 0;
+        vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
         return;
     }
     vm->blocks[count]->address = address;
