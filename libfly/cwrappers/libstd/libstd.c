@@ -63,6 +63,12 @@ void read_stdin(char *buffer, size_t size)
     fgets(buffer, size, stdin);
 }
 
+char *get_absolute_path(char *path)
+{
+    char *abs_path = realpath(path, NULL);
+    return abs_path;
+}
+
 void quit(int code)
 {
     exit(code);

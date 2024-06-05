@@ -14,6 +14,7 @@ var read_file_sym = getsym libstd "read_file"
 var write_file_sym = getsym libstd "write_file"
 var run_cmd_sym = getsym libstd "run_command"
 var read_stdin_sym = getsym libstd "read_stdin"
+var absolute_path_sym = getsym libstd "get_absolute_path"
 
 fun get_pid() [
     return ccall getpid_sym
@@ -43,6 +44,10 @@ fun read_stdin(str, size) [
     return ccall read_stdin_sym str size
 ]
 
+fun get_absolute_path(path) [
+    return ccall absolute_path_sym path
+]
+
 fun quit(code) [
     return ccall exit_sym code
 ]
@@ -65,9 +70,18 @@ fun to_str(num) [
 
 fun main() [
     var test = 5
+    var str = "yo"
+    var size = 100
     => test--
-    wout(to_str(test), 1)
-    wout("Helloword!", 1)
+    => wout(to_str(test), 1)
+    => wout("Helloword!", 1)
+    => print(to_str(get_pid()), 1, 1)
+    => print(read_file("test.txt"), 1, 1)
+    => write_file("test.txt", "Hello World !")
+    => run_command("./compiler/fcc test.fly")
+    => read_stdin(str, size)
+    => wout(str, 0)
+    wout(get_absolute_path("test.txt"), 1)
 ]
 
 main()
