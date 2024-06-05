@@ -6,19 +6,17 @@ var dll = dllopen "/usr/lib64/libc.so.6"
 var printf = getsym dll "printf"
 
 fun test(arg0, arg1) [
-    var temp = 1
+    var write = getsym dll "write"
 
-    if 1 == 1
+    if arg0 == arg1
     [
-        ccall printf "%d" arg0==arg1
         return arg0 - arg1
     ]
     else
     [
+        ccall write 1 "not_ok" 6
         return arg0 + arg1
     ]
 ]
 
-
-
-ccall printf "result=(%d)" test(2,5)
+test(5, 2)

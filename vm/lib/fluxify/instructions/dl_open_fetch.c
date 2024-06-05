@@ -24,10 +24,6 @@ void fun_dl_open_fetch(vm_state_t *vm, instruction_t *inst)
     char *lib_name = (char *)vm->fetch_src;
 
     void *handle = dlopen(lib_name, RTLD_LAZY);
-    if (!handle) {
-        vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
-        return;
-    }
 
     if (fetch == 0) {
         vm->fetch_src = (long int)handle;
