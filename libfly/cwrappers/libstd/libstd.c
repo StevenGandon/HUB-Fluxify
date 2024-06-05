@@ -1,7 +1,15 @@
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
 #include <math.h>
+
+int duplicate_process(void)
+{
+    return fork();
+}
 
 void quit(int code)
 {

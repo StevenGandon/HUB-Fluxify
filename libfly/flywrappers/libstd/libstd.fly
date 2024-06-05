@@ -7,6 +7,12 @@ var strlen_sym = getsym libstd "ft_len"
 var to_str_sym = getsym libstd "to_str"
 var exit_sym = getsym libstd "quit"
 
+var dupli_sym = getsym libstd "duplicate_process"
+
+fun duplicate_process() [
+    return ccall dupli_sym
+]
+
 fun quit(code) [
     return ccall exit_sym code
 ]
