@@ -108,6 +108,15 @@ class PatternEqual64(Pattern64):
     def to_code(self) -> bytes:
         return (b"\x09" + self.fetch_num.to_bytes(self.__class__._size, "big"))
 
+class PatternNotEqual64(Pattern64):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return (b"\x10" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
 class PatternAnd64(Pattern64):
     def __init__(self, fetch_num = 0) -> None:
         super().__init__()
@@ -433,6 +442,15 @@ class PatternEqual32(Pattern32):
 
     def to_code(self) -> bytes:
         return (b"\x09" + self.fetch_num.to_bytes(self.__class__._size, "big"))
+
+class PatternNotEqual32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return (b"\x10" + self.fetch_num.to_bytes(self.__class__._size, "big"))
 
 class PatternAnd32(Pattern32):
     def __init__(self, fetch_num = 0) -> None:

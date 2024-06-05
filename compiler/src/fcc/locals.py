@@ -50,6 +50,7 @@ INSTRUCTIONS: dict = {
     "INFERIOR": 0x0D,
     "SUPERIOR_EQUAL": 0x0E,
     "INFERIOR_EQUAL": 0x0F,
+    "NOT_EQUAL": 0x10,
 }
 
 STATIC_ADDR_TABLE: dict = {}

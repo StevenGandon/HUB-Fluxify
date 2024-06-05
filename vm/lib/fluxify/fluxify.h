@@ -29,6 +29,7 @@
     #define INFERIOR 0x0D
     #define SUPERIOR_EQUAL 0x0E
     #define INFERIOR_EQUAL 0x0F
+    #define NOT_EQUAL 0x10
     #define OP_RESERVE_AREA 0x43
     #define OP_FREE_AREA 0x44
     #define OP_MV_FETCH_BLCKS 0x45
@@ -163,6 +164,7 @@
     void fun_or(vm_state_t *vm, instruction_t *inst);
     void fun_xor(vm_state_t *vm, instruction_t *inst);
     void fun_equal_equal(vm_state_t *vm, instruction_t *inst);
+    void fun_not_equal(vm_state_t *vm, instruction_t *inst);
     void fun_and_and(vm_state_t *vm, instruction_t *inst);
     void fun_or_or(vm_state_t *vm, instruction_t *inst);
     void fun_reserve_area(vm_state_t *vm, instruction_t *inst);
@@ -223,6 +225,7 @@
         {INFERIOR, 1, &fun_inferior},
         {INFERIOR_EQUAL, 1, &fun_inferior_equal},
         {SUPERIOR_EQUAL, 1, &fun_superior_equal},
+        {NOT_EQUAL, 1, &fun_not_equal},
         {OP_RESERVE_AREA, 1, &fun_reserve_area},
         {OP_FREE_AREA, 1, &fun_free_area},
         {OP_MV_FETCH_BLCKS, 2, &fun_mv_fetch_blcks},

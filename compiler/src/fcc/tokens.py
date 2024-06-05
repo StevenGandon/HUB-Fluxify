@@ -747,6 +747,40 @@ class EQOperatorToken(TokenOperator):
         code_stack.add_code(code_stack.builder("PatternFree")(blck_0.ptr).to_code())
         code_stack.add_code(code_stack.builder("PatternFree")(blck_1.ptr).to_code())
 
+class NEQOperatorToken(TokenOperator):
+    def __init__(self, value: Token, value2: Token) -> None:
+        self.value = value
+        self.value2 = value2
+
+    def __repr__(self):
+        return f"({self.value} != {self.value2})"
+
+    def __str__(self):
+        return self.__repr__()
+
+    def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num = 0, function_stack=None) -> bytes:
+        blck_0 = code_stack.builder("PatternAlloc")()
+        blck_1 = code_stack.builder("PatternAlloc")()
+
+        code_stack.add_code(blck_0.to_code())
+        code_stack.add_code(blck_1.to_code())
+
+        self.value.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
+
+        code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_0.ptr, 0).to_code())
+
+        self.value2.compile_instruction(code_stack, fetch_num=1, function_stack=function_stack)
+
+        code_stack.add_code(code_stack.builder("PatternStoreFetch")(blck_1.ptr, 1).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(blck_0.ptr, 0).to_code())
+        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(blck_1.ptr, 1).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternNotEqual")(fetch_num).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternFree")(blck_0.ptr).to_code())
+        code_stack.add_code(code_stack.builder("PatternFree")(blck_1.ptr).to_code())
+
 class SuperiorToken(TokenOperator):
     def __init__(self, value: Token, value2: Token) -> None:
         self.value = value

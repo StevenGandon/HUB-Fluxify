@@ -241,6 +241,9 @@ class Compiler(object):
         if (line.split(' ')[0] == "for"):
             return ForToken(Compiler.get_token(' '.join(line.split('for '))[1:].split(',')[0]), Compiler.get_token(','.join(line.split(',')[1:])), [])
 
+        if ('!=' in line):
+            return DifferentToken(Compiler.get_token(line.split('!=')[0]), Compiler.get_token("!=".join(line.split('!=')[1:])))
+
         if ('>=' in line):
             return SuperiorOrEqualToken(Compiler.get_token(line.split('>=')[0]), Compiler.get_token(">=".join(line.split('>=')[1:])))
 
