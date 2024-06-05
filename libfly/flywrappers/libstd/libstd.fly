@@ -13,6 +13,7 @@ var print_sym = getsym libstd "print"
 var read_file_sym = getsym libstd "read_file"
 var write_file_sym = getsym libstd "write_file"
 var run_cmd_sym = getsym libstd "run_command"
+var read_stdin_sym = getsym libstd "read_stdin"
 
 fun get_pid() [
     return ccall getpid_sym
@@ -36,6 +37,10 @@ fun write_file(file, text) [
 
 fun run_command(cmd) [
     return ccall run_cmd_sym cmd
+]
+
+fun read_stdin(str, size) [
+    return ccall read_stdin_sym str size
 ]
 
 fun quit(code) [

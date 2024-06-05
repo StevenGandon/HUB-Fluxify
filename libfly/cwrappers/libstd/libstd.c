@@ -58,6 +58,11 @@ void run_command(char *command)
     system(command);
 }
 
+void read_stdin(char *buffer, size_t size)
+{
+    fgets(buffer, size, stdin);
+}
+
 void quit(int code)
 {
     exit(code);
