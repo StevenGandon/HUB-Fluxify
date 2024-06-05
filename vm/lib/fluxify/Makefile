@@ -52,7 +52,7 @@ NAME	=	libfluxify
 CFLAGS	=	-g -O2 -I ../../include -Wall -Wextra -Werror	\
 			-Wshadow	-Wno-pointer-to-int-cast \
 			-Waggregate-return -Wdouble-promotion	\
-			-Walloc-zero -Wcast-qual -Wconversion -Winit-self	\
+			-Walloc-zero -Wcast-qual -Wconversion -Winit-self -Wno-sign-conversion -Wno-int-to-pointer-cast	\
 			-Wlogical-op -L ../lib -lfloff -ldl
 
 all: $(NAME)

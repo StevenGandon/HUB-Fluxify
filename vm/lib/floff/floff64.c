@@ -54,16 +54,16 @@ file_sucess(fd)
 
 static void
 little_endian_to_big_endian(value)
-    unsigned long long int *value;
+    unsigned long int *value;
 {
-    *value = ((*value >> 56) & 0xFF) |
-             ((*value << 40) & 0xFF000000000000ULL) |
-             ((*value << 24) & 0xFF0000000000ULL) |
-             ((*value << 8)  & 0xFF00000000ULL) |
-             ((*value >> 8)  & 0xFF000000ULL) |
-             ((*value >> 24) & 0xFF0000ULL) |
-             ((*value >> 40) & 0xFF00ULL) |
-             ((*value << 56) & 0xFF00000000000000ULL);
+    *value = ((*value >> 56UL) & 0xFFULL) |
+             ((*value << 40UL) & 0xFF000000000000ULL) |
+             ((*value << 24UL) & 0xFF0000000000ULL) |
+             ((*value << 8UL)  & 0xFF00000000ULL) |
+             ((*value >> 8UL)  & 0xFF000000ULL) |
+             ((*value >> 24UL) & 0xFF0000ULL) |
+             ((*value >> 40UL) & 0xFF00ULL) |
+             ((*value << 56UL) & 0xFF00000000000000ULL);
 }
 
 static int
