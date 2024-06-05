@@ -18,7 +18,9 @@
 
 .SH EXAMPLES
     text = create_text("Hello, World!", 50, 50, 24, 255, 255, 255, 255)
+    set_text_fond(text, "/path/to/font.ttf")
+
+    move_text(text, 200, 200)
+
     draw_text(window, text)
     destroy_text(text)
-    move_text(text, 200, 200)
-    set_text_fond(text, "/path/to/font.ttf")

@@ -24,12 +24,14 @@
 
 .SH EXAMPLES
     window = init_window(800, 600, "My Window")
-    destroy_window(window)
-    clear_window(window)
-    display_window(window)
-    if quit_event(window) [
-        // Handle quit event
-    ]
+    set_window_framerate(window, 60)
+
     width = get_window_width(window)
     height = get_window_height(window)
-    set_window_framerate(window, 60)
+
+    while quit_event(window) [
+        clear_window(window)
+        display_window(window)
+    ]
+
+    destroy_window(window)
