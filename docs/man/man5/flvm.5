@@ -17,6 +17,41 @@ here is the opcode of the differents instructions
     │  00     NOOP   00                           │
     │  01     ADD    02                           │
     │  02     SUB    02                           │
+    │  03     MUL    02                           │
+    │  04     DIV    02                           │
+    │  05     MOD    02                           │
+    │  06     AND    02                           │
+    │  07     OR     02                           │
+    │  08     XOR    02                           │
+    │  09     EQ     02                           │
+    │  0A     EE     02                           │
+    │  0B     OO     02                           │
+    │  0C     SUP    02                           │
+    │  0D     INF    02                           │
+    │  0E     ESU    02                           │
+    │  0F     EIN    02                           │
+    │  10     NEQ    02                           │
+    │  43     REA    01                           │
+    │  44     FEA    01                           │
+    │  45     MFB    02                           │
+    │  46     MBF    02                           │
+    │  47     MCF    02                           │
+    │  48     HALT   01                           │
+    │  49     MPF    02                           │
+    │  50     MFP    02                           │
+    │  51     GLA    01                           │
+    │  52     SWF    00                           │
+    │  53     MIF    02                           │
+    │  54     MFI    02                           │
+    │  55     CVR    00                           │
+    │  56     AVR    00                           │
+    │  57     RST    01                           │
+    │  58     MPC    01                           │
+    │  59     FVR    01                           │
+    │  60     NMPC   01                           │
+    │  61     DPN    01                           │
+    │  62     DSYM   01                           │
+    │  63     CCALL  01                           │
     └─────────────────────────────────────────────┘
 
 .br
@@ -31,7 +66,6 @@ instructions are set in a table "Program" (0x02) containing all the instructions
     │  Size   Name                                │
     ├─────────────────────────────────────────────┤
     │  08     Instruction                         │
-    │  01     Argument size                       │
     │  08     Arg0                                │
     │  08     Arg1                                │
     │  08     ...                                 │
@@ -46,7 +80,6 @@ instructions are set in a table "Program" (0x02) containing all the instructions
     │  Size   Name                                │
     ├─────────────────────────────────────────────┤
     │  04     Instruction                         │
-    │  01     Argument size                       │
     │  04     Arg0                                │
     │  04     Arg1                                │
     │  04     ...                                 │
