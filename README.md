@@ -87,8 +87,8 @@ The standard library of the language is very simple, it is composed of a few fun
 
 ## Installation
 
-- [ ] Windows Binaries
+- [X] Windows Binaries
 - [X] MacOS Makefile
 - [X] Linux Makefile
 - [X] Docker Image
-- [ ] GitHub Publications
+- [X] GitHub Publications
