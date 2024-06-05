@@ -8,6 +8,7 @@
 #include "fluxify.h"
 #include "floff.h"
 #include <string.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -243,7 +244,9 @@ void load_labels32(floff32_t *flo_data, vm_state_t *vm)
 
     for (unsigned int i = 0; i < flo_data->table_number; ++i) {
         if (flo_data->body[i]->table_type == TABLE_LABEL) {
-            for (unsigned int j = 0; j < flo_data->body[i]->table_size; j++) {
+            size_t j = 0;
+
+            while (j < flo_data->body[i]->table_size) {
                 unsigned char name_length = flo_data->body[i]->table_bytes[j];
                 j += 1;
                 j += name_length;
@@ -294,7 +297,9 @@ void load_labels64(floff64_t *flo_data, vm_state_t *vm)
 
     for (size_t i = 0; i < flo_data->table_number; ++i) {
         if (flo_data->body[i]->table_type == TABLE_LABEL) {
-            for (unsigned int j = 0; j < flo_data->body[i]->table_size; j++) {
+            size_t j = 0;
+
+            while (j < flo_data->body[i]->table_size) {
                 unsigned char name_length = flo_data->body[i]->table_bytes[j];
                 j += 1;
                 j += name_length;
