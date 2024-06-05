@@ -11,6 +11,7 @@ var dupli_sym = getsym libstd "duplicate_process"
 var getpid_sym = getsym libstd "get_pid"
 var print_sym = getsym libstd "print"
 var read_file_sym = getsym libstd "read_file"
+var write_file_sym = getsym libstd "write_file"
 
 fun get_pid() [
     return ccall getpid_sym
@@ -26,6 +27,10 @@ fun print(text, stdway, flush) [
 
 fun read_file(file) [
     return ccall read_file_sym file
+]
+
+fun write_file(file, text) [
+    return ccall write_file_sym file text
 ]
 
 fun quit(code) [

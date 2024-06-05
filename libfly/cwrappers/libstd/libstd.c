@@ -42,6 +42,17 @@ char *read_file(char *filename)
     return buffer;
 }
 
+int write_file(char *filename, char *content)
+{
+    FILE *file = fopen(filename, "w+");
+    if (file == NULL) {
+        return 1;
+    }
+    fprintf(file, "%s", content);
+    fclose(file);
+    return 0;
+}
+
 void quit(int code)
 {
     exit(code);
