@@ -3,6 +3,11 @@
 #include <stdlib.h>
 #include <math.h>
 
+void quit(int code)
+{
+    exit(code);
+}
+
 char *to_str(int num)
 {
 

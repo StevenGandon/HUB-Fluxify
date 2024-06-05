@@ -5,7 +5,11 @@ var wout_sym = getsym libstd "wout"
 var werr_sym = getsym libstd "werr"
 var strlen_sym = getsym libstd "ft_len"
 var to_str_sym = getsym libstd "to_str"
+var exit_sym = getsym libstd "quit"
 
+fun quit(code) [
+    return ccall exit_sym code
+]
 
 fun strlen(text) [
     return ccall strlen_sym text
