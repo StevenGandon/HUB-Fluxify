@@ -25,6 +25,9 @@ int launch_vm(vm_state_t *vm, FILE *program, short arch)
         return (1);
     }
 
+    printf("Architecture: %hu\n", (unsigned short)vm.arch);
+    printf("Architecture file: %hu\n", (unsigned short)((floff32_t *)result)->architecture);
+
     if (((floff32_t *)result)->architecture != vm->arch) {
         printf("Incompatible architecture, architecture passed as argument is not the same as the file architecture.\n");
         return (1);
@@ -58,13 +61,20 @@ int main(int argc, char **argv)
 
     vm.filename = "unknown_compiled_program";
 
-    unsigned char arch_bytes[2];
-    if (fread(arch_bytes, sizeof(unsigned char), 2, mem) != 2) {
-        fclose(mem);
-        return 1;
-    }
+    fpos_t pos;
+    fgetpos(mem, &pos);
 
-    vm.arch = arch_bytes[0] | (arch_bytes[1] << 8);
+    (void)getc(mem);
+    (void)getc(mem);
+    (void)getc(mem);
+    (void)getc(mem);
+    (void)getc(mem);
+    (void)getc(mem);
+
+    *(((unsigned char *)&vm.arch) + 1) = (unsigned char)getc(mem);
+    *(((unsigned char *)&vm.arch)) = (unsigned char)getc(mem);
+
+    fsetpos(mem, &pos);
 
     if (fseek(mem, 0, SEEK_SET))
         return (1);
