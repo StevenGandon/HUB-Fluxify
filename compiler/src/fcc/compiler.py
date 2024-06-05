@@ -110,7 +110,6 @@ class Compiler(object):
                 temp.body.append(token)
 
         self.tokens.body = [item for item in self.tokens.body if not isinstance(item, TokenBranchGrowth)]
-        print(self.tokens)
 
     def compile(self, object_file_class: FloffAuto = Floff64) -> None:
         if (any(map(lambda x: isinstance(x, FCCError), self.debug))):
@@ -120,9 +119,6 @@ class Compiler(object):
 
         object_file: FloffAuto = object_file_class()
         self.tokens.compile_instruction(pattern_stack)
-
-        print(pattern_stack.code)
-        print(pattern_stack.symbols)
 
         instructions : bytearray = bytearray()
 
