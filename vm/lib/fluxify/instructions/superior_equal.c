@@ -21,8 +21,6 @@ void fun_superior_equal(vm_state_t *vm, instruction_t *inst)
 
     long int result = vm->fetch_src >= vm->fetch_dest;
 
-    printf("superior_equal 0: %ld, 1: %ld\n", vm->fetch_src, vm->fetch_dest);
-
     if (fetch == 0) {
         vm->fetch_src = result;
     } else {

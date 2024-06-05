@@ -43,7 +43,6 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
             array[i - dec] = vm->blocks[i];
         }
         array[i - dec] = NULL;
-        printf("%ld, %ld\n", i - dec, count);
         free(vm->blocks);
         vm->blocks = array;
     } else {
@@ -52,5 +51,4 @@ void fun_free_area(vm_state_t *vm, instruction_t *inst)
     }
 
     vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
-    printf("Free: %u\n", address);
 }

@@ -25,6 +25,5 @@ void fun_reset_fetch(vm_state_t *vm, instruction_t *inst)
         vm->fetch_dest = 0;
     }
 
-    printf("RESET_FETCH 0: %ld, 1: %ld\n", vm->fetch_src, vm->fetch_dest);
     vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
 }

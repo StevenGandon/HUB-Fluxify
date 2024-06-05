@@ -353,7 +353,6 @@ void push_call_stack(vm_state_t *vm, uint64_t return_address)
 uint64_t pop_call_stack(vm_state_t *vm)
 {
     if (vm->call_stack_size == 0) {
-        fprintf(stderr, "Call stack underflow\n");
         exit(EXIT_FAILURE);
     }
     return vm->call_stack[--vm->call_stack_size];

@@ -25,7 +25,6 @@ void fun_dl_open_fetch(vm_state_t *vm, instruction_t *inst)
 
     void *handle = dlopen(lib_name, RTLD_LAZY);
     if (!handle) {
-        fprintf(stderr, "Error: Unable to load library '%s': %s\n", lib_name, dlerror());
         vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
         return;
     }

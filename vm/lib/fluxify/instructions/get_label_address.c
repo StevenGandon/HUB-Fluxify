@@ -32,6 +32,5 @@ void fun_get_label_address(vm_state_t *vm, instruction_t *inst)
         }
     }
 
-    printf("GET_LABEL_ADDRESS 0: %ld, 1: %ld\n", vm->fetch_src, vm->fetch_dest);
     vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
 }

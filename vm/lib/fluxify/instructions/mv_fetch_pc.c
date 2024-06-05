@@ -27,5 +27,4 @@ void fun_mv_fetch_pc(vm_state_t *vm, instruction_t *inst)
     } else {
         vm->fetch_dest = (long int)vm->program_counter;
     }
-    printf("MV_FETCH_PC 0: %ld, 1: %ld, fetch: %u\n", vm->fetch_src, vm->fetch_dest, fetch);
 }

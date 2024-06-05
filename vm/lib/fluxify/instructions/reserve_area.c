@@ -21,7 +21,6 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     }
 
     if (size <= 0) {
-        fprintf(stderr, "Invalid size in reserve area operation\n");
         vm->is_running = 0;
         return;
     }
@@ -42,7 +41,6 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
 
     block_t **new_blocks = realloc(vm->blocks, (long unsigned int)(count + 2) * sizeof(block_t *));
     if (new_blocks == NULL) {
-        fprintf(stderr, "Memory reallocation failed in reserve area operation\n");
         vm->is_running = 0;
         return;
     }
@@ -50,7 +48,6 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
 
     vm->blocks[count] = malloc(sizeof(block_t));
     if (vm->blocks[count] == NULL) {
-        fprintf(stderr, "Memory allocation failed for new block\n");
         vm->is_running = 0;
         return;
     }
@@ -59,5 +56,4 @@ void fun_reserve_area(vm_state_t *vm, instruction_t *inst)
     vm->blocks[count + 1] = NULL;
 
     vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
-    printf("Reserved area: %u, size: %zu\n", address, (size_t)size);
 }

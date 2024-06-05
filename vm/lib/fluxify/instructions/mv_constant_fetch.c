@@ -30,6 +30,4 @@ void fun_mv_constant_fetch(vm_state_t *vm, instruction_t *inst)
     }
 
     vm->program_counter += vm->arch == ARCH_X86_64 ? 16 : 8;
-
-    printf("MV_CONST_FETCH 0: %ld, 1: %ld, addr: %u, fetch: %u\n", vm->fetch_src, vm->fetch_dest, dest_addr, fetch);
 }

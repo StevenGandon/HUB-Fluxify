@@ -25,7 +25,6 @@ void fun_dlsym_fetch(vm_state_t *vm, instruction_t *inst)
 
     void *symbol = dlsym(lib_handle, symbol_name);
     if (!symbol) {
-        fprintf(stderr, "Error: Unable to find symbol '%s': %s\n", symbol_name, dlerror());
         vm->program_counter += vm->arch == ARCH_X86_64 ? 8 : 4;
         return;
     }

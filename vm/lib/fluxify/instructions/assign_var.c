@@ -22,13 +22,8 @@ void fun_assign_var(vm_state_t *vm, instruction_t *inst)
                 var_map->var_value->value = malloc(sizeof(long int));
             }
             *(long int *)(var_map->var_value->value) = value;
-            printf("Assigned value %ld to variable '%s'\n", value, var_name);
             break;
         }
         var_map = var_map->next;
-    }
-
-    if (!var_map) {
-        fprintf(stderr, "Variable '%s' not found\n", var_name);
     }
 }

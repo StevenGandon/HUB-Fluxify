@@ -30,6 +30,4 @@ void fun_create_var(vm_state_t *vm, instruction_t *inst)
     new_var_map->var_value = new_var;
     new_var_map->next = vm->var_map;
     vm->var_map = new_var_map;
-
-    printf("Created variable '%s'\n", var_name);
 }
