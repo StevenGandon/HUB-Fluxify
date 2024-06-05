@@ -58,16 +58,13 @@ int main(int argc, char **argv)
 
     vm.filename = "unknown_compiled_program";
 
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
+    unsigned char arch_bytes[2];
+    if (fread(arch_bytes, sizeof(unsigned char), 2, mem) != 2) {
+        fclose(mem);
+        return 1;
+    }
 
-    (void)getc(mem);
-    (void)getc(mem);
-
-    *(((unsigned char *)&vm.arch) + 1) = (unsigned char)(getc(mem));
-    *(((unsigned char *)&vm.arch)) = (unsigned char)(getc(mem));
+    vm.arch = arch_bytes[0] | (arch_bytes[1] << 8);
 
     if (fseek(mem, 0, SEEK_SET))
         return (1);
