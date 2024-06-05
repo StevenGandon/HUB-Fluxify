@@ -57,27 +57,31 @@ int main(int argc, char **argv)
 {
     vm_state_t vm;
     int ret = 0;
-    FILE *mem = fmemopen(FILE_COMPILED, *SIZE, "r");
+    unsigned char *buffer = malloc(*SIZE);
+
+    if (!buffer)
+        return 84;
+    memcpy(buffer, FILE_COMPILED, *SIZE);
+
+    FILE *mem = fopen(FILE_COMPILED, "wb+");
+    if (!mem) {
+        fprintf(stderr, "Error opening file.\n");
+        free(buffer);
+        return 84;
+    }
 
     vm.filename = "unknown_compiled_program";
 
-    fpos_t pos;
-    fgetpos(mem, &pos);
+    fwrite(buffer, (vm.arch == ARCH_X86_64 ? 8 : 4), *SIZE, mem);
+    fflush(mem);
+    rewind(mem);
 
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
-    (void)getc(mem);
+    fseek(mem, 6, SEEK_SET);
 
     *(((unsigned char *)&vm.arch) + 1) = (unsigned char)getc(mem);
     *(((unsigned char *)&vm.arch)) = (unsigned char)getc(mem);
 
-    fsetpos(mem, &pos);
-
-    if (fseek(mem, 0, SEEK_SET))
-        return (1);
+    rewind(mem);
 
     ret = launch_vm(&vm, mem, vm.arch);
 
