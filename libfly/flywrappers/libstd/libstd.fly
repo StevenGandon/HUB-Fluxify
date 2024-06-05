@@ -26,3 +26,12 @@ fun werr(text, flush) [
 fun to_str(num) [
     return ccall to_str_sym num
 ]
+
+fun main() [
+    var test = 5
+    => test--
+    wout(to_str(test), 1)
+    wout("Helloword!", 1)
+]
+
+main()

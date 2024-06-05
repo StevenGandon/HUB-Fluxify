@@ -24,3 +24,18 @@ void display_window(sfRenderWindow *window)
 {
     sfRenderWindow_display(window);
 }
+
+int quit_event(sfRenderWindow *window)
+{
+    sfEvent event;
+
+    while (sfRenderWindow_pollEvent(window, &event))
+    {
+        if (event.type == sfEvtClosed) {
+            sfRenderWindow_close(window);
+            return (1);
+        }
+    }
+
+    return (0);
+}

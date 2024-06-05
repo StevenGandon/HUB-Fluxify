@@ -5,30 +5,37 @@ var init_window_sym = getsym libsfml "init_window"
 var destroy_window_sym = getsym libsfml "destroy_window"
 var clear_window_sym = getsym libsfml "clear_window"
 var display_window_sym = getsym libsfml "display_window"
+var quit_event_sym = getsym libsfml "quit_event"
 
 fun init_window(width, height, title) [
     return ccall init_window_sym width height title
 ]
 
-fun destroy_window(window_1) [
-    ccall destroy_window_sym window_1
+fun destroy_window(window) [
+    ccall destroy_window_sym window
 ]
 
-fun clear_window(window_2) [
-    ccall clear_window_sym window_2
+fun clear_window(window) [
+    ccall clear_window_sym window
 ]
 
-fun display_window(window_3) [
-    ccall display_window_sym window_3
+fun display_window(window) [
+    ccall display_window_sym window
+]
+
+fun quit_event(window) [
+    return ccall quit_event_sym window
 ]
 
 fun main [
-    => var window_name = "ok"
     var window_name = init_window(800, 600, "Test")
-    => while 1 [
-    =>     clear_window(window_name)
-    =>     display_window(window_name)
-    => ]
+
+    while quit_event(window_name) == 0 [
+        clear_window(window_name)
+        display_window(window_name)
+    ]
+
+    destroy_window(window_name)
 ]
 
 main()
