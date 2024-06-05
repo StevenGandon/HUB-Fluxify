@@ -6,6 +6,21 @@ var destroy_window_sym = getsym libsfml "destroy_window"
 var clear_window_sym = getsym libsfml "clear_window"
 var display_window_sym = getsym libsfml "display_window"
 var quit_event_sym = getsym libsfml "quit_event"
+var get_window_width_sym = getsym libsfml "get_window_width"
+var get_window_height_sym = getsym libsfml "get_window_height"
+var set_window_framerate_sym = getsym libsfml "set_window_framerate"
+
+=> Rectangle
+var create_rectangle_sym = getsym libsfml "create_rectangle"
+var draw_rectangle_sym = getsym libsfml "draw_rectangle"
+var destroy_rectangle_sym = getsym libsfml "destroy_rectangle"
+var move_rectangle_sym = getsym libsfml "move_rectangle"
+
+=> Circle
+var create_circle_sym = getsym libsfml "create_circle"
+var draw_circle_sym = getsym libsfml "draw_circle"
+var destroy_circle_sym = getsym libsfml "destroy_circle"
+var move_circle_sym = getsym libsfml "move_circle"
 
 fun init_window(width, height, title) [
     return ccall init_window_sym width height title
@@ -27,14 +42,85 @@ fun quit_event(window) [
     return ccall quit_event_sym window
 ]
 
+fun get_window_width(window) [
+    return ccall get_window_width_sym window
+]
+
+fun get_window_height(window) [
+    return ccall get_window_height_sym window
+]
+
+fun set_window_framerate(window, framerate) [
+    ccall set_window_framerate_sym window framerate
+]
+
+=> Rectangle
+
+fun create_rectangle(x, y, size_x, size_y, r, g, b, a) [
+    return ccall create_rectangle_sym x y size_x size_y r g b a
+]
+
+fun draw_rectangle(window, rectangle) [
+    ccall draw_rectangle_sym window rectangle
+]
+
+fun destroy_rectangle(rectangle) [
+    ccall destroy_rectangle_sym rectangle
+]
+
+fun move_rectangle(rectangle, x, y) [
+    ccall move_rectangle_sym rectangle x y
+]
+
+=> Circle
+
+fun create_circle(x, y, radius, r, g, b, a) [
+    return ccall create_circle_sym x y radius r g b a
+]
+
+fun draw_circle(window, circle) [
+    ccall draw_circle_sym window circle
+]
+
+fun destroy_circle(circle) [
+    ccall destroy_circle_sym circle
+]
+
+fun move_circle(circle, x, y) [
+    ccall move_circle_sym circle x y
+]
+
 fun main [
     var window_name = init_window(800, 600, "Test")
 
+    var rectangle = create_rectangle(100, 100, 50, 50, 255, 0, 0, 255)
+    => set_window_framerate(window_name, 30)
+    var rect_x = 100
+    var rect_y = 100
+    var rect_dx = 1
+    var rect_dy = 1
+    var temp = 1
+
     while quit_event(window_name) == 0 [
         clear_window(window_name)
+        draw_rectangle(window_name, rectangle)
+        draw_circle
+
+        => Moving logic
+        rect_x = rect_x + rect_dx
+        rect_y = rect_y + rect_dy
+        move_rectangle(rectangle, rect_x, rect_y)
+        if rect_x >= 750 || rect_x <= 0 [
+            rect_dx = -rect_dx
+        ]
+        if rect_y >= 550 || rect_y <= 0 [
+            rect_dy = -rect_dy
+        ]
+
         display_window(window_name)
     ]
 
+    destroy_rectangle(rectangle)
     destroy_window(window_name)
 ]
 

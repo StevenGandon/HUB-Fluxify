@@ -25,7 +25,7 @@ REGEX_VARIABLE_NAME: Pattern = compile_regex(r'(^(?!^$)([A-z]|_|\.|\d)*$)')
 
 REGEX_FUNCTION: Pattern = compile_regex(r"^[_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*$")
 
-REGEX_EQUAL: Pattern = compile_regex(r'(?<!=)=(?!=)', M)
+REGEX_EQUAL: Pattern = compile_regex(r'(?<![<>!=])=(?!=)', M)
 REGEX_EQUAL_EQUAL: Pattern = compile_regex(r'(?<!=)==(?!=)', M)
 REGEX_MINUS: Pattern = compile_regex(r'-(?!>)', M)
 

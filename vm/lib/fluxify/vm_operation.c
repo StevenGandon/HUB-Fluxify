@@ -29,6 +29,7 @@ void initialize_vm_state(vm_state_t *vm)//, size_t memory_size)
     vm->memory_size = 0;
     vm->program_counter = 0;
     vm->is_running = 1;
+    vm->var_map = NULL;
 }
 
 void cleanup_vm_state(vm_state_t *vm)
