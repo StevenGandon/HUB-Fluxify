@@ -7,7 +7,8 @@
 
 NAME = libfly.flo
 
-SRC = libstd/libstd.fly
+SRC = libstd/libstd.fly		\
+	  libsfml/libsfml.fly 	\
 
 OBJ = $(SRC:.fly=.flo)
 

@@ -1,0 +1,6 @@
+fun main(windowWidth, windowHeight)
+[
+    var window = initWindow(windowWidth, windowHeight)
+]
+
+main(1920, 1080)

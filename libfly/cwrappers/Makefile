@@ -7,12 +7,13 @@
 
 NAME = libfly.so
 
-SRC = libstd/libstd.c
+SRC = libstd/libstd.c	\
+	  libsfml/libsfml.c \
 
 OBJ = $(SRC:.c=.o)
 
 CC = gcc
-CFLAGS += -Wall -Wextra -Werror -fpic -g
+CFLAGS += -Wall -Wextra -Werror -fpic -g -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
 
 all: $(NAME)
 

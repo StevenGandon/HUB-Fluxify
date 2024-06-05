@@ -1,0 +1,10 @@
+var libname = "libstd.so"
+var libsfml = dllopen libname
+
+var init_window_sym = dlsym libsfml "init_window"
+
+fun init_window(title, width, height) [
+    ccall init_window_sym title width height
+]
+
+init_window("Hello World!", 800, 600)
