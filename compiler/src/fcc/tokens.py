@@ -159,14 +159,14 @@ class ReturnToken(Token):
         else:
             code_stack.add_code(code_stack.builder("PatternResetFetch")(fetch_num).to_code())
 
-        code_stack.add_code(code_stack.builder("PatternStoreFetch")(temp.addr, fetch_num).to_code())
+        code_stack.add_code(code_stack.builder("PatternStoreFetch")(temp.ptr, fetch_num).to_code())
         for item in function_stack[1]:
             tmp = code_stack.add_symbol(code_stack.builder("ConstantItem")(item))
 
             code_stack.add_code(code_stack.builder("PatternFetchConst")(tmp, 0).to_code())
             code_stack.add_code(code_stack.builder("PatternDestroyVar")().to_code())
 
-        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp.addr, fetch_num))
+        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp.ptr, fetch_num).to_code())
 
         code_stack.add_code(code_stack.builder("PatternFetchBlcks")(function_stack[0].ptr, not fetch_num).to_code())
         code_stack.add_code(code_stack.builder("PatternWeakFree")(function_stack[0].ptr).to_code())
