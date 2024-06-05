@@ -15,7 +15,7 @@ CFLAGS	=	-O2 -I ./ -Wall -Wextra -Werror	\
 			-Wshadow -pedantic	\
 			-Waggregate-return -Wdouble-promotion	\
 			-Walloc-zero -Wcast-qual -Wconversion -Winit-self	\
-			-Wlogical-op
+			-Wlogical-op -Wno-shift-count-overflow -Wno-conversion -Wno-alloc-zero
 
 all: $(NAME)
 	cp floff.h ../../include

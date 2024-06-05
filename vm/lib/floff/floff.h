@@ -23,7 +23,7 @@
     struct floff64_body_s {
         unsigned char table_type;
 
-        unsigned long long int table_size;
+        unsigned long int table_size;
         unsigned char *table_bytes;
     };
 
@@ -37,8 +37,8 @@
 
         unsigned char program_hash[40];
 
-        unsigned long long int table_number;
-        unsigned long long int start_label_address;
+        unsigned long int table_number;
+        unsigned long int start_label_address;
 
         struct floff64_body_s **body;
     };

@@ -9,7 +9,6 @@ SRC	= ./main.c
 OBJ	=	$(SRC:.c=.o)
 NAME	=	fvm
 
-CC	=	gcc
 CFLAGS	=	-O2 -I ./include -Wall -Wextra -Werror	\
 			-Wshadow -pedantic	\
 			-Waggregate-return -Wdouble-promotion	\
