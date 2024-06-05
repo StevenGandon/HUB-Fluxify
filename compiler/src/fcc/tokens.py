@@ -85,7 +85,21 @@ class GetSymbolToken(Token):
         return self.__repr__()
 
     def compile_instruction(self, code_stack: CodeStackGeneration, fetch_num=0, function_stack=None) -> bytes:
-        pass
+        temp_block = code_stack.builder("PatternAlloc")()
+
+        code_stack.add_code(temp_block.to_code())
+
+        self.dll.compile_instruction(code_stack, 0, function_stack)
+
+        code_stack.add_code(code_stack.builder("PatternStoreFetch")(temp_block.ptr, 0).to_code())
+
+        self.name.compile_instruction(code_stack, 1, function_stack)
+
+        code_stack.add_code(code_stack.builder("PatternFetchBlcks")(temp_block.ptr, 0).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternGetSymbol")(fetch_num).to_code())
+
+        code_stack.add_code(code_stack.builder("PatternFree")(temp_block.ptr).to_code())
 
 class CCallToken(Token):
     def __init__(self, name: str, args: list) -> None:

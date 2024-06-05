@@ -359,6 +359,14 @@ class PatternDllOpen64(Pattern64):
     def to_code(self):
         return b"\x61"  + self.fetch_num.to_bytes(self.__class__._size, "big")
 
+class PatternGetSymbol64(Pattern64):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b'\x62' + self.fetch_num.to_bytes(self.__class__._size, "big")
 
 class Pattern32(Pattern64):
     _size = 4
@@ -676,3 +684,12 @@ class PatternDllOpen32(Pattern32):
 
     def to_code(self):
         return b"\x61"  + self.fetch_num.to_bytes(self.__class__._size, "big")
+
+class PatternGetSymbol32(Pattern32):
+    def __init__(self, fetch_num = 0) -> None:
+        super().__init__()
+
+        self.fetch_num = fetch_num
+
+    def to_code(self):
+        return b'\x62' + self.fetch_num.to_bytes(self.__class__._size, "big")
