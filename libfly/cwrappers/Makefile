@@ -18,7 +18,7 @@ CFLAGS += -Wall -Wextra -Werror -fpic -g -lcsfml-graphics -lcsfml-window -lcsfml
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@echo -e "\e[1;34m[GAMES] Building $(NAME)...\e[0m"
+	@echo -e "\e[1;36m[C] Building $(NAME)...\e[0m"
 	$(CC) -shared -o $(NAME) $(OBJ) $(CFLAGS)
 	mv $(NAME) ../
 	@echo -e "\e[1;32m[SUCCESS] $(NAME) built\e[0m"

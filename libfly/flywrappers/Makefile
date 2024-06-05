@@ -13,7 +13,7 @@ SRC = libstd/libstd.fly		\
 OBJ = $(SRC:.fly=.flo)
 
 %.flo: %.fly
-	@echo -e "\e[1;34m[GAMES] Building $@...\e[0m"
+	@echo -e "\e[1;35m[FLY] Building $@...\e[0m"
 	../../compiler/fcc $<
 	@echo -e "\e[1;32m[SUCCESS] $@ built\e[0m"
 
