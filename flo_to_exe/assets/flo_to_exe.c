@@ -57,11 +57,11 @@ int main(int argc, char **argv)
 {
     vm_state_t vm;
     int ret = 0;
-    unsigned char *buffer = malloc(SIZE);
+    unsigned char *buffer = malloc(*SIZE);
 
     if (!buffer)
         return 84;
-    memcpy(buffer, FILE_COMPILED, SIZE);
+    memcpy(buffer, FILE_COMPILED, *SIZE);
 
     FILE *mem = fopen(FILE_COMPILED, "wb+");
     if (!mem) {
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 
     vm.filename = "unknown_compiled_program";
 
-    fwrite(buffer, 1, SIZE, mem);
+    fwrite(buffer, 1, *SIZE, mem);
     fflush(mem);
     rewind(mem);
 
