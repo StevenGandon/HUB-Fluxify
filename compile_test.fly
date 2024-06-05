@@ -3,20 +3,19 @@
 <==
 
 fun test(arg0, arg1) [
-    var temp = 1
+    var dll = dllopen "/usr/lib64/libc.so.6"
+    var write = getsym dll "write"
 
-    if temp == 1
+    if arg0 == arg1
     [
+        ccall write 1 "ok\n" 4
         return arg0 - arg1
     ]
     else
     [
+        ccall write 1 "not_ok" 6
         return arg0 + arg1
     ]
 ]
 
-var dll = dllopen "/usr/lib64/libc.so.6"
-var write = getsym dll "write"
-ccall write 1 "hello" 5
-
-test(5, 2)
+test(2, 2)
