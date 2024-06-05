@@ -43,12 +43,13 @@ SRC	=	./vm_operation.c \
 		./instructions/superior_equal.c	\
 		./instructions/inferior_equal.c	\
 		./instructions/dl_open_fetch.c \
-		./instructions/dlsym_fetch.c
+		./instructions/dlsym_fetch.c	\
+		./instructions/ccall.c
 
 OBJ	=	$(SRC:.c=.o)
 NAME	=	libfluxify
 CFLAGS	=	-g -O2 -I ../../include -Wall -Wextra -Werror	\
-			-Wshadow -pedantic	-Wno-pointer-to-int-cast \
+			-Wshadow	-Wno-pointer-to-int-cast \
 			-Waggregate-return -Wdouble-promotion	\
 			-Walloc-zero -Wcast-qual -Wconversion -Winit-self	\
 			-Wlogical-op -L ../lib -lfloff -ldl

@@ -49,6 +49,7 @@
     #define OP_MOVE_PC_CMPN 0x60
     #define OP_DLOPEN_FETCH 0x61
     #define OP_DLSYM_FETCH 0x62
+    #define OP_CCALL 0x63
 
     typedef enum {
         FLO_TYPE_INT = 1,
@@ -189,6 +190,7 @@
     void fun_superior_equal(vm_state_t *vm, instruction_t *inst);
     void fun_dl_open_fetch(vm_state_t *vm, instruction_t *inst);
     void fun_dlsym_fetch(vm_state_t *vm, instruction_t *inst);
+    void fun_ccall(vm_state_t *vm, instruction_t *inst);
 
     void load_constants32(floff32_t *flo_data, vm_state_t *vm);
     void load_constants64(floff64_t *flo_data, vm_state_t *vm);
@@ -241,6 +243,7 @@
         {OP_MOVE_PC_CMPN, 0, &fun_move_pc_cmpn},
         {OP_DLOPEN_FETCH, 1, &fun_dl_open_fetch},
         {OP_DLSYM_FETCH, 1, &fun_dlsym_fetch},
+        {OP_CCALL, 1, &fun_ccall},
         {0, 0, NULL}
     };
 

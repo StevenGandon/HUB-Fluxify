@@ -125,6 +125,12 @@ class CCallToken(Token):
             item.compile_instruction(code_stack, fetch_num=0, function_stack=function_stack)
             code_stack.add_code(code_stack.builder("PatternStoreFetch")(allocs[1 + i].ptr, 0).to_code())
 
+        addr = code_stack.add_symbol(code_stack.builder("ConstantItem")(allocs[0].ptr))
+        addr2 = code_stack.add_symbol(code_stack.builder("ConstantItem")(len(allocs)))
+
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(addr, 0).to_code())
+        code_stack.add_code(code_stack.builder("PatternFetchConst")(addr2, 1).to_code())
+
         code_stack.add_code(code_stack.builder("PatternCCall")(fetch_num).to_code())
 
         for item in allocs:
