@@ -7,7 +7,7 @@ var clear_window_sym = getsym libsfml "clear_window"
 var display_window_sym = getsym libsfml "display_window"
 
 fun init_window(width, height, title) [
-    ccall init_window_sym width height title
+    return ccall init_window_sym width height title
 ]
 
 fun destroy_window(window_1) [
