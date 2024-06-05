@@ -393,7 +393,7 @@ class PatternDestroyVar64(Pattern64):
         self.fetch_num = fetch_num
 
     def to_code(self):
-        return b'\x64' + self.fetch_num.to_bytes(self.__class__._size, "big")
+        return b'\x64'
 
 class Pattern32(Pattern64):
     _size = 4
@@ -746,4 +746,4 @@ class PatternDestroyVar32(Pattern32):
         self.fetch_num = fetch_num
 
     def to_code(self):
-        return b'\x64' + self.fetch_num.to_bytes(self.__class__._size, "big")
+        return b'\x64'
