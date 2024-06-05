@@ -23,8 +23,8 @@ fun display_window(window_3) [
 ]
 
 fun main [
-    var window_name = "ok"
-    => var window_name = init_window(800, 600, "Test")
+    => var window_name = "ok"
+    var window_name = init_window(800, 600, "Test")
     => while 1 [
     =>     clear_window(window_name)
     =>     display_window(window_name)
