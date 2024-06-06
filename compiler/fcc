@@ -130,6 +130,9 @@ def main() -> int:
         compiler.tokenize()
         compiler.compile(floffClass)
 
+        PatternAlloc32._area_stack_res.clear()
+        PatternAlloc64._area_stack_res.clear()
+
         if (any(map(lambda x: isinstance(x, FCCError), compiler.debug))):
             return_status: int = 84
 
