@@ -21,6 +21,7 @@ RUN apt install gcc -y
 RUN apt install make -y
 RUN apt install man -y
 RUN apt install nano -y
+RUN apt install libcsfml-dev -y
 
 RUN mkdir /usr/lib64
 RUN cp /lib/x86_64-linux-gnu/libc.so.6 /usr/lib64/
