@@ -469,7 +469,7 @@ class IntToken(Token):
 
 class StringToken(Token):
     def __init__(self, value: str) -> None:
-        self.value = str(value)
+        self.value = str(value).replace('\\n', '\n').replace('\\r', '\r').replace('\\t', '\t').replace('\\b', '\b').replace('\\*', '\033').replace('\\v', '\v')
 
     def __repr__(self):
         return f"{self.value}"
