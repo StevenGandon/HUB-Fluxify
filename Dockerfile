@@ -67,8 +67,8 @@ RUN chmod +x /var/lib/fcc/fcc
 RUN chmod +x /var/lib/fli/fli
 RUN chmod +x /var/lib/flo_to_exe/flo_to_exe
 
-RUN cp /var/lib/libfly/libflysfml.so /usr/lib64/
-RUN cp /var/lib/libfly/libflystd.so /usr/lib64/
+RUN cp /var/lib/libfly/cwrappers/libflysfml.so /usr/lib64/
+RUN cp /var/lib/libfly/cwrappers/libflystd.so /usr/lib64/
 
 #        * Create user *
 RUN useradd fluxify

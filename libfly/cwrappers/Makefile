@@ -14,8 +14,8 @@ $(NAME):
 	make -C libstd/
 	@mkdir -p /usr/lib64/
 	@echo -e "\e[1;35m[FLY] COPY libfly.so in /usr/lib64/ ...\e[0m"
-	sudo cp libflystd.so /usr/lib64/
-	sudo cp libflysfml.so /usr/lib64/
+	cp libflystd.so /usr/lib64/
+	cp libflysfml.so /usr/lib64/
 	@echo -e "\e[1;32m[SUCCESS]\e[0m"
 
 clean:
