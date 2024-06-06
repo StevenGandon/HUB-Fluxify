@@ -1,5 +1,5 @@
-var libname = "libfly/libfly.so"
-var libstd = dllopen libname
+var libname_std = "/usr/lib64/libfly.so"
+var libsfml = dllopen libname_std
 
 var wout_sym = getsym libstd "wout"
 var werr_sym = getsym libstd "werr"
@@ -67,21 +67,3 @@ fun werr(text, flush) [
 fun to_str(num) [
     return ccall to_str_sym num
 ]
-
-fun main() [
-    var test = 5
-    var str = "yo"
-    var size = 100
-    => test--
-    => wout(to_str(test), 1)
-    => wout("Helloword!", 1)
-    => print(to_str(get_pid()), 1, 1)
-    => print(read_file("test.txt"), 1, 1)
-    => write_file("test.txt", "Hello World !")
-    => run_command("./compiler/fcc test.fly")
-    => read_stdin(str, size)
-    => wout(str, 0)
-    wout(get_absolute_path("test.txt"), 1)
-]
-
-main()

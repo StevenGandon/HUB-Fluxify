@@ -1,5 +1,5 @@
-var libname = "libfly/libfly.so"
-var libsfml = dllopen libname
+var libname_sfml = "/usr/lib64/libfly.so"
+var libsfml = dllopen libname_sfml
 
 var init_window_sym = getsym libsfml "init_window"
 var destroy_window_sym = getsym libsfml "destroy_window"
@@ -142,74 +142,3 @@ fun destroy_image(image) [
 fun move_image(image, x, y) [
     ccall move_image_sym image x y
 ]
-
-=> fun main [
-=>     var window_name = init_window(800, 600, "Test")
-
-=>     var rectangle = create_rectangle(100, 100, 50, 50, 255, 0, 0, 255)
-=>     set_window_framerate(window_name, 100)
-=>     var rect_x = 100
-=>     var rect_y = 100
-=>     var rect_dx = 1
-=>     var rect_dy = 1
-=>     var temp = 1
-
-=>     while quit_event(window_name) == 0 [
-=>         clear_window(window_name)
-=>         draw_rectangle(window_name, rectangle)
-=>         draw_circle
-
-=>         => Moving logic
-=>         rect_x = rect_x + rect_dx
-=>         rect_y = rect_y + rect_dy
-=>         move_rectangle(rectangle, rect_x, rect_y)
-=>         if rect_x >= 750 || rect_x <= 0 [
-=>             rect_dx = -rect_dx
-=>         ]
-=>         if rect_y >= 550 || rect_y <= 0 [
-=>             rect_dy = -rect_dy
-=>         ]
-
-=>         display_window(window_name)
-=>     ]
-
-=>     destroy_rectangle(rectangle)
-=>     destroy_window(window_name)
-=> ]
-
-fun move_my_sprite()
-[
-    if sprite_x < 75 [
-        vector = 1
-    ] elif sprite_x > 275 [
-        vector = -1
-    ]
-
-    sprite_x = sprite_x + vector
-    sprite_y = sprite_y + vector
-]
-
-fun main() [
-    var window_name = init_window(800, 600, "Test")
-    set_window_framerate(window_name, 60)
-
-    var sprite_x = 50
-    var sprite_y = 100
-    var vector = 1
-    var sprite = create_image("assets/test_sprite.png", sprite_x, sprite_y)
-
-    while quit_event(window_name) == 0 [
-        clear_window(window_name)
-
-        draw_image(window_name, sprite)
-        move_my_sprite()
-        move_image(sprite, sprite_x, sprite_y)
-
-        display_window(window_name)
-    ]
-
-    destroy_image(sprite)
-    destroy_window(window_name)
-]
-
-main()
