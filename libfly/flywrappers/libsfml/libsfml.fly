@@ -1,40 +1,38 @@
-var libname_fly = "/usr/lib64/libfly.so"
-if libfly == 0
-    var libfly = dllopen libname_fly
+var libflysfml = dllopen "/usr/lib64/libflysfml.so"
 
-var init_window_sym = getsym libfly "init_window"
-var destroy_window_sym = getsym libfly "destroy_window"
-var clear_window_sym = getsym libfly "clear_window"
-var display_window_sym = getsym libfly "display_window"
-var quit_event_sym = getsym libfly "quit_event"
-var get_window_width_sym = getsym libfly "get_window_width"
-var get_window_height_sym = getsym libfly "get_window_height"
-var set_window_framerate_sym = getsym libfly "set_window_framerate"
+var init_window_sym = getsym libflysfml "init_window"
+var destroy_window_sym = getsym libflysfml "destroy_window"
+var clear_window_sym = getsym libflysfml "clear_window"
+var display_window_sym = getsym libflysfml "display_window"
+var quit_event_sym = getsym libflysfml "quit_event"
+var get_window_width_sym = getsym libflysfml "get_window_width"
+var get_window_height_sym = getsym libflysfml "get_window_height"
+var set_window_framerate_sym = getsym libflysfml "set_window_framerate"
 
 => Rectangle
-var create_rectangle_sym = getsym libfly "create_rectangle"
-var draw_rectangle_sym = getsym libfly "draw_rectangle"
-var destroy_rectangle_sym = getsym libfly "destroy_rectangle"
-var move_rectangle_sym = getsym libfly "move_rectangle"
+var create_rectangle_sym = getsym libflysfml "create_rectangle"
+var draw_rectangle_sym = getsym libflysfml "draw_rectangle"
+var destroy_rectangle_sym = getsym libflysfml "destroy_rectangle"
+var move_rectangle_sym = getsym libflysfml "move_rectangle"
 
 => Circle
-var create_circle_sym = getsym libfly "create_circle"
-var draw_circle_sym = getsym libfly "draw_circle"
-var destroy_circle_sym = getsym libfly "destroy_circle"
-var move_circle_sym = getsym libfly "move_circle"
+var create_circle_sym = getsym libflysfml "create_circle"
+var draw_circle_sym = getsym libflysfml "draw_circle"
+var destroy_circle_sym = getsym libflysfml "destroy_circle"
+var move_circle_sym = getsym libflysfml "move_circle"
 
 => Text
-var create_text_sym = getsym libfly "create_text"
-var draw_text_sym = getsym libfly "draw_text"
-var destroy_text_sym = getsym libfly "destroy_text"
-var move_text_sym = getsym libfly "move_text"
-var set_text_fond_sym = getsym libfly "set_text_fond"
+var create_text_sym = getsym libflysfml "create_text"
+var draw_text_sym = getsym libflysfml "draw_text"
+var destroy_text_sym = getsym libflysfml "destroy_text"
+var move_text_sym = getsym libflysfml "move_text"
+var set_text_fond_sym = getsym libflysfml "set_text_fond"
 
 => Image
-var create_image_sym = getsym libfly "create_image"
-var draw_image_sym = getsym libfly "draw_image"
-var destroy_image_sym = getsym libfly "destroy_image"
-var move_image_sym = getsym libfly "move_image"
+var create_image_sym = getsym libflysfml "create_image"
+var draw_image_sym = getsym libflysfml "draw_image"
+var destroy_image_sym = getsym libflysfml "destroy_image"
+var move_image_sym = getsym libflysfml "move_image"
 
 fun init_window(width, height, title) [
     return ccall init_window_sym width height title
