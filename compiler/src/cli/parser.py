@@ -7,7 +7,9 @@ class Parser:
             "-c": False,
             "-h": False,
             "-help": False,
-            "-?": False
+            "-?": False,
+            "-sfml": False,
+            "-std": False
         }
         self.entry: str = "_start"
         self.outputName: str = "fly.out"
