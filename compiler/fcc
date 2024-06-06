@@ -58,6 +58,7 @@ def find_libs(libs: list) -> list:
             if (isfile(path + item)):
                 found_libs.append(path + item)
                 continue
+    return (found_libs)
 
 def main() -> int:
     code: str = None
@@ -112,7 +113,7 @@ def main() -> int:
     elif parser.arch == "X64_32":
         floffClass = Floff32
 
-    parser.files = ["libfly/flywrappers/libstd.fly", "libfly/flywrappers/libsfml.fly"] + parser.files
+    parser.files = find_libs(["libfly/flywrappers/libstd.fly", "libfly/flywrappers/libsfml.fly"]) + parser.files
 
     for file in parser.files:
         code: str = read_code(file)
