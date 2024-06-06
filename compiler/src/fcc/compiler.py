@@ -150,7 +150,7 @@ class Compiler(object):
         object_file.code_hash = self.get_code_hash()
 
         object_file.write()
-        object_file.flush(('.'.join(self.filename.split('.')[:-1]) + '.flo') if self.filename.endswith('.fly') else self.filename)
+        object_file.flush(self.filename)
 
     @staticmethod
     def get_token(line: str) -> Token:
