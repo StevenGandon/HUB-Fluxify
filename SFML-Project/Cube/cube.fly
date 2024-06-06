@@ -10,7 +10,6 @@ fun main (window_size_x, window_size_y) [
     var temp = 1
 
     while quit_event(window_name) == 0 [
-        wout("Test")
         clear_window(window_name)
         draw_rectangle(window_name, rectangle)
 
