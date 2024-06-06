@@ -118,7 +118,7 @@ def main() -> int:
     for file in parser.files:
         code: str = read_code(file)
 
-        if (not code):
+        if (code is None):
             return_status: int = 84
             continue
 
