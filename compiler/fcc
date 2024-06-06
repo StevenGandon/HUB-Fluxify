@@ -113,7 +113,10 @@ def main() -> int:
     elif parser.arch == "X64_32":
         floffClass = Floff32
 
-    parser.files = find_libs(["libfly/flywrappers/libstd/libstd.fly", "libfly/flywrappers/libsfml/libsfml.fly"]) + parser.files
+    if (parser.options['-sfml']):
+        parser.files = find_libs(["libfly/flywrappers/libsfml/libsfml.fly"]) + parser.files
+    if (parser.options['-std']):
+        parser.files = find_libs(["libfly/flywrappers/libstd/libstd.fly"]) + parser.files
 
     for file in parser.files:
         code: str = read_code(file)
