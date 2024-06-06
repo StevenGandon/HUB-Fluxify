@@ -74,9 +74,9 @@ def invalid_comparaison_warning(code: object, debug_constructor: object, color: 
                 continue
 
             if ((token.value is not None or token.value2 is not None)):
-                if (isinstance(token.value, StringToken) and not isinstance(token.value2, StringToken)):
+                if (isinstance(token.value, StringToken) and (not isinstance(token.value2, StringToken) and not isinstance(token.value2, VariableToken))):
                     err = f"String cannot be {operand} with other types"
-                if (isinstance(token.value, IntToken) and not isinstance(token.value2, IntToken)):
+                if (isinstance(token.value, IntToken) and (not isinstance(token.value2, IntToken) and not isinstance(token.value2, VariableToken))):
                     err = f"Int cannot be {operand} with other types"
                 break
 
