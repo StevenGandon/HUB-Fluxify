@@ -1,0 +1,11 @@
+fun move_my_sprite()
+[
+    if sprite_x < 75 [
+        vector = 1
+    ] elif sprite_x > 275 [
+        vector = -1
+    ]
+
+    sprite_x = sprite_x + vector
+    sprite_y = sprite_y + vector
+]

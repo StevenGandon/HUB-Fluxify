@@ -1,0 +1,22 @@
+fun launch_project() [
+    var window_name = init_window(800, 600, "Test")
+    set_window_framerate(window_name, 60)
+
+    var sprite_x = 50
+    var sprite_y = 100
+    var vector = 1
+    var sprite = create_image("assets/test_sprite.png", sprite_x, sprite_y)
+
+    while quit_event(window_name) == 0 [
+        clear_window(window_name)
+
+        draw_image(window_name, sprite)
+        move_my_sprite()
+        move_image(sprite, sprite_x, sprite_y)
+
+        display_window(window_name)
+    ]
+
+    destroy_image(sprite)
+    destroy_window(window_name)
+]
