@@ -1,20 +1,21 @@
-var libname_std = "/usr/lib64/libfly.so"
-var libstd = dllopen libname_std
+var libname_fly = "/usr/lib64/libfly.so"
+if libfly == 0
+    var libfly = dllopen libname_fly
 
-var wout_sym = getsym libstd "wout"
-var werr_sym = getsym libstd "werr"
-var strlen_sym = getsym libstd "ft_len"
-var to_str_sym = getsym libstd "to_str"
-var exit_sym = getsym libstd "quit"
+var wout_sym = getsym libfly "wout"
+var werr_sym = getsym libfly "werr"
+var strlen_sym = getsym libfly "ft_len"
+var to_str_sym = getsym libfly "to_str"
+var exit_sym = getsym libfly "quit"
 
-var dupli_sym = getsym libstd "duplicate_process"
-var getpid_sym = getsym libstd "get_pid"
-var print_sym = getsym libstd "print"
-var read_file_sym = getsym libstd "read_file"
-var write_file_sym = getsym libstd "write_file"
-var run_cmd_sym = getsym libstd "run_command"
-var read_stdin_sym = getsym libstd "read_stdin"
-var absolute_path_sym = getsym libstd "get_absolute_path"
+var dupli_sym = getsym libfly "duplicate_process"
+var getpid_sym = getsym libfly "get_pid"
+var print_sym = getsym libfly "print"
+var read_file_sym = getsym libfly "read_file"
+var write_file_sym = getsym libfly "write_file"
+var run_cmd_sym = getsym libfly "run_command"
+var read_stdin_sym = getsym libfly "read_stdin"
+var absolute_path_sym = getsym libfly "get_absolute_path"
 
 fun get_pid() [
     return ccall getpid_sym
