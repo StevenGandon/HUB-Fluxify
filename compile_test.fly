@@ -1,8 +1,2 @@
-==>
-    Test program
-<==
 
-var dll = dllopen "/usr/lib64/libc.so.6"
-var printf = getsym dll "printf"
-
-ccall printf "%s" "test"
+wout("test\n")

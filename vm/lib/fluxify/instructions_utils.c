@@ -58,6 +58,7 @@ char run_vm(vm_state_t *vm)
         // adjust_endianness(&inst.operands[2]);
         // if (vm->program_counter > vm->program_size)
         //     return;
+        printf("%ld\n", vm->program_counter);
     }
 
     return ((char)vm->fetch_src);
