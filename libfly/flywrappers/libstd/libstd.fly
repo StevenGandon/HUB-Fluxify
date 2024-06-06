@@ -1,5 +1,5 @@
 var libname_std = "/usr/lib64/libfly.so"
-var libsfml = dllopen libname_std
+var libstd = dllopen libname_std
 
 var wout_sym = getsym libstd "wout"
 var werr_sym = getsym libstd "werr"

@@ -32,5 +32,4 @@ fun main (window_size_x, window_size_y) [
     destroy_window(window_name)
 ]
 
-wout("ok")
 main(1920, 1080)
