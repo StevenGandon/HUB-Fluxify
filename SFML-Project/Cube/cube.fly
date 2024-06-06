@@ -1,0 +1,36 @@
+fun main (window_size_x, window_size_y) [
+    var window_name = init_window(window_size_x, window_size_y, "Test")
+
+    var rectangle = create_rectangle(100, 100, 50, 50, 255, 0, 0, 255)
+    set_window_framerate(window_name, 100)
+    var rect_x = 100
+    var rect_y = 100
+    var rect_dx = 1
+    var rect_dy = 1
+    var temp = 1
+
+    while quit_event(window_name) == 0 [
+        wout("Test")
+        clear_window(window_name)
+        draw_rectangle(window_name, rectangle)
+
+        => Moving logic
+        rect_x = rect_x + rect_dx
+        rect_y = rect_y + rect_dy
+        move_rectangle(rectangle, rect_x, rect_y)
+        if rect_x >= 750 || rect_x <= 0 [
+            rect_dx = -rect_dx
+        ]
+        if rect_y >= 550 || rect_y <= 0 [
+            rect_dy = -rect_dy
+        ]
+
+        display_window(window_name)
+    ]
+
+    destroy_rectangle(rectangle)
+    destroy_window(window_name)
+]
+
+wout("ok")
+main(1920, 1080)
