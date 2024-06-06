@@ -19,7 +19,7 @@ def compile_code(fcc_path='fcc', code=''):
         f.write(code)
         f.flush()
 
-    proc = Popen(f"{fcc_path} .temp.fly -Eall -arch=X86_64", shell=True)
+    proc = Popen(f"{fcc_path} .temp.fly -Eall -arch=X86_64 -std", shell=True)
     status = proc.wait(100)
 
     return (status == 0)
