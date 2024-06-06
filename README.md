@@ -103,6 +103,18 @@ The standard library of the language is very simple, it is composed of a few fun
 
 When you compile your own Fluxify program, the compiler will automatically link the standard library to your program. You don't have to do anything, the compiler will do it for you (it won't call the functions at your place tho!).
 
+Take a look at the man pages for each functions of the standard library :
+
+```bash
+man docs/man/man3/libly.std.3/*function_name*.3
+```
+
+For the custom CSFML functions :
+
+```bash
+man docs/man/man3/libly.sfml.3/*type*.3
+```
+
 ## Command Line Interface
 
 The command line interface of the language is a simple program named `fli` that allows you to compile and execute a program in Fluxify with a single command.
