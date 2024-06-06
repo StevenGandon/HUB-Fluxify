@@ -10,7 +10,7 @@ NAME = result
 SRC = cube.fly
 
 OBJ = $(SRC:.fly=.flo)
-FLYFLAGS += -Wall -Eall -c
+FLYFLAGS += -Wall -Eall -sfml
 
 %.flo: %.fly
 	@echo "\e[1;35m[FLY] Building $@...\e[0m"

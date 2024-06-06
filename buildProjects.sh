@@ -1,0 +1,2 @@
+./compiler/fcc SFML-Project/DiamondProject/diamond.fly SFML-Project/DiamondProject/move_sprite.fly SFML-Project/DiamondProject/mainFile.fly -Wall -Eall -sfml -o diamondProject
+./compiler/fcc SFML-Project/Cube/cube.fly -Wall -Eall -sfml -o cubeProject

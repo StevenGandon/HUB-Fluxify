@@ -12,11 +12,11 @@ SRC = 	diamond.fly		\
 		mainFile.fly	\
 
 OBJ = $(SRC:.fly=.flo)
-FLYFLAGS += -Wall -Eall -c
+FLYFLAGS += -Wall -Eall -sfml
 
 %.flo: %.fly
 	@echo "\e[1;35m[FLY] Building $@...\e[0m"
-	../../compiler/fcc $< ${FLYFLAGS} -o ${NAME}
+	../../compiler/fcc {OBJ} ${FLYFLAGS} -o ${NAME}
 	@echo "\e[1;32m[SUCCESS] $@ built\e[0m"
 
 all: $(NAME)

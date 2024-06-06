@@ -1,4 +1,4 @@
-fun main (window_size_x, window_size_y) [
+fun main(window_size_x, window_size_y) [
     var window_name = init_window(window_size_x, window_size_y, "Test")
 
     var rectangle = create_rectangle(100, 100, 50, 50, 255, 0, 0, 255)
@@ -31,4 +31,4 @@ fun main (window_size_x, window_size_y) [
     destroy_window(window_name)
 ]
 
-main(1920, 1080)
+main(800, 600)
