@@ -1,8 +1,0 @@
-fun main(windowWidth, windowHeight)
-[
-    => var window = initWindow(windowWidth, windowHeight)
-    var test = 5
-    test--
-]
-
-main(1920, 1080)
