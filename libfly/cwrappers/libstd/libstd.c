@@ -119,5 +119,7 @@ void werr(char *text, char flush)
 
 size_t ft_len(char *text)
 {
+    if (!text)
+        return 0;
     return strlen(text);
 }

@@ -1,0 +1,15 @@
+.TH libstd 1 "06 Juillet 2024" "1.0" "LibStd man page"
+.SH NAME
+    Output Functions - Functions for standard error operations
+
+.SH SYNOPSIS
+    fun werr(text, flush)
+
+.SH DESCRIPTION
+    werr - Writes the string pointed to by text to the standard error (stderr). If flush is non-zero, the output buffer is flushed.
+
+.SH RETURN VALUE
+    None
+
+.SH EXAMPLES
+    werr("An error occurred\n", 1);  // Writes to stderr and flushes the buffer

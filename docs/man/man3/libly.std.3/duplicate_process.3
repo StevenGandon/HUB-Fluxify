@@ -1,0 +1,23 @@
+.TH libfly 1 "06 Juillet 2024" "1.0" "LibFly man page"
+.SH NAME
+    Process Functions - Functions for process management
+
+.SH SYNOPSIS
+    fun duplicate_process()
+
+.SH DESCRIPTION
+    duplicate_process - Duplicates the current process, creating a new child process.
+
+.SH EXAMPLES
+    var pid = duplicate_process()
+
+    if pid == 0 [
+        => This is the child process
+        => Do something...
+    ] elif pid > 0 [
+        => This is the parent process
+        => Do something...
+    ] else [
+        => Duplicate failed
+        => Handle error...
+    ]

@@ -1,0 +1,13 @@
+.TH libstd 1 "06 Juillet 2024" "1.0" "LibStd man page"
+.SH NAME
+    Output Functions - Functions for standard output operations
+
+.SH SYNOPSIS
+    fun wout(text, flush)
+
+.SH DESCRIPTION
+    wout - Writes the string pointed to by text to the standard output (stdout). If flush is non-zero, the output buffer is flushed.
+
+.SH EXAMPLES
+    wout("Hello, world!", 1)
+    => Will print "Hello, world!" to the standard output and flush the buffer.

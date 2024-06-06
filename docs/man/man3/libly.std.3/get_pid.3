@@ -1,0 +1,16 @@
+.TH libstd 1 "06 Juillet 2024" "1.0" "LibStd man page"
+.SH NAME
+    Process Functions - Functions for process management
+
+.SH SYNOPSIS
+    fun get_pid()
+
+.SH DESCRIPTION
+    get_pid - Returns the process ID of the current process.
+
+.SH EXAMPLES
+    fun main() [
+        var pid = get_pid()
+        wout("Process ID: ", 1)
+        print(to_str(pid), 1, 1)
+    ]

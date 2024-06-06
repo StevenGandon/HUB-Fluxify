@@ -1,0 +1,17 @@
+.TH libstd 1 "06 Juillet 2024" "1.0" "LibStd man page"
+.SH NAME
+    Path Functions - Functions for path operations
+
+.SH SYNOPSIS
+    fun get_absolute_path(path)
+
+.SH DESCRIPTION
+    get_absolute_path - Returns the absolute path of the file or directory specified by path.
+
+.SH RETURN VALUE
+    Returns the absolute path of the file or directory specified by path.
+
+.SH EXAMPLES
+    var abs_path = get_absolute_path("./myfile.txt")
+    wout("Absolute path: ", 1)
+    print(abs_path, 1, 1)

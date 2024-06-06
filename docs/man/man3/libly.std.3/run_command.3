@@ -1,0 +1,18 @@
+.TH libstd 1 "06 Juillet 2024" "1.0" "LibStd man page"
+.SH NAME
+    Command Functions - Functions for command execution
+
+.SH SYNOPSIS
+    fun run_command(command)
+
+.SH DESCRIPTION
+    run_command - Executes the command specified by the string pointed to by command. The command is executed by the shell.
+
+.SH RETURN VALUE
+    That function does not return anything.
+
+.SH EXAMPLES
+    fun main() [
+        run_command("ls -l")
+        => Will list the files in the current directory in the terminal
+    ]

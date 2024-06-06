@@ -1,0 +1,17 @@
+.TH libstd 1 "06 Juillet 2024" "1.0" "LibStd man page"
+.SH NAME
+    Output Functions - Functions for standard output operations
+
+.SH SYNOPSIS
+    fun print(text, stdway, flush)
+
+.SH DESCRIPTION
+    print - Writes the string pointed to by text to the standard output (stdout) or standard error (stderr), depending on the value of stdway. If flush is non-zero, the output buffer is flushed.
+    It will automatically append a newline character to the end of the string.
+
+.SH RETURN VALUE
+    None
+
+.SH EXAMPLES
+    print("Hello, world!", 1, 1);  // Writes to stdout and flushes the buffer
+    print("Error message", 2, 1);  // Writes to stderr and flushes the buffer

@@ -1,0 +1,19 @@
+.TH libstd 1 "06 Juillet 2024" "1.0" "LibStd man page"
+.SH NAME
+    Input Functions - Functions for standard input operations
+
+.SH SYNOPSIS
+    fun read_stdin(buffer, size)
+
+.SH DESCRIPTION
+    read_stdin - Reads up to size - 1 characters from the standard input (stdin) into the buffer pointed to by buffer. The resulting string is null-terminated.
+
+.SH RETURN VALUE
+    The function returns the number of characters read, including the null terminator.
+
+.SH EXAMPLES
+    fun main() [
+        var buffer = ""
+        read_stdin(buffer, 256)
+        print(buffer)
+    ]

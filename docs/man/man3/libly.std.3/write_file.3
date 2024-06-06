@@ -1,0 +1,20 @@
+.TH libstd 1 "06 Juillet 2024" "1.0" "LibStd man page"
+.SH NAME
+    File Functions - Functions for file operations
+
+.SH SYNOPSIS
+    fun write_file(filename, content)
+
+.SH DESCRIPTION
+    write_file - Writes the string pointed to by content to the file specified by filename. If the file does not exist, it is created. If it does exist, its contents are overwritten.
+
+.SH RETURN VALUE
+    Returns 0 if the file was written successfully, and 1 if an error occurred.
+
+.SH EXAMPLES
+    var content = "Hello, world!"
+    if write_file("myfile.txt", content) == 0 [
+        print("File written successfully");
+    ] else [
+        print("Failed to write file");
+    ]
