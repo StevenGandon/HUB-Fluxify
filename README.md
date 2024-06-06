@@ -122,7 +122,7 @@ The command line interface of the language is a simple program named `fli` that 
 To compile and execute a program in Fluxify, you must use the following command:
 
 ```bash
-$ fli program.fly [path_to_fcc] [path_to_fvm]
+$ fli [path_to_fcc] [path_to_fvm]
 ```
 
 - `path_to_fcc` is the path to the compiler
