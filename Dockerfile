@@ -21,6 +21,7 @@ RUN apt install gcc -y
 RUN apt install make -y
 RUN apt install man -y
 RUN apt install nano -y
+RUN apt install libcsfml-dev -y
 
 RUN mkdir /usr/lib64
 RUN cp /lib/x86_64-linux-gnu/libc.so.6 /usr/lib64/
@@ -53,6 +54,7 @@ RUN cp ./vm/lib/fluxify/fluxify.h /usr/include/
 
 RUN cp ./fli/fli /var/lib/fli/
 RUN cp -r ./fli/src /var/lib/fli/
+RUN cp -r ./libfly /var/lib
 RUN ln -s /var/lib/fli/fli /bin/fli
 
 RUN cp ./flo_to_exe/flo_to_exe /var/lib/flo_to_exe/
@@ -64,6 +66,9 @@ RUN chmod +x /bin/fvm
 RUN chmod +x /var/lib/fcc/fcc
 RUN chmod +x /var/lib/fli/fli
 RUN chmod +x /var/lib/flo_to_exe/flo_to_exe
+
+RUN make -C /var/lib/libfly
+RUN cp /var/lib/libfly/libfly.so /usr/lib64/
 
 #        * Create user *
 RUN useradd fluxify
